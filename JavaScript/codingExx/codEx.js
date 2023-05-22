@@ -1,9 +1,8 @@
-const str = "ddcttct";
-const str2 = str.split("");
+const str2 = "ddcttct";
 
 // output = 'dct'
 
-let result = [];
+let result = "";
 
 // for (let i = 0; i < str.length; i++) {
 //   if (!result.includes(str[i])) {
@@ -35,7 +34,7 @@ for (let i = 0; i < str2.length; i++) {
   }
 
   if (!resultFound) {
-    result.push(str2[i]);
+    result += str2[i];
   }
 }
 

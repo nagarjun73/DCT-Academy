@@ -9,33 +9,13 @@ a:["a"]
 }
 */
 
-const obj = {};
-
-let arrOfKey = [];
-
+let obj = {};
 for (let i = 0; i < str.length; i++) {
-  if (str[i] !== arrOfKey[i]) {
-    if (str[i] === str[i].toLowerCase()) {
-      arrOfKey.push(str[i]);
-    }
+  let char = str[i].toLowerCase();
+  if (obj[char]) {
+    obj[char].push(str[i]);
+  } else {
+    obj[char] = [str[i]];
   }
 }
-
-for (let i = 0; i < arrOfKey.length; i++) {
-  obj[arrOfKey[i]] = [];
-
-  for (let j = 0; j < str.length; j++) {
-    if (arrOfKey[i] === str[j].toLowerCase() || str[j].toUpperCase())
-      obj[arrOfKey[j]] = str[j];
-  }
-}
-
-// for (let j = 0; j < str.length; j++) {
-//   if (obj[j] === str[j].toLowerCase() || str[j].toUpperCase()) {
-//     if (arrOfKey[j]) {
-//       arrOfKey[j].push(str[j]);
-//     }
-//   }
-// }
-
 console.log(obj);

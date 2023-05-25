@@ -29,12 +29,9 @@ const obj = {
 
 const str = "dctacademy";
 let strWeight = "";
-const checkWeight = function (name) {
-  for (let i = 0; i < str.length; i++) {
-    strWeight += obj[str[i]];
-  }
-};
+for (let i = 0; i < str.length; i++) {
+  strWeight += obj[str[i]];
+}
 
-checkWeight(str);
 
 console.log(strWeight);

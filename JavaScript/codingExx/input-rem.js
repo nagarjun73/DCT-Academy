@@ -2,6 +2,7 @@ const players = ["dhoni", "virat", "sachin", "rahul"];
 
 const searchVal = process.argv[2];
 
+console.log(searchVal);
 /*
 
 const newArr = [];

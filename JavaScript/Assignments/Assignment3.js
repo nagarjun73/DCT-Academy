@@ -1,3 +1,21 @@
+// USING SLICE METHOD
+const capitalize = function(str){
+  const sepWords = str.split(' ') 
+    let final = ""
+    for(let i=0; i<sepWords.length; i++){
+      final += sepWords[i][0].toUpperCase()
+      final += sepWords[i].slice(1)
+      final += " "
+    }
+  return final
+}
+
+console.log(capitalize('js string exercises'));
+console.log(capitalize('dct academy bangalore'));
+
+
+//Using nested Loop
+/*
 const capitalize = function(str){
   const sepWords = str.split(' ') 
   let capitalizedWord = []
@@ -15,19 +33,7 @@ const capitalize = function(str){
     return capitalizedWord.join(' ')
 }
 
-
 console.log(capitalize('js string exercises'));
 console.log(capitalize('dct academy bangalore'));
 
-
-
-
-// code2
-// const capitalize = function(str){
-//   const sepWords = str.split(' ') 
-//   let capitalizedWord = []
-//   for(let i=0; i<sepWords.length; i++){
-//     capitalizedWord.push(sepWords[i][i].toUpperCase()) 
-//   }
-//     return capitalizedWord
-// }
+*/

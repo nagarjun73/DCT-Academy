@@ -21,3 +21,54 @@ for(const key in result){
     console.log(key);
   }
 }
+
+//
+
+const fruits = ['mango', 'apple', 'banana']
+
+/* Task1
+  output
+  {
+    mango:5,
+    apple:5,
+    banana:6
+  }
+
+*/
+// const fruitsObj = {}
+// for(let i=0; i<fruits.length; i++){
+//   fruitsObj[fruits[i]] = fruits[i].length
+// }
+// console.log(fruitsObj);
+
+/*
+Task2
+output
+{
+  mango:{
+    vowels:2,
+    consonants:3
+  },
+  apple:{
+    vowels:2,
+    consonants:3
+  }
+}
+*/
+
+const fruitsObj2 = {}
+let vowelsChar = 'aeiou'
+
+for(let i=0; i<fruits.length; i++){
+  let vowels1 = 0
+  let consonant = 0
+    for(let j=0; j<fruits[i].length; j++){
+    if(vowelsChar.includes(fruits[i][j])){
+      vowels1++
+    }else{
+      consonant++
+    }
+    }
+  fruitsObj2[fruits[i]] = {'vowels': vowels1, 'consonant': consonant }
+}
+console.log(fruitsObj2);

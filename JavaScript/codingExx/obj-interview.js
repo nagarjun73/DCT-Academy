@@ -69,6 +69,8 @@ for(let i=0; i<fruits.length; i++){
       consonant++
     }
     }
-  fruitsObj2[fruits[i]] = {'vowels': vowels1, 'consonant': consonant }
+  let calVow = vowels1 *100 / fruits[i].length
+  let calCons = consonant *100 / fruits[i].length
+  fruitsObj2[fruits[i]] = {'vowels': vowels1, 'vowPerc':calVow + '%', 'consonant': consonant,'calCons':calCons + '%'}
 }
 console.log(fruitsObj2);

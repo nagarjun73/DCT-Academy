@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Listing App
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+          
+          const rootHandle = document.getElementById('root')
+          const { useState } = React
+
+          function App(props){
+            const [tasks, setTasks] = useState(['deploy to server', 'write documentation'])
+
+            const handleClick = function(){
+              const title = prompt("Enter a Task")
+              if(title){
+                const newArr = [...tasks]
+                newArr.push(title)
+                setTasks(newArr)
+              }
+            }
+
+            const handleClickRem = function(){
+              const title = prompt("Enter a Task number")
+              if(title){
+              const newArr = tasks.slice(0)
+              newArr.splice(title, 1)
+              setTasks(newArr)
+            }}
+
+            const handleClickEdit = function(){
+              const title = prompt("Enter a Task number")
+              if(title){
+              const newArr = tasks.slice(0)
+              const selectVal = newArr.slice(title, title+1)
+              const edited = prompt("Edit a Task" , selectVal)
+              if(title){
+              newArr.splice(title, 1, edited)
+              console.log(edited);
+              setTasks(newArr)
+              }
+            }}
+
+            const makeList = function(){
+              let arrTask = []
+              // for(let i=0; i<tasks.length; i++){
+              //   arrTask.push(<li key={i}> {tasks[i]} </li>)
+              // }
+
+              tasks.forEach(function(ele, i){
+                arrTask.push(<li key={i}>{i} {ele} </li>)
+              })
+              return arrTask
+            }
+
+            return (
+              <div>
+                <h1>Listing Tasks - {tasks.length}</h1>
+                <ul>
+                  {makeList()}
+                </ul>
+                <button onClick={handleClick}>Add Task</button>
+                <button onClick={handleClickRem}>Remove Task</button>
+                <button onClick={handleClickEdit}>Edit Task</button>
+              </div>
+            )
+          }
+          ReactDOM.render(<App />, rootHandle)
+        </script>
+    </body>
+</html>

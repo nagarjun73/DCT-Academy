@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Counter App
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+           const rootHandle = document.getElementById('root')
+           
+           // Your code goes here 
+           //we are extracting useState method from React
+           const { useState } = React
+
+           //Component - function
+          function App(props){
+            const [count, setCount] = useState(1)
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+            const handleClickPlus = function(){
+              return setCount(count + 1)
+            }
+
+            const handleClickMinus = function(){
+              return setCount(count - 1)
+            }
+
+            return (
+              <div>
+                {numbers.map(function(ele, i){
+                  return <li key={i}>{count} * {ele} = {ele * count}</li>
+                })}
+
+                <button onClick = {handleClickPlus}> 1+ </button>
+                <button onClick = {handleClickMinus}> 1+ </button>
+              </div>
+            )
+          }
+
+          ReactDOM.render(<App />, rootHandle)
+          // ReactDOM.render(App(), rootHandle)
+          
+        </script>
+    </body>
+</html>

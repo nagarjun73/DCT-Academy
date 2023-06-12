@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Counter App
+        </title>
+    </head>
+    <body>
+        <div id="root">
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+          const rootHandle = document.getElementById('root')
+          
+           // Your code goes here 
+           //we are extracting useState method from React
+          const { useState } = React
+
+           //Component - function
+          function App(props){
+            const [count, setCount] = useState(0)
+
+            const updateCount = e => {
+              if (e.target.checked) {
+                setCount(count+1)
+              } else {
+                setCount(count-1)
+              }
+            };
+            
+            return (
+              <div>
+                <h1>{count}</h1>
+                <input type="checkbox" name='checkbox' value='1' onChange= { updateCount } /> Task1
+                <input type="checkbox" name='checkbox' value='2' onChange= { updateCount } /> Task2
+                <input type="checkbox" name='checkbox' value='3' onChange= { updateCount } /> Task3
+                <input type="checkbox" name='checkbox' value='4' onChange= { updateCount } /> Task4
+              </div>
+            )
+          }
+          ReactDOM.render(<App />, rootHandle)
+          // ReactDOM.render(App(), rootHandle)
+          
+        </script>
+    </body>
+</html>

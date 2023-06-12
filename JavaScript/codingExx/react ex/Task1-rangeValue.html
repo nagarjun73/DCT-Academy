@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Counter App
+        </title>
+    </head>
+    <body>
+        <div id="root">
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+           const rootHandle = document.getElementById('root')
+           
+           // Your code goes here 
+           //we are extracting useState method from React
+          const { useState } = React
+
+           //Component - function
+          function App(props){
+            const [count, setCount] = useState(0)
+
+            let ranNos = [3, 29, 14, 20, 8, 35, 17, 41, 24, 23, 33, 47, 4, 10, 45, 32, 48, 7, 2, 12, 30, 38, 46, 5, 39, 25, 31, 11, 37, 18, 19, 42, 9, 34, 26, 13, 40, 43, 44, 50, 15, 22, 6, 16, 21, 49, 36, 27, 28, 1]
+
+            const result = ranNos.filter(function(ele){
+              return ele <= count 
+            })
+            
+            const res2 = result.map(function(ele, i){
+              return <li key={i}>{ele} </li>
+              
+            })
+            return (
+              <div>
+                <h1>{count}</h1>
+                <input type="range" name="points" min="0" max="50" value={count}
+                onChange={(e) => setCount(e.target.value)}/>
+                <ul>
+                  {res2}
+                </ul>
+                <input type="checkbox" name='checkbox' value='' onChange='' />
+              </div>
+            )
+          }
+          ReactDOM.render(<App />, rootHandle)
+          // ReactDOM.render(App(), rootHandle)
+          
+        </script>
+    </body>
+</html>

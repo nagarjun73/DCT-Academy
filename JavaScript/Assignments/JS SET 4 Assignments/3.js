@@ -1,5 +1,5 @@
 function joinWords(a) {
-    let result = 0
+    let result = a[0]
     let initialSplice = []
     let commonWord = []
     let wordCommon = ''
@@ -19,9 +19,11 @@ function joinWords(a) {
     }
   }
 
-  
-
-  return lengthToSlice
+  for(let d=1; d<a.length; d++){
+    let nxtVal = a[d]
+    result += nxtVal.slice(wordCommon.length)
+  }
+  return  result
 }
 
 console.log(joinWords(["aaa", "bbb", "ccc", "ddd"]));

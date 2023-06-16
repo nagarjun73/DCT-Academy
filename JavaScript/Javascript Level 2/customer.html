@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Counter App
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+        const rootHandle = document.getElementById('root')
+        
+           // Your code goes here 
+           //we are extracting useState method from React
+        const { useState } = React
+
+           //Component - function
+        function App(props){
+            const [term, setTerm] = useState('')
+        const customers = [
+    {
+        "id": 1,
+        "code": "C001",
+        "name": "John Smith",
+        "email": "john@example.com",
+        "mobile": "1234567890"
+    },
+    {
+        "id": 2,
+        "code": "C002",
+        "name": "Jane Doe",
+        "email": "jane@example.com",
+        "mobile": "9876543210"
+    },
+    {
+        "id": 3,
+        "code": "C003",
+        "name": "Alex Johnson",
+        "email": "alex@example.com",
+        "mobile": "5555555555"
+    },
+    {
+        "id": 4,
+        "code": "C004",
+        "name": "Emily Williams",
+        "email": "emily@example.com",
+        "mobile": "1111111111"
+    },
+    {
+        "id": 5,
+        "code": "C005",
+        "name": "Michael Brown",
+        "email": "michael@example.com",
+        "mobile": "2222222222"
+    }
+]
+
+            const handleSearch = function(){
+                const userInput = prompt("Enter")
+                if(userInput){
+                    setTerm(userInput)
+                }
+            }
+
+            const filteredCustomers = function(){
+                    const result = customers.filter(function(ele){
+                    return ele.name.toLocaleLowerCase().includes(term.toLowerCase()) || ele.email.toLocaleLowerCase().includes(term.toLowerCase()) || ele.mobile.toLocaleLowerCase().includes(term.toLowerCase())
+                })
+                return result
+                }
+
+            const clearhandle = function(){
+                setTerm('')
+            }
+
+            return (
+            <div>
+                <h1>CRM Tool</h1>
+                <h2>Listing Customers - { customers.length }</h2>
+                <button onClick={ handleSearch }>Search</button>
+
+                <ul>
+                    {
+                        customers.map(function(ele){
+                            return <li key={ele.id}>{ele.name} - {ele.email} - {ele.mobile}</li>
+                        })
+                    }
+                </ul>
+
+                {term && (
+                    <div>
+                        <h2>Search Reasult for - {term}</h2>
+                        {filteredCustomers().map(function(ele){
+                            return <li key={ele.id}>{ele.name} - {ele.email} - {ele.mobile}</li>
+                        })}
+                    <button onClick={ clearhandle }>Clear Search</button>
+                    </div>
+                ) }
+
+            </div>
+            )
+        }
+
+        ReactDOM.render(<App />, rootHandle)
+          // ReactDOM.render(App(), rootHandle)
+        
+        </script>
+    </body>
+</html>

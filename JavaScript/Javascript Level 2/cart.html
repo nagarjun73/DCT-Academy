@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Counter App
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+        const rootHandle = document.getElementById('root')
+        
+           // Your code goes here 
+           //we are extracting useState method from React
+        const { useState } = React
+
+           //Component - function
+        function App(props){
+        const cartItems = [
+          {id:1, name:'board', quantity:2, price:200},
+          {id:2, name:'marker', quantity:3, price:50},
+        ]
+
+          const result = cartItems.reduce(function(iniVal, curVal){
+            iniVal += curVal.price * curVal.quantity
+            return iniVal
+          }, 0)
+
+            return (
+            <div>
+              <h1>My Cart {cartItems.length}</h1>
+              <ul>
+                {cartItems.map(function(ele){
+                  return <li key={ele.id}> Product Name : {ele.name} - Quantity:{ele.quantity} - Price:{ele.price} - Total: {ele.quantity * ele.price} </li>
+                })}  
+              </ul>
+
+              <h1>total INR {result}</h1>
+            </div>
+            )
+        }
+
+        ReactDOM.render(<App />, rootHandle)
+          // ReactDOM.render(App(), rootHandle)
+        
+        </script>
+    </body>
+</html>

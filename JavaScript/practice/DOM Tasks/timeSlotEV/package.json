@@ -1,0 +1,16 @@
+{
+  "name": "timeslotev",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "parcel ./chargingSlots.html",
+    "build": "parcel build ./chargingSlots.html --dist-dir ./dist"
+  },
+  "author": "nagZ",
+  "license": "ISC",
+  "dependencies": {
+    "date-fns": "^2.30.0",
+    "parcel": "^2.9.2"
+  }
+}

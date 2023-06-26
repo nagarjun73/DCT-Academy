@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Time slot
+        </title>
+    </head>
+    <body>
+        <div id="root">
+            <h1>Time Slot</h1>
+            <div>
+                <div>
+                    <label for="startTime">Start date time:</label>
+                    <input type="datetime-local" id="startTime" name="startTime">
+                </div>
+                <br>
+                <div>
+                    <label for="endTime">End date time:</label>
+                    <input type="datetime-local" id="endTime" name="endTime">
+                </div>
+                <br>
+                <div>
+                    <label for="selectSlot">Select Slot:</label> 
+                    <select name="selectSlot" id="selectSlot"> 
+                        <option value="15">15</option> 
+                        <option value="30">30</option> 
+                        <option value="45">45</option> 
+                        <option value="60">60</option> 
+                    </select>
+                </div>
+                <br>
+                <button id="buttonCreate">Create</button>
+            </div>
+            <div>
+                <h2>Results</h2>
+                <div>
+                    <h6 id="data">data1</h6>
+                </div>
+            </div>
+        </div>
+
+        <script src="/chargingSlots.63aff760.js" defer=""></script>
+    </body>
+</html>

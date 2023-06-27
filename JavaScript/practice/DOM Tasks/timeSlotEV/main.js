@@ -20,7 +20,10 @@ import { add, compareAsc, format, addMinutes, parseISO } from 'date-fns'
         const startTimeMinutes = format(new Date(startTime.value),'mm');
         const endTimeMinutes = format(new Date(endTime.value),'mm');
 
-        let totalSlot = (((endTimehours - startTimeHours) * 60) + (endTimeMinutes - startTimeMinutes)) / slot
+        const startTimeDay = format(new Date(startTime.value),'dd');
+        const endTimeDay = format(new Date(endTime.value),'dd');
+
+        let totalSlot = (((((endTimeDay - startTimeDay) * 24)+(endTimehours - startTimeHours)) * 60) + (endTimeMinutes - startTimeMinutes)) / slot
         
         // const startTime = format(new Date(startTime.value),'hh:mm');
         // let initialT = new Date(startTime.value)

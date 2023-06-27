@@ -33,6 +33,15 @@ import { add, compareAsc, format, addMinutes, parseISO } from 'date-fns'
                 resultArr.push(add)
         }
         console.log(resultArr);
+
+        let newResArr = []
+        for(let i=0; i<resultArr.length; i++){
+            if(resultArr[i+1]){
+                newResArr.push(`${resultArr[i]} - ${resultArr[i+1]}`)
+            }
+        }
+
+        console.log(newResArr);
         
         //Total slots possible
         // let totalSlot = Math.round(((((dayDiff * 24) + hrsLeft )* 60) + minLeft ) / slot)
@@ -40,7 +49,7 @@ import { add, compareAsc, format, addMinutes, parseISO } from 'date-fns'
 
 
         // console.log(totalSlot);
-            dataRes.insertAdjacentHTML('afterbegin', resultArr.map(ele => `<h2>${format(new Date(ele),'dd.MM.yyyy hh:mm')}</h2>`))
+            dataRes.insertAdjacentHTML('afterbegin', newResArr.map(ele => `<button style="display: block;">${ele.slice(3, 21)} - ${ele.slice(61, 79)}</button>`))
         }
 
         buttonCreate.addEventListener("click", displayDate)

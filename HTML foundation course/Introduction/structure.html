@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- METADATA -->
+    <style>
+      p {
+        font-size: 30px;
+        color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- CONTENT -->
+    <p id="param">This is Paragraph</p>
+    <script>
+      const para = document.getElementById('param')
+      let handleClick = function(){
+        para.innerHTML = 'You clicked it'
+      }
+      para.addEventListener('click', handleClick)
+    </script>
+  </body>
+</html>

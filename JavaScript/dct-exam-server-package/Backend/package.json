@@ -1,0 +1,11 @@
+{
+  "name": "exam-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "data.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Nagz",
+  "license": "ISC"
+}

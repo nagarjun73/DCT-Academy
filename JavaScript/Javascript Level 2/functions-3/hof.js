@@ -72,6 +72,7 @@ console.log(fruits.last());
 // })
 
 //Filter
+/*
 Array.prototype.dctFilter = function(callback){
   let fil = []
   for(let i=0; i<this.length; i++){
@@ -86,16 +87,15 @@ let fil1 = arr.dctFilter(function(ele){
 })
 
 console.log(fil1);
-
+*/
 
 //Map
-/*
+
 Array.prototype.dctMap = function(callback){
   let map = []
   for(let i=0; i<this.length; i++){
-    if(callback(this[i], i, this)){
+    callback(this[i], i, this)
       map.push(this[i])
-    }
   }
   return map
 }
@@ -104,4 +104,3 @@ let map1 = arr.dctMap(function(ele){
 })
 
 console.log(map1);
-*/

@@ -17,11 +17,23 @@
         alert(`Welcome to the guess Game, ${name} !!!`)
 
         const target = Math.ceil(Math.random() * 100)
-        
         const maxGuess = 10
+        let won = false
 
         for(let i=0; i<maxGuess; i++){
           let guess = prompt(`Guess Number (${maxGuess - i} chances left)`)
+          if(guess < target){
+            console.log('Oops!!! Your guess was low');
+          } else if(guess > target){
+            console.log('Oops!!! Your guess was high');
+          } else if(parseInt(guess) === target){
+            console.log(`Good Job, ${name}. You guessed in ${i + 1} guesses`);
+            won = true
+            break
+          }
+        }
+        if(!won){
+          console.log(`Sorry. You didn't get my number. My Number was ${target}`);
         }
         
       }

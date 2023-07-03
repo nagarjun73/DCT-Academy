@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign-up</title>
+</head>
+<body>
+  <h1>Subscription Form</h1>
+  <form>
+    <label for="username">username</label> <br/>
+    <input type="text" name="username" id="username"/> <br/>
+
+    <label for="email">email</label> <br/>
+    <input type="text" name="email" id="email"/> <br/>
+
+    <label>gender</label><br>
+    <input type="radio" name="gender" value="male" id="male"><label for="male">male</label>
+    <input type="radio" name="gender" value="female" id="female"/><label for="female">female</label> <br>
+
+    <label>Interests</label><br>
+    <input type="checkbox" name="interest[0]" value="javascript" id="javascript" /><label for="javascript">javascript</label>
+
+    <input type="checkbox" name="interest[1]" value="python" id="python" /><label for="python">python</label>
+
+    <input type="checkbox" name="interest[2]" value="ruby" id="ruby" /><label for="ruby">ruby</label><br>
+
+    <input type="submit"/>
+  </form>
+</body>
+</html>

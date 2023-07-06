@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+
+    </title>
+  </head>
+  <body>
+    <h1>Hashtag Generator</h1>
+    <h1 id="output">Result - </h1>
+    <script>
+      const str = prompt("Enter a string")
+
+      if(str){
+        let result = '#'
+        const word = str.split(' ')
+
+        // word.forEach(function(ele){
+        //   result += ele.charAt(0).toUpperCase() + ele.slice(1).toLowerCase()
+        // })
+
+        for(const ele of word){
+          result += ele.charAt(0).toUpperCase() + ele.slice(1).toLowerCase()
+        }
+
+        const outputHandle = document.getElementById("output")
+        outputHandle.textContent = outputHandle.textContent + result
+      }
+    </script>
+  </body>
+</html>

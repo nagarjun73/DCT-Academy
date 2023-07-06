@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Appointment Schedular</title>
+  </head>
+
+  <body>
+    <h2>Total Appointments - <span id="count"></span></h2>
+    <ul id="listing">
+
+    </ul>
+
+    <script>
+      const appointments = [
+        {id:1, name:'Adam', mobile:'9587234815', dateTime:'2023-07-06 10:45 AM'},
+        {id:1, name:'Sara', mobile:'8476197512', dateTime:'2023-07-06 11:00 AM'},
+        {id:1, name:'John', mobile:'9784512365', dateTime:'2023-07-06 12:00 PM'}
+      ]
+
+      const countHandle = document.getElementById("count");
+      const listingHandle = document.getElementById("listing")
+      countHandle.textContent = appointments.length
+
+      appointments.forEach((ele) => {
+        const liTag = document.createElement('li');
+        liTag.textContent = `${ele.name} - ${ele.mobile} - ${ele.dateTime}`
+        listingHandle.appendChild(liTag)
+      })
+
+    </script>
+  </body>
+</html>

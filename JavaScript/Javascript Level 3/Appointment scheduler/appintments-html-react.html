@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Appointment App React
+        </title>
+    </head>
+    <body>
+        <div id="root">
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+          
+          const rootHandle = document.getElementById('root')
+
+          const appointments = [
+          {id:1, name:'Adam', mobile:'9587234815', dateTime:'2023-07-06 10:45 AM'},
+          {id:2, name:'Sara', mobile:'8476197512', dateTime:'2023-07-06 11:00 AM'},
+          {id:3, name:'John', mobile:'9784512365', dateTime:'2023-07-06 12:00 PM'}
+          ]
+
+          const ele = (
+          <div>
+            <h2>Total Appointments - {appointments.length}</h2>
+            <ul>
+              {appointments.map((ele) => <li key ={ele.id}>{ele.name} - {ele.mobile} - {ele.dateTime}</li>)}
+            </ul>
+          </div>
+      )
+          
+          ReactDOM.render(ele, rootHandle)
+        </script>
+    </body>
+</html>

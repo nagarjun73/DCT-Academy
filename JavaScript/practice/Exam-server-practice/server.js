@@ -1,25 +1,29 @@
-const express = require('express');
-const mysql = require('mysql2');
+import express from 'express'
+import mysql2 from 'mysql2'
 
 const app = express();
 
-const pool = mysql.createPool({
-  host:'127.0.0.1',
+const connection = mysql2.createConnection({
+  host:'localhost',
   user:'root',
-  password:'',
+  password:'root',
   database:'banking_system'
-}).promise()
+})
 
-const 
+const PORT = 3030
+app.listen(PORT, function(){
+  console.log(`http//:localhost:${PORT}`);
+  console.log('Listening........');
+  connection.connect((err) => {
+    if(err) throw err;
+    console.log("DB connected");
+  })
+})
 
-// app.get("/users", (req, res) => {
-//   const sql = "SELECT * FROM users"
-//   db.query(sql, (err, data) => { 
-//     if(err) return res.json("Error");
-//     return res.json(data)
-//   })
-// })
-
-// app.listen(3030, function(){
-//   console.log('Listening........');
-// })
+app.get("/users", (req, res) => {
+  const sql = "SELECT * FROM customers_table"
+  connection.query(sql, (err, data) => { 
+    if(err) throw err;
+    res.send(data)
+  })
+})

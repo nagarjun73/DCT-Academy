@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="./JS/react.development.js"></script>
+    <script src="./JS/react-dom.development.js"></script>
+    <script src="./JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+    const data = {
+      source: 'bangalore',
+      destination: 'mysore',
+      distance: '140 kms',
+      duration: '3 hours 30 mins'
+      }
+
+    const ele = <p>The Distance between {data.source} and {data.destination} is {data.distance} and the time taken to travel is {data.duration}</p>
+
+    // const ele = <p>{JSON.stringify(data)}</p>
+
+      ReactDOM.render(ele, rootHandle)
+    </script>
+  </body>
+</html>

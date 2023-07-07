@@ -1,0 +1,33 @@
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="./JS/react.development.js"></script>
+    <script src="./JS/react-dom.development.js"></script>
+    <script src="./JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      const user = {
+          first_name: 'Joseph', 
+          email: 'joseph@gmail.com', 
+          avatar: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.lbU5wn0FtxRVzV-c9_jAkAHaEK%26pid%3DApi&f=1&ipt=ff2371cb2e3b37553eca445da48b4c5971e4e5c474a1bb3117b532d214972eb4&ipo=images'
+          }
+          
+      const ele = (
+        <img src={user.avatar} alt={user.first_name} />
+      )
+
+      ReactDOM.render(ele, rootHandle)
+    </script>
+  </body>
+</html>

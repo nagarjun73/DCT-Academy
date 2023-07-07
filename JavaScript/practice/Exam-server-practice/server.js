@@ -12,8 +12,7 @@ const connection = mysql2.createConnection({
 
 const PORT = 3030
 app.listen(PORT, function(){
-  console.log(`http//:localhost:${PORT}`);
-  console.log('Listening........');
+  console.log(`http://localhost:${PORT}`);
   connection.connect((err) => {
     if(err) throw err;
     console.log("DB connected");

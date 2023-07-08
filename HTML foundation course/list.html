@@ -2,18 +2,37 @@
 <html>
   <head>
     <title>
-
+      HashTag Gen
     </title>
   </head>
   <body>
     <h1>Hashtag Generator</h1>
-    <h1 id="output">Result - </h1>
-    <script>
-      const str = prompt("Enter a string")
+    <h1>Result -</h1> 
+    <ul id="output">
+    </ul>
+    <button id="btn">Add</button>
+    <button id="delBtn">Delete</button>
 
-      if(str){
+
+    <script>
+      const btn = document.getElementById("btn")
+      const delBtn = document.getElementById("delBtn")
+        const outputHandle = document.getElementById("output")
+
+
+      if(localStorage.getItem("outStr")){
+        console.log(localStorage.getItem("outStr"))
+        outputHandle.innerHTML = outputHandle.textContent + localStorage.getItem("outStr");
+      }
+      let strFun = function(){
+        let outStr = ""
+        let str  = prompt("Enter a string") 
+        outStr += String(str)
+        console.log(outStr);
+
+        if(outStr){
         let result = '#'
-        const word = str.split(' ')
+        const word = outStr.split(' ')
 
         // word.forEach(function(ele){
         //   result += ele.charAt(0).toUpperCase() + ele.slice(1).toLowerCase()
@@ -23,9 +42,20 @@
           result += ele.charAt(0).toUpperCase() + ele.slice(1).toLowerCase()
         }
 
-        const outputHandle = document.getElementById("output")
-        outputHandle.textContent = outputHandle.textContent + result
+        const createList = document.createElement("li");
+        outputHandle.appendChild(createList).textContent =  result
+
+        localStorage.setItem("outStr", outputHandle.innerHTML);
       }
+      }
+
+      const delFun = function(){
+        localStorage.setItem("outStr", '');
+        outputHandle.innerHTML = ''
+      }
+
+      btn.addEventListener('click', strFun)
+      delBtn.addEventListener('click', delFun)
     </script>
   </body>
 </html>

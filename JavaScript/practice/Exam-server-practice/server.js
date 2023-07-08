@@ -1,5 +1,6 @@
 import express from 'express'
 import mysql2 from 'mysql2'
+import cors from 'cors'
 
 const app = express();
 
@@ -9,6 +10,8 @@ const connection = mysql2.createConnection({
   password:'root',
   database:'banking_system'
 })
+
+app.use(cors())
 
 const PORT = 3030
 app.listen(PORT, function(){

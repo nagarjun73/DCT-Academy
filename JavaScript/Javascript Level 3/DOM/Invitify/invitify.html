@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Invitify</title>
+  </head>
+  
+  <body>
+    <button onclick="handleClick()">Click Me</button>
+    <h1>Invitify</h1>
+    <h2>Invite List - <span id="count"></span></h2>
+    <ul id="listing">
+    </ul>
+
+    <h2>Add Invitee</h2>
+
+    <form id="myForm">
+      <label for="name">Name</label><br>
+      <input type="text" id="name" name="name"><br>
+
+      <label for="mobile">Mobile</label><br>
+      <input type="number" id="mobile" name="mobile"><br>
+
+      <input type="submit"/>
+    </form>
+
+    <script>
+      <!-- Inline Even Handler-->
+      function handleClick(){
+        alert("U clicked me")
+      }
+
+      const contacts = []
+
+      const countHandle = document.getElementById("count")
+      countHandle.textContent = contacts.length
+
+      const listHandle = document.getElementById("listing");
+      const myFormHandle = document.getElementById("myForm");
+      const nameHandle = document.getElementById("name");
+      const mobilehandle = document.getElementById("mobile");
+
+      myFormHandle.addEventListener('submit', function(e){
+        e.preventDefault()
+        console.log(e.target.name.value);
+
+      const obj = {
+          id: Number(new Date()),
+          name:nameHandle.value,
+          mobile:mobilehandle.value,
+          isAttending:true
+        }
+
+      contacts.push(obj)
+      countHandle.textContent = contacts.length
+
+      const liTag = document.createElement('li')
+      liTag.textContent = `${obj.name} - ${obj.mobile}`
+      listHandle.appendChild(liTag)
+
+      //reset form
+      nameHandle.value = ''
+      mobilehandle.value = ''
+      })
+
+
+      nameHandle.addEventListener('blur', function(){
+        if(nameHandle.value.length === 0){
+          alert("name is required")
+        }
+      })
+
+      mobilehandle.addEventListener('blur', function(){
+        if(mobilehandle.value.length === 0){
+          alert("number is required")
+        }
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Local storage</title>
+  </head>
+  
+  <body>
+    <button onclick="clickHandle()">Add Task</button>
+    <h2>Hashtags -- <span id="numTask"></span></h2>
+    <ul id="ulHandle">
+      
+    </ul>
+
+    <h2>Trending</h2>
+    <ul id="trendHandle">
+
+    </ul>
+
+    <script>
+      const ulHandle = document.getElementById("ulHandle")
+      const numTask = document.getElementById("numTask")
+      const trendHandle = document.getElementById("trendHandle")
+      const tags = localStorage.getItem('tags') ? JSON.parse(localStorage.getItem('tags')) :[]
+      //access the value in local storage
+      numTask.textContent = tags.length
+      console.log(tags);
+
+      //Render tags from local storage
+      tags.map(function(ele){
+          let liTag = document.createElement('li');
+          liTag.textContent = ele['hashedString']
+          ulHandle.appendChild(liTag);
+        })
+
+      // wordtag
+      let wordTags = {}
+      console.log(wordTags);
+      tags.forEach(function(ele){
+        let eleSplit = ele['originalString'].split(' ')
+        for(let i=0; i<eleSplit.length; i++){
+          if(wordTags.hasOwnProperty(eleSplit[i])){
+            wordTags[eleSplit[i]] += 1
+          }else{
+            wordTags[eleSplit[i]] = 1
+          }
+        }
+      })
+
+      //rendering wordag
+      let maxNum = 0
+      Object.keys(wordTags).forEach(function(ele){
+        if(wordTags[ele] > maxNum){
+          maxNum = wordTags[ele]
+        } 
+      })
+
+      trendAscArr = []
+      let arrKey = Object.keys(wordTags)
+      for(let k=0; k<arrKey.length; k++){
+        if(trendAscArr.length < 5){
+          for(let h=0; h<arrKey.length; h++){
+            if(wordTags[arrKey[h]] == arrKey.length - k){
+              trendAscArr.push([arrKey[h], arrKey.length - k])
+            }
+          }
+        }else{
+            break
+        }
+
+      }
+      console.log(trendAscArr);
+      
+      trendAscArr.map(function(ele){ 
+        let divTag = document.createElement('div'); 
+        divTag.textContent = ele[0].toUpperCase()
+        divTag.style.fontSize= `${ele[1] * 15}px`;
+        trendHandle.appendChild(divTag); 
+      })
+
+
+      //Add task even handle
+      function clickHandle(){
+        const objTag = {id:Number(new Date())}
+        const valTask = prompt("Enter task");
+
+        //Adding to obj original
+        objTag['originalString'] = valTask
+
+        //converting to task
+        if(valTask){
+          const splitVal = valTask.split(' ')
+          let res = '#'
+          splitVal.forEach(ele => {
+            res += ele.charAt(0).toUpperCase() + ele.slice(1)
+          })
+          
+
+          //Adding to Obj hashed
+          objTag['hashedString'] = res
+          tags.push(objTag);
+            let liTag = document.createElement('li');
+            liTag.textContent = res
+            ulHandle.appendChild(liTag);
+            numTask.textContent = tags.length
+            localStorage.setItem('tags', JSON.stringify(tags)) //stores value
+          }
+        }
+    </script>
+  </body>
+</html>

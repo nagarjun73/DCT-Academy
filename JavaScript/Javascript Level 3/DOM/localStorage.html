@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Local storage</title>
+  </head>
+  
+  <body>
+    <h2>Tasks -- <span id="numTask"></span></h2>
+    <ul id="ulHandle">
+      
+    </ul>
+    <button onclick="clickHandle()">Add Task</button>
+    <script>
+      const ulHandle = document.getElementById("ulHandle")
+      const numTask = document.getElementById("numTask")
+      const tasks = localStorage.getItem('tasks') ? JSON.parse(localStorage.getItem('tasks')) :[]
+      //access the value in local storage
+      numTask.textContent = tasks.length
+      console.log(tasks);
+      tasks.map(function(ele){
+          let liTag = document.createElement('li');
+          liTag.textContent = ele
+          ulHandle.appendChild(liTag);
+        })
+
+      function clickHandle(){
+        const valTask = prompt("Enter task");
+        if(valTask){
+          tasks.push(valTask);
+          console.log(tasks);
+            let liTag = document.createElement('li');
+            liTag.textContent = valTask
+            ulHandle.appendChild(liTag);
+            numTask.textContent = tasks.length
+            localStorage.setItem('tasks', JSON.stringify(tasks)) //stores value
+          }
+        }
+
+        //localStorage.removeItem('age') -- one specific key pair
+        //localStorage.clear() -- removers everything
+    </script>
+  </body>
+</html>

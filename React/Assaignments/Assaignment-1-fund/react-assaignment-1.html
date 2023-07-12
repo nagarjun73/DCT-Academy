@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Display Users 
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle = document.getElementById('root')
+            // Your code goes here 
+            const users =  [
+            { "id": 1, "email": "george@gmail.com", "first_name": "George", "avatar": "https://randomuser.me/api/portraits/men/32.jpg" },
+            { "id": 2, "email": "weaver@gmail.com", "first_name": "Weaver", "avatar": "https://randomuser.me/api/portraits/men/46.jpg" },
+            { "id": 3, "email": "wong@gmail.com", "first_name": "Wong", "avatar": "https://randomuser.me/api/portraits/men/36.jpg" },
+            { "id": 4, "email": "eve@gmail.com", "first_name": "Eve", "avatar": "https://randomuser.me/api/portraits/women/79.jpg" }
+            ]
+
+            const ele = (
+                <div>
+                    <h1 style={{color: 'red'}}>EXAMPLE OUTPUT</h1> 
+                    <hr/>
+                    <h3>Listing Users - {users.length}</h3>
+                    <table border = '1'>
+                        <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>Avatar</th>
+                                <th>First Name</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            { users.map((ele) => {
+                                return (
+                                    <tr key={ele.id}>
+                                    <td>{ele.id}</td>
+                                    <td><img src={ele.avatar} alt={ele.first_name}/></td>
+                                    <td>{ele.first_name}</td>
+                                    <td>{ele.email}</td>
+                                    </tr>
+                                )
+                            }) }
+                        </tbody>
+                    </table>
+                </div>
+                )
+                
+                ReactDOM.render(ele, rootHandle)
+        </script>
+    </body>
+</html>

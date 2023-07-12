@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Sample Title 
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+           const rootHandle = document.getElementById('root')
+           
+           // Your code goes here 
+            const colors = {
+                red: ['energy', 'strength', 'power', 'courage'],
+                blue: ['loyalty', 'trust', 'stability', 'confidence'],
+                orange: ['excitment', 'fun', 'haste', 'action'],
+                yellow: ['cheerfulness', 'happiness', 'joy', 'optimism']
+              }
+
+              const colorHandle = function(colors){
+                const arr = []
+                for(const key in colors){
+                  arr.push(<li key={key}> {key} - {colors[key].join(", ")} </li>)
+                }
+                return arr
+              }
+
+              const ele = (
+                <div>
+                  <h1>Colors and it's symbol - Object</h1>
+                  <ul>
+                    { colorHandle(colors) }
+                  </ul>
+                </div>
+              )
+
+              ReactDOM.render(ele, rootHandle)
+        </script>
+    </body>
+</html>

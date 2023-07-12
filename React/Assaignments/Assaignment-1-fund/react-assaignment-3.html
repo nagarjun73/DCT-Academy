@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Single Color
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+           const rootHandle = document.getElementById('root')
+           
+           // Your code goes here 
+          const color = {
+            red: ['energy', 'strength', 'power', 'courage']
+            }
+
+            const outputStr = function(){
+              for(const key in color){
+                let res = `${key[0].toUpperCase()}${key.slice(1)} - ${color[key].join(", ")}`
+                return res
+              }
+            }
+
+            const ele = (
+                <div>
+                    <h1 style={{color: 'red'}}>EXAMPLE OUTPUT</h1>
+                    <hr/>
+                    <h1>{ outputStr() }</h1>
+                </div>
+            )
+
+            ReactDOM.render(ele, rootHandle)
+        </script>
+    </body>
+</html>

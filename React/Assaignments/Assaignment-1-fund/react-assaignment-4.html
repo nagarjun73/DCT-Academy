@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Single Color
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+           const rootHandle = document.getElementById('root')
+           
+           // Your code goes here 
+          const colors = [
+             { color: 'red', symbols: ['energy', 'strength', 'power', 'courage'] },
+             { color: 'blue', symbols: ['loyalty', 'trust', 'stability', 'confidence']},
+             { color: 'orange', symbols: ['excitment', 'fun', 'haste', 'action']},
+             { color: 'yellow', symbols: ['cheerfulness', 'happiness', 'joy', 'optimism']}
+            ]
+
+            const ele = (
+                <div>
+                    <h1>Colors & it's symbols</h1>
+                    <ul>
+                      { colors.map(function(ele, i){
+                          return <li key={i}> {ele.color} - {ele.symbols.join(", ")} </li>
+                      }) }
+                    </ul>
+                </div>
+            )
+            ReactDOM.render(ele, rootHandle)
+        </script>
+    </body>
+</html>

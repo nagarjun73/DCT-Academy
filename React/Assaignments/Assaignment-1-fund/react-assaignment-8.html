@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Sample Title 
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+           const rootHandle = document.getElementById('root')
+           
+           // Your code goes here 
+            const colors = [   
+                  { color: 'red', symbols: ['energy', 'strength', 'power', 'courage']},
+                  { color: 'blue', symbols: ['loyalty', 'trust', 'stability', 'confidence']},   
+                  { color: 'orange', symbols: ['excitment', 'fun', 'haste', 'action'] },
+                  { color: 'yellow', symbols: ['cheerfulness', 'happiness', 'joy', 'optimism'] } 
+              ]
+
+            const ele = (
+              <div>
+                <h1>All Colors</h1>
+                <ol>
+                  { colors.map((ele, i) => {
+                    return <li key={i}> {ele.color} </li>
+                  }) }
+                </ol>
+
+                <h1>All Symbols</h1>
+                <ol>
+                  { colors.map((ele, i) => {
+                    let synMap = ele.symbols.map((sym, i)=>{
+                    return <li key={i} style={{color:ele.color}}> {sym} </li>
+                    })
+                    return synMap
+                  })}
+                </ol>
+              </div>
+            )
+
+            ReactDOM.render(ele, rootHandle)
+        </script>
+    </body>
+</html>

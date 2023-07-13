@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="./JS/react.development.js"></script>
+    <script src="./JS/react-dom.development.js"></script>
+    <script src="./JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      const info = {
+        name:'Nagarjun',
+        phone:5454534654,
+        email:'nags@gmail.com',
+        website:"http://www.nags.com"
+      }
+
+      function Contact(props){
+        return (
+          <div>
+            <h2>{props.name}</h2>
+            <p>{props.phone}</p>
+            <p>{props.email}</p>
+          </div>
+        )
+      }
+
+      const ele = <Contact name={info.name} phone={info.phone} email={info.email}/>
+
+      ReactDOM.render(ele, rootHandle)
+    </script>
+  </body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Total Component 
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+           const rootHandle = document.getElementById('root')
+           
+           // Your code goes here 
+          const prices = [150,250,200,400]
+
+          function Total(props){
+            return <h1>Total Bill = {props.total.reduce((ini,fin) => ini + fin)}</h1>
+          }
+
+          const ele = <Total total={prices}/>
+
+          ReactDOM.render(ele, rootHandle)
+        </script>
+    </body>
+</html>

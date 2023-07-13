@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="./JS/react.development.js"></script>
+    <script src="./JS/react-dom.development.js"></script>
+    <script src="./JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      function Greet(props){
+        return <h1>hii {props.name} from {props.company}</h1>
+      }
+
+      const ele = Greet({name:"Nagarjun", company:"Apple"})
+      // const ele = <Greet name="Nagarjun" company="Apple"/>
+
+      ReactDOM.render(ele, rootHandle)
+    </script>
+  </body>
+</html>

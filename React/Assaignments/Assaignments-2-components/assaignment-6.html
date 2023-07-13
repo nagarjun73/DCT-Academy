@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Article Likes
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+           const rootHandle = document.getElementById('root')
+           
+           // Your code goes here 
+          const articles = [
+              { id: 1, title: 'Article 1', meta: { likes: 10, dislikes: 0} },
+              { id: 2, title: 'Article 2', meta: { likes: 20, dislikes: 10 }},
+              { id: 3, title: 'Article 3', meta: { likes: 5, dislikes: 0 } }
+          ]
+
+          function ArticlesList(props){
+            return <li>{props.title} - likes {props.likes}, dislikes - {props.dislikes}</li>
+          }
+
+          const ele = (
+            <ul>
+              {articles.map((ele) => {
+                return <ArticlesList key={ele.id} title={ele.title} likes={ele.meta.likes} dislikes={ele.meta.dislikes}/>
+              })}
+            </ul>
+          )
+
+          ReactDOM.render(ele, rootHandle)
+        </script>
+    </body>
+</html>

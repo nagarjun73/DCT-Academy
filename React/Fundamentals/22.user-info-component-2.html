@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="./JS/react.development.js"></script>
+    <script src="./JS/react-dom.development.js"></script>
+    <script src="./JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      const user1 = {
+        name:"Nagarjun",
+        email:"nagarjun@gmail.com",
+        avatar:"https://vgraphs.com/images/agents/yoru-avatar.jpg"
+      }
+
+      const user2 = {
+        name:"Nagin",
+        email:"nagin@gmail.com",
+        avatar:"https://static.valorantstats.xyz/agent-headshots/neon-headshot.png"
+      }
+
+      function UserInfo(props){
+        return (
+          <div>
+            <img src={props.avatar} alt={props.name}/>
+            <h3>{props.name}</h3>
+          </div>
+        )
+      }
+
+      const ele = (
+          <div>
+            <UserInfo avatar={user1.avatar} name={user1.name} />
+            <UserInfo avatar={user2.avatar} name={user2.name} />
+          </div>
+      )
+
+      ReactDOM.render(ele, rootHandle)
+    </script>
+  </body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            User Table
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+           const rootHandle = document.getElementById('root')
+           
+           // Your code goes here 
+          const users = [
+                  { id: 1, name: 'user1', email: 'u1@gmail.com'},
+                  { id: 2, name: 'user2', email: 'u2@gmail.com' },
+                  { id: 3, name: 'user3', email: 'u3@gmail.com' }
+                ]
+
+          function UserTable(props){
+            return (
+                  <tr>
+                    <td>{ props.id }</td>
+                    <td>{ props.name }</td>
+                    <td>{ props.email }</td>
+                  </tr>
+            )
+          }
+
+          const ele = (
+            <table>
+                <thead>
+                  <tr>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>email</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  { users.map((ele) => {
+                    return (
+                      <UserTable key={ele.id} id={ele.id} name={ele.name} email={ele.email}/>
+                    )
+                  }) }
+                </tbody>
+            </table>
+          )
+
+          ReactDOM.render(ele, rootHandle)
+        </script>
+    </body>
+</html>

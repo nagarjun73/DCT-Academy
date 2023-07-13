@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="./JS/react.development.js"></script>
+    <script src="./JS/react-dom.development.js"></script>
+    <script src="./JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      const users = [
+                { id: 1, email: "george@gmail.com", first_name: "George", avatar: "https://vgraphs.com/images/agents/reyna-avatar.jpg" },
+                { id: 2, email: "weaver@gmail.com", first_name: "Weaver", avatar: "https://files.cults3d.com/uploaders/14684840/illustration-file/fc596d42-0318-4bef-9415-cd7245a926bb/omen-avatar.jpg" },
+                { id: 3, email: "wong@gmail.com", first_name: "Wong", avatar: "https://vgraphs.com/images/agents/jett-avatar.jpg" },
+                { id: 4, email: "eve@gmail.com", first_name: "Eve", avatar: "https://static.valorantstats.xyz/agent-headshots/neon-headshot.png" }
+                ]
+
+      function UserInfo(props){
+        return (
+          <div>
+            <img src={props.avatar} alt={props.name}/>
+            <h3>{props.name}</h3>
+            <hr/>
+          </div>
+        )
+      }
+
+      const ele = (
+          <div>
+            {users.map((user) =>{
+              return (
+                <UserInfo key={user.id} name={user.first_name} avatar={user.avatar}/>
+              )
+            })}
+          </div>
+      )
+
+      ReactDOM.render(ele, rootHandle)
+    </script>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gender Finder</title>
+  </head>
+  <body>
+    <button onclick="addUserHandle()">Enter Student Name</button>
+
+    <h1>Total Students - <span id="totalHandle">0</span></h1>
+
+    <div >
+      <h2 style="display: inline-block;">Male -- <span id="maleHandle">0</span></h2> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <h2 style="display: inline-block;">Female -- <span id="femaleHandle">0</span></h2>
+    </div>
+
+    <ul id="listStudents">
+
+    </ul>
+    <script>
+      const totalHandle = document.getElementById("totalHandle")
+      const maleHandle = document.getElementById("maleHandle")
+      const femaleHandle = document.getElementById("femaleHandle")
+      const listStudents = document.getElementById("listStudents")
+
+
+      function addUserHandle(){
+        const value = prompt("Type Student Name")
+
+        //sending xhr request
+        const xhr = new XMLHttpRequest()
+        xhr.open('GET', `https://api.genderize.io?name=${value}`)
+        xhr.send()
+
+        xhr.onload = function(){
+          const studentObj = JSON.parse(xhr.responseText);
+          if(studentObj){
+            totalHandle.textContent ++
+            const liTag = document.createElement('li')
+            liTag.textContent = studentObj.name[0].toUpperCase() + studentObj.name.slice(1) + ' (' + studentObj.gender + ')'
+            listStudents.appendChild(liTag)
+
+            if(studentObj.gender === 'male'){
+              maleHandle.textContent ++
+            }else if(studentObj.gender === 'female'){
+              femaleHandle.textContent ++
+            }
+          }
+          
+        }
+
+
+      }
+    </script>
+  </body>
+</html>

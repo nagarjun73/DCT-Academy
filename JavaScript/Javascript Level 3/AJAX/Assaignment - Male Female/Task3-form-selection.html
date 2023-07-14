@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gender Finder</title>
+  </head>
+  <body>
+    <h1>Register</h1>
+    <form id="myForm">
+        <label for="name">Name</label><br/>
+        <input type="text" id="name" /><br/>
+
+        <label for="email">Email</label><br/>
+        <input type="email" id="email" /><br/>
+
+        <input type="radio"  name="gender" value="male" id="male">
+        <label for="male">Male</label>
+
+        <input type="radio" name="gender" value="female" id="female">
+        <label for="female">Female</label> <br>
+
+        <input type="submit"/>
+    </form>
+    
+    <script>
+        const nameHandle = document.getElementById("name")
+        const myFormHandle = document.getElementById("myForm")
+        const maleHandle = document.getElementById("male")
+        const femaleHandle = document.getElementById("female")
+
+      function registerHandle(){
+        const xhr = new XMLHttpRequest()
+        xhr.open('GET', `https://api.genderize.io?name=${nameHandle.value}`)
+        xhr.send()
+        xhr.onload = function(){
+          const nameObj = JSON.parse(xhr.responseText);
+
+          if(nameObj.gender === 'male'){
+            maleHandle.checked = true;
+          }else if(nameObj.gender === 'female'){
+            femaleHandle.checked = true;
+          }
+          console.log(nameObj);
+        }
+      }
+      
+      nameHandle.addEventListener('blur', registerHandle)
+    </script>
+  </body>
+</html>

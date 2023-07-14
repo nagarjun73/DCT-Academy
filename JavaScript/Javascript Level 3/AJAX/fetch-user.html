@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fetch user</title>
+  </head>
+  <body>
+    <button onclick="handleClick(event)">Fetch user data</button>
+
+    <ul id="listing">
+
+    </ul>
+
+    <script>
+      const listHandle = document.getElementById('listing')
+
+      function handleClick(event){
+        const xhr = new XMLHttpRequest() //fetch api || axios
+        xhr.open('GET', 'https://jsonplaceholder.typicode.com/users')
+        xhr.send()
+
+        xhr.onload = function(){
+          event.target.setAttribute('disabled', true)
+          if(xhr.status == 200){
+            const users = JSON.parse(xhr.responseText)
+            console.log(users);
+  
+            users.forEach((ele) => {
+              const liTag = document.createElement('li')
+              liTag.textContent = `${ele.name}`
+              listHandle.appendChild(liTag)
+            })
+          }else if(xhr.status == 404){
+            alert("Data not found")
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

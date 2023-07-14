@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gender Finder</title>
+  </head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+  <body>
+    <button onclick="addUserHandle()">Enter Student Name</button>
+
+    <h1>Total Students - <span id="totalHandle">0</span></h1>
+    <h2 >Male -- <span id="maleHandle">0</span>&nbsp;&nbsp;&nbsp;&nbsp;Female -- <span id="femaleHandle">0</span></h2>
+
+    <ul id="listStudents">
+
+    </ul>
+
+    <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+
+    <script>
+      const totalHandle = document.getElementById("totalHandle")
+      const maleHandle = document.getElementById("maleHandle")
+      const femaleHandle = document.getElementById("femaleHandle")
+      const listStudents = document.getElementById("listStudents")
+
+      const studentArr = localStorage.getItem('students') ? JSON.parse(localStorage.getItem('students')):[]
+      
+      //Initial Render
+      studentArr.map((ele) =>{
+            const liTag = document.createElement('li')
+            liTag.textContent = ele.name[0].toUpperCase() + ele.name.slice(1) + ' (' + ele.gender + ')'
+            listStudents.appendChild(liTag)
+
+            totalHandle.textContent ++
+            maleHandle.textContent = studentArr.filter(ele => ele.gender === 'male').length
+            femaleHandle.textContent = studentArr.filter(ele => ele.gender === 'female').length
+      })
+      //chart js
+      function createChart(){
+      let xValues = ["Male","Female"];
+      let maleCount = studentArr.filter(ele => ele.gender === 'male').length
+      let femaleCount = studentArr.filter(ele => ele.gender === 'female').length
+      let yValues = [maleCount, femaleCount];
+
+      new Chart("myChart", {
+              type: "pie",
+              data: {
+                labels: xValues,
+                datasets: [{
+                  backgroundColor: [
+                    "#00aba9",
+                    "#b91d47",
+                  ],
+                  data: yValues
+                }]
+              },
+              options: {
+                title: {
+                  display: true,
+                  text: "Male Female Ratio"
+                }
+              }
+            })
+          }
+        createChart()
+    
+      //Add User
+      function addUserHandle(){
+        const value = prompt("Type Student Name")
+
+        //sending xhr request
+        const xhr = new XMLHttpRequest()
+        xhr.open('GET', `https://api.genderize.io?name=${value}`)
+        xhr.send()
+
+        xhr.onload = function(){
+          const studentObj = JSON.parse(xhr.responseText);
+
+          //condtion to check valid user
+          if(studentObj && studentObj.gender !== null){
+            studentArr.push(studentObj)
+            const liTag = document.createElement('li')
+            liTag.textContent = studentObj.name[0].toUpperCase() + studentObj.name.slice(1) + ' (' + studentObj.gender + ')'
+            listStudents.appendChild(liTag)
+            
+            totalHandle.textContent ++
+            maleHandle.textContent = studentArr.filter(ele => ele.gender === 'male').length
+            femaleHandle.textContent = studentArr.filter(ele => ele.gender === 'female').length
+
+          }
+          localStorage.setItem('students', JSON.stringify(studentArr))
+          createChart()
+        }
+        console.log(studentArr);
+      }
+    </script>
+  </body>
+</html>

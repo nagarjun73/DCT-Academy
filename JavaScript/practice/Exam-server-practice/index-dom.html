@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Exam Result Server
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  </head>
+  <body>
+        <div>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+              </tr>
+            </thead>
+            <tbody id="tBody">
+            </tbody>
+          </table>
+            <div>
+              <button>Add user</button>
+              <button>Delete user</button>
+            </div>
+        </div>
+
+    <script>
+      const tBody = document.getElementById("tBody");
+        let xhr = new XMLHttpRequest()
+        xhr.open('GET', `http://localhost:3030/users`)
+        xhr.send()      
+        xhr.onload = function(){
+          const result = JSON.parse(xhr.responseText)
+          const res = result.forEach((ele, i) =>{
+          const rowTag = document.createElement('tr')
+          rowTag.innerHTML = `<th scope="row">${ele.customer_id}</th>
+                              <td>${ele.first_name}</td>
+                              <td>${ele.last_name}</td>`
+          tBody.appendChild(rowTag)
+        })
+        }
+
+        
+    </script>
+  </body>
+</html>

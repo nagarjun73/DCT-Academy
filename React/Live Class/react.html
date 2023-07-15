@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Sample Title 
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+          const rootHandle = document.getElementById('root')
+          
+          const products = [
+              {
+                name: 'iPhone 13 Pro',
+                price: 1299,
+                ratings: [4.5, 4.8, 4.9, 4.7, 4.6]
+              },
+              {
+                name: 'Samsung Galaxy S21 Ultra',
+                price: 1199,
+                ratings: [4.3, 4.7, 4.5, 4.6, 4.4]
+              },
+              {
+                name: 'Sony PlayStation 5',
+                price: 499,
+                ratings: [4.7, 4.9, 4.8, 4.6, 4.7]
+              },
+              {
+                name: 'MacBook Pro M1',
+                price: 1499,
+                ratings: [4.9, 4.8, 4.9, 4.7, 4.9]
+              },
+              {
+                name: 'Nintendo Switch',
+                price: 299,
+                ratings: [4.6, 4.7, 4.5, 4.4, 4.6]
+              }
+            ];
+
+          let avgRating = function(ele){
+            let add = ele.reduce((ini,fin)=>{
+              return ini + fin
+              },0)
+            return (add / ele.length).toFixed(1)
+            }
+          
+          const ele = (
+            <div>
+              <h1>Listing Products - {products.length}</h1>
+              <table border='1'>
+                <thead>
+                  <tr>
+                    <th>name</th>
+                    <th>price</th>
+                    <th>rating</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products.map((ele, i) => {
+                    return (
+                      <tr key={i}>
+                        <td>{ele.name}</td>
+                        <td>{ele.price}</td>
+                        <td>{avgRating(ele.ratings)}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )
+
+          ReactDOM.render(ele, rootHandle)
+        </script>
+    </body>
+</html>

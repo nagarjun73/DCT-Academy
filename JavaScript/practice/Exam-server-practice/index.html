@@ -22,9 +22,9 @@
         
         xhr.onload = function(){
           const result = JSON.parse(xhr.responseText)
+          
           const ele = (
             <div>
-
             <table className="table table-bordered">
                 <thead>
                   <tr>
@@ -34,7 +34,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  
                     {result.map((ele, i) =>(
                       <tr key={i}> 
                         <th scope="row">{ele.customer_id}</th>
@@ -44,7 +43,6 @@
                       ))}
                   </tbody>
             </table>
-                
                 <button>Add user</button>
                 <button>Delete user</button>
                 </div>

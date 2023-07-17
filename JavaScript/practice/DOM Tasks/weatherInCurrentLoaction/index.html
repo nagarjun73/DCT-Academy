@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Current Weather</title>
+  </head>
+  <body>
+    <button onclick="getWeather()">Get Weather</button>
+
+    <h3>&nbsp; Latitude --- <span id="latitude">0</span></h3>
+    <h3>&nbsp; Longitude --- <span id="longitude">0</span></h3>
+
+    <h1 >Temparature - <span id="tempHandle">0</span></h1>
+
+    <div id="map" style="height: 180px;"></div>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
+    <script>
+      const latitudeHandle = document.getElementById("latitude")
+      const longitudeHandle = document.getElementById("longitude")
+      const tempHandle = document.getElementById('tempHandle')
+
+
+      function getWeather(){
+        navigator.geolocation.getCurrentPosition((position) => {
+          const currLatitude = position.coords.latitude
+          const currLongitude = position.coords.longitude
+
+          latitudeHandle.textContent =  currLatitude
+          longitudeHandle.textContent = currLongitude
+
+          const xhr = new XMLHttpRequest()
+          xhr.open('GET', `https://api.open-meteo.com/v1/forecast?latitude=${currLatitude}&longitude=${currLongitude}&current_weather=true&hourly=temperature_2m,relativehumidity_2m,windspeed_10m`)
+          xhr.send()
+          xhr.onload = function(){
+            const resTemp = JSON.parse(xhr.responseText);
+            console.log(resTemp);
+            tempHandle.textContent = resTemp.current_weather.temperature + '* C'
+          }
+
+          //LEAFLET LIBRARY
+
+          let  map = L.map('map').setView([currLatitude, currLongitude], 13);
+
+          L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          }).addTo(map);
+          
+          L.marker([currLatitude, currLongitude]).addTo(map)
+              .bindPopup('Current Location')
+              .openPopup();
+
+            console.log(map);
+          
+        } , function error(msg){
+
+                alert('Please enable your GPS position future.');  
+
+      },{maximumAge:600000, timeout:5000, enableHighAccuracy: true});
+      }
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Sample Title 
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle = document.getElementById('root')
+            
+            // Your code goes here 
+            const tasks = [
+        { id: 1, title: 'Task 1', isCompleted: true },
+        { id: 2, title: 'Task 2', isCompleted: true },
+        { id: 3, title: 'Task 3', isCompleted: false }
+        ]
+
+        function FindElement(props){
+          function handleClick(){
+            const value = Number(prompt("Enter Id"))
+              if(tasks.includes(props.tasks[value-1])){
+                alert(`${props.tasks[value-1].title} - ${props.tasks[value-1].isCompleted}`)
+              }else{
+                alert(`Task with id - ${value} not found`)
+              }
+            }
+
+          return(
+            <button onClick={handleClick}>Find Record by Id</button>
+          )
+        }
+
+        const ele = (
+          <FindElement tasks={tasks}/>
+        )
+
+        ReactDOM.render(ele, rootHandle)
+        </script>
+    </body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Display Random Number 
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle = document.getElementById('root')
+            
+            // Your code goes here 
+            function GenerateRandom (props){
+              
+              function evenHandler(){
+                const randomNumber = Math.ceil(Math.random() * 100)
+                alert(randomNumber)
+              }
+              
+              return (
+                <button onClick={evenHandler}>Generate Random</button>
+              )
+            }
+
+            const ele = (
+              <GenerateRandom/>
+            )
+
+            ReactDOM.render(ele, rootHandle)
+        </script>
+    </body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="./JS/react.development.js"></script>
+    <script src="./JS/react-dom.development.js"></script>
+    <script src="./JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      const users = [
+        {id:1, name:'user1', mail:'user1@gmail.com'},
+        {id:2, name:'user2', mail:'user2@gmail.com'},
+        {id:3, name:'user3', mail:'user3@gmail.com'}
+      ]
+
+      function DisplayUsers(props){
+
+        function showDeatils(user){
+          alert(`${user.name} -- ${user.mail}`)
+        }
+
+        return (
+          <ul>
+              {props.users.map((user) => {
+                return <li key={user.id}>{user.name} <button onClick={() => {showDeatils(user)}}>Show</button> </li>
+              })}
+          </ul>
+        )
+      }
+
+      const ele = (
+        <DisplayUsers users={users}/>
+      )
+
+      ReactDOM.render(ele, rootHandle)
+    </script>
+  </body>
+</html>

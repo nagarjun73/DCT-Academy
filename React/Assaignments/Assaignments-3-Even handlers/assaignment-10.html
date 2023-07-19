@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Find By Id & Completed 
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle = document.getElementById('root')
+            
+            // Your code goes here 
+            const tasks = [
+        { id: 1, title: 'Task 1', isCompleted: true },
+        { id: 2, title: 'Task 2', isCompleted: true },
+        { id: 3, title: 'Task 3', isCompleted: false },
+        { id: 4, title: 'Task 4', isCompleted: false },
+        { id: 5, title: 'Task 5', isCompleted: true }
+    ]
+
+        function TasksList(props){
+
+          function findTaskHandle(){
+            const value = Number(prompt("Enter Id"))
+              if(tasks.includes(props.tasks[value-1])){
+                alert(`${props.tasks[value-1].title} - ${props.tasks[value-1].isCompleted}`)
+              }else{
+                alert(`Task with id - ${value} not found`)
+              }
+          }
+
+          function completedTaskHandle(bool){
+            let completedTask = props.tasks.filter((task) => task.isCompleted === bool)
+            alert(`${completedTask.map((task) => {return task.title})}`)
+          }
+
+          return(
+            <div>
+              <button onClick={findTaskHandle}>Find Task by ID</button>
+              <button onClick={() => {completedTaskHandle(true)}}>Show Completed Tasks</button>
+            </div>
+          )
+        }
+
+        const ele = (
+          <TasksList tasks={tasks}/>
+        )
+
+        ReactDOM.render(ele, rootHandle)
+        </script>
+    </body>
+</html>

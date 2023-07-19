@@ -53,7 +53,8 @@
             }
           
           const ele = (
-            <div>
+            
+          <div>
               <h1>Listing Products - {products.length}</h1>
               <table border='1'>
                 <thead>
@@ -66,19 +67,17 @@
                 <tbody>
                   {products.map((ele, i) => {
                     return (
-                      <tr key={i}>
-                        <td>{ele.name}</td>
-                        <td>{ele.price}</td>
-                        <td>{avgRating(ele.ratings)}
-                        </td>
-                      </tr>
+                    <tr key={i}>
+                      <td>{ele.name}</td>
+                      <td>{ele.price}</td>
+                      <td>{avgRating(ele.ratings)}</td>
+                    </tr>
                     )
                   })}
                 </tbody>
               </table>
             </div>
           )
-
           ReactDOM.render(ele, rootHandle)
         </script>
     </body>

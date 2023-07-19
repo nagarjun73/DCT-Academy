@@ -4,33 +4,49 @@
     <title>Current Weather</title>
   </head>
   <body>
-    <button onclick="getWeather()">Get Weather</button>
+    <button onclick="getWeather()">Get Location</button>
+    <button onclick="saveWeather()">Save Location</button>
+    <button onclick="getDirection()">Get Direction</button>
 
     <h3>&nbsp; Latitude --- <span id="latitude">0</span></h3>
     <h3>&nbsp; Longitude --- <span id="longitude">0</span></h3>
 
-    <h1 >Temparature - <span id="tempHandle">0</span></h1>
+    <h1>Temperature - <span id="tempHandle">0</span></h1>
 
-    <div id="map" style="height: 180px;"></div>
+    <div id="map" style="height: 500px;"></div>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-     crossorigin=""/>
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
 
+    
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-     crossorigin=""></script>
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+    
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
 
     <script>
       const latitudeHandle = document.getElementById("latitude")
       const longitudeHandle = document.getElementById("longitude")
       const tempHandle = document.getElementById('tempHandle')
 
+      const locationLists = []
+      const currentLocation = {}
+
+      let  map = L.map('map').setView([12, 77], 13);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          }).addTo(map);
+
 
       function getWeather(){
         navigator.geolocation.getCurrentPosition((position) => {
           const currLatitude = position.coords.latitude
           const currLongitude = position.coords.longitude
+          currentLocation['latitude'] = currLatitude
+          currentLocation['longitude'] = currLongitude
 
           latitudeHandle.textContent =  currLatitude
           longitudeHandle.textContent = currLongitude
@@ -41,29 +57,44 @@
           xhr.onload = function(){
             const resTemp = JSON.parse(xhr.responseText);
             console.log(resTemp);
-            tempHandle.textContent = resTemp.current_weather.temperature + '* C'
+            const temp = resTemp.current_weather.temperature
+            const unit = resTemp.hourly_units.temperature_2m
+            tempHandle.textContent =  temp + ' ' + unit
+            currentLocation['temparature'] = temp
+            currentLocation['unit'] = unit
           }
 
-          //LEAFLET LIBRARY
-
-          let  map = L.map('map').setView([currLatitude, currLongitude], 13);
-
-          L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-              attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          }).addTo(map);
-          
+          //GET MARKER
           L.marker([currLatitude, currLongitude]).addTo(map)
               .bindPopup('Current Location')
               .openPopup();
-
-            console.log(map);
-          
+              
         } , function error(msg){
-
                 alert('Please enable your GPS position future.');  
 
       },{maximumAge:600000, timeout:5000, enableHighAccuracy: true});
-      }
+      locationLists.push(currentLocation)
+      console.log(map);
+
+    }
+
+    //GET DIRECTION
+    function getDirection(){
+      let dirObj = {
+            waypoints: [
+              L.latLng(currentLocation.latitude, currentLocation.longitude),
+              L.latLng(12.901741, 77.7865837),
+            ]
+          }
+
+          L.Routing.control(dirObj).addTo(map);
+    }
+
+    //Save Waether local
+    function saveWeather(){
+      alert('Saved')
+      localStorage.setItem('weatherData', JSON.stringify(locationLists))
+    }
 
     </script>
   </body>

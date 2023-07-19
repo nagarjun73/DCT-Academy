@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Sample Title 
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle = document.getElementById('root')
+            
+            // Your code goes here 
+            const tasks = [
+        { id: 1, title: 'Task 1', isCompleted: true },
+        { id: 2, title: 'Task 2', isCompleted: true },
+        { id: 3, title: 'Task 3', isCompleted: false },
+        { id: 4, title: 'Task 4', isCompleted: false },
+        { id: 5, title: 'Task 5', isCompleted: true }
+    ]
+
+        function CompletedTasks(props){
+          function handleClick(bool){
+            let completedTask = props.tasks.filter((task) => task.isCompleted === bool)
+            alert(`${completedTask.map((task) => {return task.title})}`)
+            }
+
+          return(
+            <button onClick={() => {handleClick(true)}}>Show Completed Tasks</button>
+          )
+        }
+
+        const ele = (
+          <CompletedTasks tasks={tasks}/>
+        )
+
+        ReactDOM.render(ele, rootHandle)
+        </script>
+    </body>
+</html>

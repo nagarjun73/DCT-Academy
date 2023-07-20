@@ -74,20 +74,31 @@
 
       },{maximumAge:600000, timeout:5000, enableHighAccuracy: true});
       locationLists.push(currentLocation)
-      console.log(map);
+      console.log(locationLists);
 
     }
 
     //GET DIRECTION
     function getDirection(){
-      let dirObj = {
+      const locVal = prompt("Enter Destination")
+      const xhr = new XMLHttpRequest()
+          xhr.open('GET', `https://nominatim.openstreetmap.org/search?q=${locVal}&format=json`)
+          xhr.send()
+          xhr.onload = function(){
+            const result = JSON.parse(xhr.responseText);
+            console.log(result);
+            const latitude = result[0].lat;
+            const longitude = result[0].lon;
+            
+            let dirObj = {
             waypoints: [
               L.latLng(currentLocation.latitude, currentLocation.longitude),
-              L.latLng(12.901741, 77.7865837),
+              L.latLng(13.5187264,77.6880704),
+              L.latLng(latitude,longitude)
             ]
           }
-
           L.Routing.control(dirObj).addTo(map);
+          }
     }
 
     //Save Waether local

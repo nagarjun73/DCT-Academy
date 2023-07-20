@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Sample Title 
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle = document.getElementById('root')
+            
+          const strArr = ['Happy', 'Joy', 'Elated', 'Blissful']
+
+          function App(props){
+            const { data } = props
+            function showHandle(str){
+              let vowelsCount = 0
+              const vowels = 'aeiouAEIOU'
+              for(let i=0; i<str.length; i++){
+                if(vowels.includes(str[i])){
+                  vowelsCount++
+                }
+              }
+              alert(vowelsCount)
+            }
+
+            const totalVowelsHandle = function(){
+              let objCount = {}
+              const vowels = 'aeiou'
+              for(let i=0; i<data.length; i++){
+                for(let j=0; j<data[i].length; j++){
+                  if(vowels.includes(data[i][j].toLowerCase())){
+                  if(objCount.hasOwnProperty(data[i][j].toLowerCase())){
+                    objCount[data[i][j].toLowerCase()]++
+                  }else{
+                    objCount[data[i][j].toLowerCase()] = 1
+                  }
+                }
+                }
+              }
+              alert(JSON.stringify(objCount))
+            }
+
+            return (
+              <div>
+              <ul>
+                {data.map((str, i) => {
+                  return <li key={i}>{str} <button onClick={() => {showHandle(str)}}>Show</button></li>
+                })}
+              </ul>
+              <button onClick={totalVowelsHandle}>Total Vowels</button>
+              </div>
+            )
+          }
+
+          ReactDOM.render(<App data={strArr}/>, rootHandle)
+
+        </script>
+    </body>
+</html>

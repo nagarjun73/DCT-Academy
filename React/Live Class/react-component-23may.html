@@ -6,9 +6,7 @@
         </title>
     </head>
     <body>
-        <div id="root">
-
-        </div>
+        <div id="root"></div>
 
         <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
         <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
@@ -16,18 +14,85 @@
 
         <script type="text/babel">
            const rootHandle = document.getElementById('root')
+
+           const employees = [
+                              { id: 1, name: 'John Doe', department: 'Sales', code: 'EMP001', skills: ['Communication', 'Negotiation'], experience: '5 years' },
+                              { id: 2, name: 'Jane Smith', department: 'Marketing', code: 'EMP002', skills: ['Digital Marketing', 'Market Research'], experience: '3 years' },
+                              { id: 3, name: 'Mike Johnson', department: 'Sales', code: 'EMP003', skills: ['Sales Strategy', 'Client Relationship'], experience: '7 years' },
+                              { id: 4, name: 'Emily Brown', department: 'HR', code: 'EMP004', skills: ['Recruitment', 'Employee Relations'], experience: '4 years' },
+                              { id: 5, name: 'David Wilson', department: 'Marketing', code: 'EMP005', skills: ['Content Marketing', 'SEO'], experience: '2 years' },
+                              { id: 6, name: 'Sarah Davis', department: 'HR', code: 'EMP006', skills: ['Training and Development', 'Performance Management'], experience: '6 years' },
+                              { id: 7, name: 'Michael Lee', department: 'Sales', code: 'EMP007', skills: ['Sales Techniques', 'Account Management'], experience: '8 years' },
+                              { id: 8, name: 'Jessica Anderson', department: 'Marketing', code: 'EMP008', skills: ['Social Media Marketing', 'Brand Management'], experience: '4 years' },
+                              { id: 9, name: 'Ryan Taylor', department: 'HR', code: 'EMP009', skills: ['Conflict Resolution', 'HR Policies'], experience: '3 years' },
+                              { id: 10, name: 'Laura Martinez', department: 'Sales', code: 'EMP010', skills: ['Presentation Skills', 'Market Analysis'], experience: '5 years' }
+                            ];
+            const departments=employees.reduce((prev,curr)=>{
+              if(!prev.hasOwnProperty(curr.department)){
+                prev[curr.department]=[curr]
+              }
+              else{
+                prev[curr.department].push(curr)
+              }
+              return prev
+            },{})
+            console.log(departments)
            
-        const App = function(props){
+            function EmployeeTable(props){
+              const displaySkills = function(ele){
+                alert(`Skills ${ele.skills}`)
+              }
+              return (
+                        <table >
+                          <thead>
+                            <tr>
+                              <th>Code</th>
+                              <th>Name</th>
+                              <th>Department</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                              {
+                                props.data.map(ele=>{
+                                  return (
+                                    <tr key={ele.id}>
+                                        <td>{ele.code}</td>
+                                        <td>{ele.name}</td>
+                                        <td>{ele.department}</td>
+                                        <td><button onClick={() => displaySkills(ele)}>Show skills</button></td>
+                                    </tr>
+                                  )
+                                })
+                              }
+                          </tbody>
+                        </table>
 
-          return(
-            <div>
-              <h1>HR Dashboard</h1>
-
-              <h2></h2>
-            </div>
-          )
-        }
+                      )
+            }
+           
+           function Apps(props){
             
+            return (
+                  <div>
+                    <h1>HR Dashboard</h1>
+                    <h2>total employees : {employees.length}</h2>
+                    <h2>total departments : {Object.keys(departments).length}</h2>
+                    <h2>total experience : {employees.map(ele=>parseInt(ele.experience)).reduce((p,c)=>p+=c,0)}</h2>
+                    <h2>Listing Employees - {employees.length}</h2>
+                    <EmployeeTable data={employees}/>
+
+                    <h2>Listing HR - {departments.HR.length}</h2>
+                    <EmployeeTable data={departments.HR}/>
+
+                    <h2>Listing Sales - {departments.Sales.length}</h2>
+                    <EmployeeTable data={departments.Sales}/>
+
+                    <h2>Listing Marketing - {departments.Marketing.length}</h2>
+                    <EmployeeTable data={departments.Marketing}/>
+                  </div>
+                  )
+           }
+           ReactDOM.render(<Apps/>,rootHandle)
         </script>
     </body>
 </html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Sample Title 
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script src="./JS/react.development.js"></script>
+        <script src="./JS/react-dom.development.js"></script>
+        <script src="./JS/babel-standalone@6.26.0_babel.js"></script>
+
+        <script type="text/babel">
+        const rootHandle = document.getElementById('root')
+
+        const { useState } = React
+        
+        function App (props){
+            const [count, setCount] = useState(1)
+            const string = 'dct'
+
+            const formatText = () => {
+                let result = ''
+                for(const char of string){
+                    result += char.repeat(count)
+                }
+                return result
+            }
+
+            function increament(){
+                setCount(count + 1)
+            }
+
+            function repeatStr(){
+                const val = prompt('Enter num')
+                if(val){
+                    setCount(Number(val))
+                }
+            }
+
+            return(
+                <div>
+                    <h1>{ formatText()}</h1>
+                    <button onClick={increament}>++</button>
+                    <button onClick={repeatStr}>set Count</button>
+                </div>
+            )
+        }
+
+        ReactDOM.render(<App/>, rootHandle)
+        </script>
+    </body>
+</html>

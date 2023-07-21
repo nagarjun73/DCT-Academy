@@ -21,15 +21,25 @@
           function App(props){
 
             function clickHandle(e){
-              const email = Number(prompt("type email"))
+              const email = prompt("type email")
 
               const xhr = new XMLHttpRequest()
               xhr.open('GET', `https://jsonplaceholder.typicode.com/users?email=${email}`)
               xhr.send()
 
               xhr.onload = function(){
-                const res = JSON.parse(xhr.responseText);
-                console.log(res)
+              const res = JSON.parse(xhr.responseText);
+              let id = res[0].id
+
+              const gg = new XMLHttpRequest()
+              gg.open('GET', `https://jsonplaceholder.typicode.com/posts?userId=${id}`)
+              gg.send()
+
+              gg.onload = function(){
+                const posts = JSON.parse(gg.responseText);
+                alert(`Total postes for user ID ${id} is ${posts.length}`)
+              }
+                
                 // if(res){
                 //   alert(res[0][id])
                 // }else{

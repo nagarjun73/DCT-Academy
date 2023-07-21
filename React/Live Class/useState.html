@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Sample Title 
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script src="./JS/react.development.js"></script>
+        <script src="./JS/react-dom.development.js"></script>
+        <script src="./JS/babel-standalone@6.26.0_babel.js"></script>
+
+        <script type="text/babel">
+          const { useState } = React
+           const rootHandle = document.getElementById('root')
+           
+           // Your code goes here 
+          const Counter = (props) => {
+            const[count, setCount] = useState(0)
+            const[clicks, setClicks] = useState(0)
+
+            function handleClick(){
+              setCount(count + 1)
+              setClicks(clicks + 1)
+            }
+
+            function handleClickReduce (){
+                setCount(count - 1)
+                setClicks(clicks + 1)
+            }
+
+            return(
+              <div>
+                <h1>Counter - {count}</h1>
+                <button onClick={handleClick}>+1</button>
+                <button onClick={handleClickReduce} disabled={count == 0}>-1</button>
+                <h1>Clicks - {clicks}</h1>
+              </div>
+            )
+          }
+
+          ReactDOM.render(<Counter/>, rootHandle)
+        </script>
+    </body>
+</html>

@@ -27,7 +27,8 @@
         function FindElement(props){
           function handleClick(){
             const value = Number(prompt("Enter Id"))
-              if(tasks.includes(props.tasks[value-1])){
+            let findTask = props.tasks.find(ele => ele.id == value)
+              if(findTask){
                 alert(`${props.tasks[value-1].title} - ${props.tasks[value-1].isCompleted}`)
               }else{
                 alert(`Task with id - ${value} not found`)

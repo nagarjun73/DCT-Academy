@@ -93,11 +93,13 @@
             let dirObj = {
             waypoints: [
               L.latLng(currentLocation.latitude, currentLocation.longitude),
-              L.latLng(13.5187264,77.6880704),
               L.latLng(latitude,longitude)
             ]
           }
+          dirObj.waypoints.push({lat: 14.426929, lng: 77.6880704})
           L.Routing.control(dirObj).addTo(map);
+          const routeObj = L.Routing.control(dirObj).addTo(map)
+          console.log(routeObj);
           }
     }
 

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Sample Title 
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script src="./JS/react.development.js"></script>
+        <script src="./JS/react-dom.development.js"></script>
+        <script src="./JS/babel-standalone@6.26.0_babel.js"></script>
+
+        <script type="text/babel">
+           const rootHandle = document.getElementById('root')
+           const { useState } = React
+           // Your code goes here 
+          const Multiple = function ( props) {
+            const [number, setNumber] = useState(5)
+
+            // function rendNums (){
+            //   let arr = []
+            //   for(let i=0; i<=10; i++){
+            //           arr.push(
+            //               <tr>
+            //                   <td key={i}>{number}</td>
+            //                   <td>{i}</td>
+            //                   <td>{number * i}</td>
+            //                 </tr>
+            //                 )
+            //         }
+            //         return arr
+            // }
+
+            function arrNums (){
+              let arr = []
+              for(let i=0; i<=10; i++){
+                      arr.push(i)
+                    }
+              return arr
+            }
+
+            function increaseHandle(){
+              setNumber(number + 1)
+            }
+
+            return (
+              <div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Number</th>
+                    <th>Times</th>
+                    <th>Product</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {arrNums().map((ele, i) =>{
+                    return(
+                      <tr key={i}>
+                        <td key={ele}>{number}</td>
+                        <td>{ele}</td>
+                        <td>{number * ele}</td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+
+              <button onClick={increaseHandle}>++</button>
+              </div>
+          )
+          }
+
+          ReactDOM.render(<Multiple />, rootHandle)
+        </script>
+    </body>
+</html>

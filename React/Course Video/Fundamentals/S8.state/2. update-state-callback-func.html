@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="../JS/react.development.js"></script>
+    <script src="../JS/react-dom.development.js"></script>
+    <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+      const { useState } = React
+
+      function App(props){
+        const [count, setCount] = useState(0)
+
+        function increament(){
+          const res = confirm("Are you sure?")
+          if(res){
+          setCount(count + 1)
+          }
+        }
+
+        return (
+          <div>
+            <h1>{count}</h1>
+            <button onClick={increament}>+1</button>
+          </div>
+        )
+      }
+
+      ReactDOM.render(<App/>, rootHandle)
+    </script>
+  </body>
+</html>

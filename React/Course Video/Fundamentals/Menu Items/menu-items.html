@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="../JS/react.development.js"></script>
+    <script src="../JS/react-dom.development.js"></script>
+    <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      function IsVeg(props){
+        return <img src="https://i.ibb.co/kQQyRwP/veg.png" alt="veg"/>
+      }
+
+      function NonVeg(props){
+        return <img src="https://i.ibb.co/stN0gCz/non-veg.png" alt="non-veg"/>
+      }
+      
+      function ItemPic(props){
+        const {image, name} = props
+        return <img src={image} alt={name}/>
+      }
+
+      function MenuItem(props){
+        const {id, name, image, isVeg, price} = props
+        return (
+          <div>
+            <h2>{isVeg ? <IsVeg/> : <NonVeg/>}{ name }</h2>
+            <ItemPic image={image} name={name}/>
+            <p>INR { price }</p>
+            <hr/>
+          </div>
+        )
+      }
+
+      function App(props){
+        const menuItems = [
+            { id: 1, name: 'Aloo Dum Biryani', price: 114, isVeg: true, image: 'https://i.ibb.co/MRr0V8h/aloo-biryani.png' },
+            { id: 2, name: 'Chicken Kebab', price: 142, isVeg: false, image: 'https://i.ibb.co/nBxxxp6/chicken-kebab.png' },
+            { id: 3, name: 'Chicken Lollipop', price: 153,  isVeg: false, image: 'https://i.ibb.co/09YrZNn/chicken-lollipop.png' },
+            { id: 4, name: 'Chicken Biryani', price: 148, isVeg: false, image: 'https://i.ibb.co/gv3FYqh/chicken-biryani.png' }
+        ]
+
+        return (
+          <div>
+            <h1>Menu Items</h1>
+            { menuItems.map((item) => {
+              return <MenuItem key={item.id} {...item}/>
+            }) }
+          </div>
+        )
+      }
+
+      ReactDOM.render(<App/>, rootHandle)
+    </script>
+  </body>
+</html>

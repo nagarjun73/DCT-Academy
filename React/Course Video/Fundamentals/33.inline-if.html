@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="./JS/react.development.js"></script>
+    <script src="./JS/react-dom.development.js"></script>
+    <script src="./JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      function CartStatus(props){
+        const { user } = props
+        return(
+          <div>
+                <p>{user.name}</p>
+                {user.isAdmin === true && <p>Admin</p>}
+          </div>
+        )
+      }
+
+      function App(props){
+        const user = {
+          name:'Nagarjun',
+          isAdmin:false
+        }
+
+        return (
+          <div>
+            <h1>Cart Page</h1>
+            <CartStatus user={user}/>
+          </div>
+        )
+      }
+
+      ReactDOM.render(<App/>, rootHandle)
+    </script>
+  </body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="./JS/react.development.js"></script>
+    <script src="./JS/react-dom.development.js"></script>
+    <script src="./JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      function ChildComponent(props){
+        return (
+          <h3>Child Component -- {props.name}</h3>
+        )
+      }
+
+      function ParentComponent(){
+        const name1 = 'Ross'
+        const name2 = 'Rachel'
+        return (
+        <div>
+          <h1>Parent Component</h1>
+          <ChildComponent name={name1}/>
+          <ChildComponent name={name2}/>
+          <ChildComponent name="Joey"/>
+        </div>
+      )
+      }
+
+      ReactDOM.render(<ParentComponent/>, rootHandle)
+    </script>
+  </body>
+</html>

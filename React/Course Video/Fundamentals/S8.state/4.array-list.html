@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="../JS/react.development.js"></script>
+    <script src="../JS/react-dom.development.js"></script>
+    <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+      const { useState } = React
+
+      function RandomNumbers(props){
+        const [numbers, setNumbers] = useState([])
+
+        //callback should be pure finction
+        function add(){
+          const randomNums = Math.round(Math.random() * 100)
+          const newNym = [...numbers, randomNums]
+          setNumbers(newNym)
+          console.log(newNym);
+        }
+
+        return (
+          <div>
+            <h1>Total --- {numbers.length}</h1>
+            <button onClick={add}>add</button>
+            <ul>
+              {numbers.map((num, i)=>{
+                return <li key={i}>{num}</li>
+              })}
+            </ul>
+          </div>
+        )
+      }
+
+      ReactDOM.render(<RandomNumbers/>, rootHandle)
+    </script>
+  </body>
+</html>

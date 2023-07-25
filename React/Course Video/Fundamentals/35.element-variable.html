@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="./JS/react.development.js"></script>
+    <script src="./JS/react-dom.development.js"></script>
+    <script src="./JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      function ButtonComp(props){
+        const {userLoggedin} = props
+        let button;
+
+        if(userLoggedin){
+          button = <button>Logout</button>
+        }else{
+          button = <button>Login</button>
+        }
+        return(
+          <div>
+                {button}
+          </div>
+        )
+      }
+
+      function App(props){
+        const userLoggedin = false
+
+        return (
+          <div>
+            <h1>User</h1>
+            <ButtonComp userLoggedin={userLoggedin}/>
+          </div>
+        )
+      }
+
+      ReactDOM.render(<App/>, rootHandle)
+    </script>
+  </body>
+</html>

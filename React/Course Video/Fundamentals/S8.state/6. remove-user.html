@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="../JS/react.development.js"></script>
+    <script src="../JS/react-dom.development.js"></script>
+    <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+      const { useState } = React
+
+      const userData = [
+        {id:1, name:'user1'},
+        {id:2, name:'user2'},
+        {id:3, name:'user3'},
+      ]
+
+      function UsersList(props){
+        const [users, setUsers] = useState(userData)
+
+        function remove(id){
+          const confirmRemove = confirm("Are you sure?")
+          if(confirmRemove){
+            let newUser  = users.filter((user) => {
+              return user.id !== id
+            })
+            setUsers(newUser)
+          }
+        }
+
+        return (
+          <div>
+            <h1>Listing Users --- {users.length}</h1>
+            <ul>
+              {users.map((user, i)=>{
+                return <li key={user.id}>{user.name} <button onClick={() => remove(user.id)}>remove</button></li>
+              })}
+            </ul>
+          </div>
+        )
+      }
+
+      ReactDOM.render(<UsersList/>, rootHandle)
+    </script>
+  </body>
+</html>

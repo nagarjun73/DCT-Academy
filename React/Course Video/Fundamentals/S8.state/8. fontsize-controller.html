@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="../JS/react.development.js"></script>
+    <script src="../JS/react-dom.development.js"></script>
+    <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+      const { useState } = React
+
+      function App(){
+        const [fontsize, setFontsize] = useState(50)
+
+        const h1Style = {
+          fontSize:fontsize + 'px',
+          display:'inline'
+        }
+
+        function down(){
+          setFontsize(fontsize - 5)
+        }
+
+        function up(){
+          setFontsize(fontsize + 5)
+        }
+
+        return(
+          <div>
+            <h3>Font Size Controller</h3>
+            <button onClick={down}>-</button>
+            <h1 style={h1Style}>Dct Academy</h1>
+            <button onClick={up}>+</button>
+          </div>
+        )
+      }
+
+      ReactDOM.render(<App/>, rootHandle)
+    </script>
+  </body>
+</html>

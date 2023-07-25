@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="../JS/react.development.js"></script>
+    <script src="../JS/react-dom.development.js"></script>
+    <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+      const { useState } = React
+
+      function App(){
+        const [count, setCount] = useState(0)
+        return(
+          <div>
+            <h1>{count}</h1>
+            <button onClick={() => {
+              setCount(count + 1)
+            }}>+1</button>
+
+            <button onClick={() => {
+              setCount(count - 1)
+            }}>-1</button>
+
+            <button onClick={() => {
+              setCount(0)
+            }}>reset</button>
+          </div>
+        )
+      }
+
+      ReactDOM.render(<App/>, rootHandle)
+    </script>
+  </body>
+</html>

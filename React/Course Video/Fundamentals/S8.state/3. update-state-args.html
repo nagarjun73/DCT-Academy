@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="../JS/react.development.js"></script>
+    <script src="../JS/react-dom.development.js"></script>
+    <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+      const { useState } = React
+
+      function App(props){
+        const [names, setNames] = useState(['Joey', 'Ross', 'Chandler'])
+
+        function remove(name){
+          const newNames = [...names]
+          const index= newNames.indexOf(name)
+          newNames.splice(index, 1)
+          setNames(newNames)
+        }
+
+        return (
+          <ul>
+            {names.map((name, i) => {
+              return <li key={i}>{name} <button onClick={() => remove(name)}>Remove</button></li>
+            })}
+          </ul>
+        )
+      }
+
+      ReactDOM.render(<App/>, rootHandle)
+    </script>
+  </body>
+</html>

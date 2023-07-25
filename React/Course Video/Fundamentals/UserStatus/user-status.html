@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="../JS/react.development.js"></script>
+    <script src="../JS/react-dom.development.js"></script>
+    <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      function LoginTrue(props){
+        return <img src="https://i.ibb.co/cNfHy3b/green-dot.png" alt="green-dot"/>
+      }
+
+      function LoginFalse(props){
+        return <img src="https://i.ibb.co/jhPVt09/red-dot.png" alt="red-dot"/>
+      }
+
+      function UserStatus(props){
+        const {name,isLoggedIn} = props
+        return (
+              <h2>{(isLoggedIn) ? (
+                  <LoginTrue/>
+                ) : (
+                  <LoginFalse/>
+                )} {name}</h2>
+        )
+      }
+
+      function App(props){
+        const users = [
+            { id: 1, name: 'adam', isLoggedIn: false }, 
+            { id: 2, name: 'steve', isLoggedIn: true }, 
+            { id: 3, name: 'dona', isLoggedIn: true }, 
+            { id: 4, name: 'kumar', isLoggedIn: false } 
+        ]
+
+        return (
+          <div>
+            <h1>User Login Status</h1>
+            {users.map((user) => {
+              return <UserStatus key={user.id} name={user.name} isLoggedIn={user.isLoggedIn}/>
+            })}
+          </div>
+        )
+      }
+
+      ReactDOM.render(<App/>, rootHandle)
+    </script>
+  </body>
+</html>

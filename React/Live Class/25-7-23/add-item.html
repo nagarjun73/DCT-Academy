@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="../JS/react.development.js"></script>
+    <script src="../JS/react-dom.development.js"></script>
+    <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      const {useState} = React
+
+      function App(props){
+        const [items, setItems] = useState([])
+
+        function addItem(){
+          const value = prompt("Type your item")
+          if(value){
+            // const newArr = items.concat(value)
+            const newArr = [...items, value]
+            setItems(newArr)
+          }
+        }
+
+        function handleRemove(ele){
+          const newArr = items.filter((item) => {
+            return  ele !== item
+          })
+
+          setItems(newArr)
+        }
+
+        return(
+          <div>
+            <button onClick={addItem}>Add Item</button>
+            <h1>Listing Items - {items.length}</h1>
+            {(items.length === 0) ? (
+              <p>No items found. Add your first item.</p>
+            ) : (
+              <ul>
+                {items.map((ele, i ) => {
+                  return <li key={i}>{ele} <button onClick={() => handleRemove(ele)}>remove</button></li>
+                })}
+              </ul>
+            )}
+            
+          </div>
+        )
+      }
+
+      ReactDOM.render(<App/>, rootHandle)
+    </script>
+  </body>
+</html>

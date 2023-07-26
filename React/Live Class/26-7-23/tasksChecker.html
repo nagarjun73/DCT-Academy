@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="../JS/react.development.js"></script>
+    <script src="../JS/react-dom.development.js"></script>
+    <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      const { useState } = React
+
+      const tasks = [
+  { "id": 1, "title": "Clean the kitchen", "isCompleted": false },
+  { "id": 2, "title": "Vacuum the living room", "isCompleted": true },
+  { "id": 3, "title": "Mop the floors", "isCompleted": false },
+  { "id": 4, "title": "Do the laundry", "isCompleted": false },
+  { "id": 5, "title": "Dust the furniture", "isCompleted": true }
+]
+
+      function App(props){
+        const { tasks } = props
+        const [task, setTask] = useState(tasks)
+
+        function getInCompleted(){
+          const completed = task.filter((ele) => ele.isCompleted == false)
+          return completed.length
+        }
+
+        function clickHandle(id){
+          const newArr = task.map((ele) => {
+            if(id == ele.id){
+              return {...ele, isCompleted:true}
+            }else{
+              return {...ele}
+            }
+          })
+          setTask(newArr)
+        }
+        
+        function markAllHandle(){
+          const newArr = task.map((ele) => {
+              return {...ele, isCompleted:true}
+          })
+          setTask(newArr)
+        }
+
+        return(
+          <div>
+            <h1>Total tasks - {task.length}</h1>
+            <h3>Completed - {task.filter((ele) => ele.isCompleted == true).length}</h3>
+            <h3>incompleted - {getInCompleted()}</h3>
+            <ul>
+              {task.map((ele, i) => {
+                return (
+                  <li key={i} >
+                    {ele.isCompleted ? <s>{ele.title}</s> : <label><input type="checkbox" onClick={() => clickHandle(ele.id)}/>{ele.title}</label>}
+                  </li>
+                )
+              })}
+            </ul>
+            {getInCompleted() !== 0 && <label> <input type="checkbox" onClick={() => markAllHandle()}/>Mark All as Completed</label>}
+          </div>
+        )
+      }
+
+      const ele = (
+        <App tasks = {tasks}/>
+      )
+
+      ReactDOM.render(ele, rootHandle)
+    </script>
+  </body>
+</html>

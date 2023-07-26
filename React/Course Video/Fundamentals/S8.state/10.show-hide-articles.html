@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="../JS/react.development.js"></script>
+    <script src="../JS/react-dom.development.js"></script>
+    <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      const{ useState } = React
+
+      
+
+            function TextDisplay(props){
+          return(
+            <div>
+              {data.map((ele) => {
+                return (
+                  <div>
+                    <p>{ele.body}</p>
+                    <button onClick={() => btnHandle(ele)}>{(result) ? 'Hide' : 'Show'}</button>
+                  </div>
+                )
+              })}
+              
+            </div>
+              )
+        }
+
+      function App(props){
+        const data = [
+        {
+        title:"variations of passages",
+        body:"There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable."
+        },
+        {
+        title:"passage of Lorem Ipsum",
+        body:"If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. "
+        },
+        {
+        title:"generators on the Internets",
+        body:"All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable."
+        },
+    ]
+        const[result, setResult] = useState(true)
+
+        function btnHandle(ele){
+          const status = !result
+          setResult(status)
+        }
+
+        return (
+          <div>
+            <h1>Show / Hide</h1>
+            <TextDisplay/>
+          </div>
+        )
+      }
+
+      ReactDOM.render(<App/>, rootHandle)
+    </script>
+  </body>
+</html>

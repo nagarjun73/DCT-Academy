@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+    </div>
+
+    <script src="../JS/react.development.js"></script>
+    <script src="../JS/react-dom.development.js"></script>
+    <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+      const { useState } = React
+
+      const players = [
+            { "id": 1, "name": "Virat Kohli", "team": '' },
+            { "id": 2, "name": "Rohit Sharma", "team": '' },
+            { "id": 3, "name": "Jasprit Bumrah", "team": '' },
+            { "id": 4, "name": "KL Rahul", "team": '' },
+            { "id": 5, "name": "Rishabh Pant", "team": '' },
+            { "id": 6, "name": "Shikhar Dhawan", "team": '' },
+            { "id": 7, "name": "Hardik Pandya", "team": '' },
+            { "id": 8, "name": "Ravindra Jadeja", "team": '' },
+            { "id": 9, "name": "Yuzvendra Chahal", "team": '' },
+            { "id": 10, "name": "Bhuvneshwar Kumar", "team": '' }
+        ]
+
+      function App(props){
+        const { playr } = props
+        const [players, setPlayers] = useState(playr)
+
+        function addToTeam(id, tm){
+          const newPlayer = players.map((player) => {
+            if(player.id === id){
+              return {...player, team:tm}
+            }else{
+              return {...player}
+            }
+          })
+          setPlayers(newPlayer)
+          console.log(newPlayer);
+        }
+
+        function filterTeams(team){
+          const newTeams = players.filter((player) => {
+            return player.team === team
+          })
+          return newTeams
+        }
+
+        
+        
+        return(
+          <div>
+            <h1>Team Selection</h1>
+            <ul>
+              {players.map((player) => {
+                if(player.team === ''){
+                  return (
+                  <li key={player.id}>{player.name}
+                  <button onClick={() => addToTeam(player.id, 'a')}>A</button>
+                  <button onClick={() => addToTeam(player.id, 'b')}>B</button>
+                  </li>
+                  )
+                }
+              })}
+            </ul>
+            <h1>Team A</h1>
+            <ul>
+              {filterTeams('a').map((player) => {
+                return (
+                  <li key={player.id}>{player.name}
+                  <button onClick={() => addToTeam(player.id, 'b')}>change</button>
+                  <button onClick={() => addToTeam(player.id, '')}>X</button>
+                  </li>
+                  )
+              })}
+            </ul>
+            <h1>Team B</h1>
+            <ul>
+              {filterTeams('b').map((player) => {
+                return (
+                  <li key={player.id}>{player.name}
+                  <button onClick={() => addToTeam(player.id, 'a')}>change</button>
+                  <button onClick={() => addToTeam(player.id, '')}>X</button>
+                  </li>
+                  )
+              })}
+            </ul>
+          </div>
+        )
+      }
+      ReactDOM.render(<App playr={players}/>, rootHandle)
+    </script>
+  </body>
+</html>

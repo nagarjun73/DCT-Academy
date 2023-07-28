@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="./JS/react.development.js"></script>
+    <script src="./JS/react-dom.development.js"></script>
+    <script src="./JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      const {useState} = React
+
+      function App(props){
+        const [string, setString] = useState([])
+        const str = 'dct'
+
+        function repeatHandle(){
+          const result = Number(prompt("type repeat"))
+          const repeatedArr = []
+          for(let i=0; i<result; i++){
+            repeatedArr.push(str)
+          }
+          setString(repeatedArr)
+        }
+
+        function deleteHandle(index){
+          const result = string.filter((ele, i) => {
+            return index !== i
+          })
+          setString(result)
+        }
+
+        return(
+          <div>
+            <button onClick={repeatHandle}>Repeat</button>
+            <ul>
+              {string.map((ele, i ) => {
+              return (
+                <li key={i}>{ele} <button onClick={() => deleteHandle(i)}>X</button></li>
+              )
+            })}
+              </ul>
+            
+          </div>
+        )
+      }
+
+      ReactDOM.render(<App/>, rootHandle)
+    </script>
+  </body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="../JS/react.development.js"></script>
+    <script src="../JS/react-dom.development.js"></script>
+    <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+      const { useState } = React
+
+      function PriceDetails(props){
+        const {totalItems, cartTotal} = props
+        return(
+          <div>
+            <h3>Price Details</h3>
+            <b>Price ({totalItems} items) - {cartTotal}</b> <br/>
+            <b>Delivery Charge - 100 </b> <br/>
+            <b>Total - {cartTotal + 100}</b>
+          </div>
+        )
+      }
+
+      function CartItem(props){
+        console.log(props);
+        const{id, name, price, quantity, removeItem, incQuantity, decQuantity} = props
+        return(
+          <div>
+            <b>{name}</b>
+            <p>INR {price}</p>
+            <p>Quantity - {quantity}</p>
+            <button onClick={() => decQuantity(id)} disabled= {quantity == 1}>-</button>
+            {quantity} 
+            <button onClick={() => incQuantity(id)}>+</button>
+            <button onClick={() => removeItem(id)}>Remove</button>
+            <hr />
+          </div>
+        )
+      }
+
+      function MyCart(props){
+        const [products, setProducts] = useState([
+          {id:1, name:'marker', price:10, quantity:1},
+          {id:2, name:'pencil', price:5, quantity:2}
+        ])
+
+        function removeItem(id){
+          const result = products.filter((ele) => {
+            return ele.id !== id
+          })
+          setProducts(result)
+        }
+
+        function incQuantity(id){
+          const result = products.map((ele) => {
+            if(ele.id === id){
+              return {...ele, quantity:ele.quantity + 1}
+            }else{
+              return {...ele}
+            }
+          })
+          setProducts(result)
+        }
+
+        function decQuantity(id){
+          const result = products.map((ele) => {
+            if(ele.id === id){
+              return {...ele, quantity:ele.quantity - 1}
+            }else{
+              return {...ele}
+            }
+          })
+          setProducts(result)
+        }
+
+        function calcSum(){
+          let sum = 0
+          products.forEach((ele) => {
+            sum = sum + ele.price * ele.quantity
+          })
+          return sum
+        }
+
+        return(
+          <div>
+            <h2>My Cart ({products.length})</h2>
+            {products.map((prod) => <CartItem 
+              key={prod.id} 
+              {...prod} 
+              removeItem={removeItem} 
+              incQuantity={incQuantity} 
+              decQuantity={decQuantity}/>)}
+            <PriceDetails totalItems={products.length} cartTotal={calcSum()}/>
+          </div>
+        )
+      }
+
+      function App(props) {
+
+        return (
+          <div>
+            <h1>Cart Page</h1>
+            <MyCart/>
+          </div>
+        )
+      }
+
+      ReactDOM.render(<App/>, rootHandle)
+    </script>
+  </body>
+</html>

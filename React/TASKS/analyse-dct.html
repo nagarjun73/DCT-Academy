@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="./JS/react.development.js"></script>
+    <script src="./JS/react-dom.development.js"></script>
+    <script src="./JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+
+      const { useState } = React
+
+      function App(props){
+        const [boolean, setBoolean]  = useState(false)
+        const [obj, setObj]  = useState({})
+
+        const string = 'ddccttdd'
+        const splitStr = string.split('');
+        
+        function clickHandle(){
+          let obj = {}
+        for(let i=0; i<splitStr.length; i++){
+          if(obj.hasOwnProperty(splitStr[i])){
+            obj[splitStr[i]] ++
+          }else{
+            obj[splitStr[i]] = 1
+          }
+        }
+        setBoolean(true)
+        setObj(obj)
+        }
+        
+
+        // function Tbody(props){
+
+        //   return(
+        //     <tr>
+        //       <td></td>
+        //     </tr>
+        //   )
+        // }
+
+        return (
+          <div>
+            <h1>{string}</h1>
+            <button onClick={() => clickHandle()}>Analyse</button>
+            { boolean && <div>
+              <table>
+                <thead>
+                  <tr>
+                    {Object.keys(obj).map((ele, i) => <th key={i}>{ele}</th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    {Object.values(obj).map((ele, i) => <td key={i}>{ele}</td>)}
+                  </tr>
+                </tbody>
+              </table>
+            </div>}
+          </div>
+        )
+      }
+
+      ReactDOM.render(<App/>, rootHandle)
+    </script>
+  </body>
+</html>

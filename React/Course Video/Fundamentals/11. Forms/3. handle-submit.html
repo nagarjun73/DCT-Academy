@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="../JS/react.development.js"></script>
+    <script src="../JS/react-dom.development.js"></script>
+    <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      const {useState} = React
+
+      function MyName(props){
+        const [name, setName] = useState('')
+
+        function nameHandle(e){
+          const nameInput = e.target.value
+          setName(nameInput)
+        }
+
+        function handleSubmit(e){
+          e.preventDefault()
+          alert(`${name} has ${name.length} character`)
+        }
+
+        return (
+          <form onSubmit={ handleSubmit }>
+            <label>Enter your Name</label>
+            <input type="text" value={name} onChange={ nameHandle }/>
+
+            <input type="submit" value='Calc Length'/>
+          </form>
+        )
+      }
+
+      ReactDOM.render(<MyName/>, rootHandle)
+    </script>
+  </body>
+</html>

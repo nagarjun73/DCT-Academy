@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="../JS/react.development.js"></script>
+    <script src="../JS/react-dom.development.js"></script>
+    <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      const { useState } = React
+
+      function EnquiryForm(props){
+        const[name, setName] = useState('')
+        const[email, setEmail] = useState('')
+        const[textarea, setTextarea] = useState('')
+        const[profession, setProfession] = useState('')
+        const[gender, setGender] = useState('')
+        const[isChecked, setIsChecked] = useState(false)
+        const status = ['FED', 'BED', "FSD"]
+
+        function nameInputHandle(e){
+          const nameInput = e.target.value
+          setName(nameInput)
+        }
+
+        function emailInputHandle(e){
+          const emailInput = e.target.value
+          setEmail(emailInput)
+        }
+
+        function textareaInputHandle(e){
+          const textAreaInput = e.target.value
+          setTextarea(textAreaInput)
+        }
+
+        function professionInputHandle(e){
+          const proffInput = e.target.value
+          setProfession(proffInput)
+        }
+
+        function genderInputHandle(e){
+          const genderInput = e.target.value
+          setGender(genderInput)
+        }
+
+        function checkBoxHandle(e){
+          const checkedInput = e.target.checked
+          setIsChecked(checkedInput)
+        }
+
+        function formSubmitHandle(e){
+          e.preventDefault()
+
+          const userData = {
+            name:name,
+            email:email,
+            message:textarea,
+            profession:profession,
+            gender:gender,
+            isChecked:isChecked
+          }
+          console.log(userData)
+        }
+
+        return(
+          <div>
+            <h1>Enquiry Form</h1>
+            <form onSubmit={formSubmitHandle}>
+              <label>Name</label><br/>
+              <input type="text" value={name} onChange={nameInputHandle}/> <br/>
+
+              <label>Email</label><br/>
+              <input type="email" value={email} onChange={emailInputHandle}/> <br/>
+
+              <label>Message</label><br/>
+              <textarea value={textarea} onChange={textareaInputHandle}></textarea><br/>
+
+              <label>Profession</label>
+              <select value={profession} onChange={professionInputHandle}>
+                <option value="">status</option>
+                {status.map((ele, i) => {
+                  return <option key={i} value={ele}>{ele}</option>
+                })}
+              </select><br/>
+
+              <label>Gender</label><br/>
+              <input type="radio" value='male' name='gander' onChange={genderInputHandle}/>Male
+              <input type="radio" value='female' name='gander' onChange={genderInputHandle}/>Female<br/>
+
+              <input type="checkbox" onChange={checkBoxHandle}/>
+              <label>I agree to Terms and Condition</label><br/>
+
+              <input type="submit" value="Submittu"/>
+            </form>
+          </div>
+        )
+      }
+      ReactDOM.render(<EnquiryForm/>, rootHandle)
+    </script>
+  </body>
+</html>

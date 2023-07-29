@@ -15,12 +15,83 @@
     <script type="text/babel">
       const rootHandle = document.getElementById("root");
 
-      const line = "Hello World"
-      const ele = (
-        <h1>{ line }</h1>
-      )
 
-      ReactDOM.render(ele, rootHandle)
-    </script>
+      const { useState } = React
+      
+      function EmployeeStats(props){
+        const {employees} = props
+        const maleEmployees = employees.filter((emp) =>{
+          return emp.gender === 'male'
+        })
+
+        const femaleEmployees = employees.filter((emp) =>{
+          return emp.gender === 'female'
+        })
+        
+        return(
+          <div>
+            <h2>Employee Statistics</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Gender</th>
+                  <th>Count</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td> Male</td>
+                  <td>{maleEmployees.length}</td>
+                </tr>
+                <tr>
+                  <td> female</td>
+                  <td>{femaleEmployees.length}</td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+            )
+          }
+
+      function EmployeesList(props){
+        const {employees, removeEmployee} = props
+
+        return(
+          <div>
+            <h2>Listing Employees</h2>
+            <ul>
+              {employees.map((ele, i) => {
+                return <li key={i}>{ele.name} <button onClick={() => removeEmployee(ele.id)}>Remove</button></li>
+              })}
+              </ul>
+              </div>
+              )
+            }
+            
+      function EmployeesContainer(props){
+              const [employees, setEmployees] = useState([
+                {id: 2, name: 'Employee 2', gender: 'male' },
+                {id: 3, name: 'Employee 3', gender: 'male' },
+                {id: 4, name: 'Employee 4', gender: 'female' },
+                {id: 1, name: 'Employee 1', gender: 'male' },
+                {id: 5, name:'Employee 5', gender: 'female' }
+              ])
+
+              const removeEmployee = function(id){
+                const result = employees.filter((ele) => {
+                    return ele.id !== id
+                })
+                setEmployees(result)
+              }
+      
+              return(
+                <div>
+                  <EmployeesList employees={employees} removeEmployee={removeEmployee}/>
+                  <EmployeeStats employees={employees}/>
+                </div>
+              )
+            }
+      ReactDOM.render(<EmployeesContainer/>, rootHandle)
+      </script>
   </body>
 </html>

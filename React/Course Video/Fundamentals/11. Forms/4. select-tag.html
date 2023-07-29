@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="../JS/react.development.js"></script>
+    <script src="../JS/react-dom.development.js"></script>
+    <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      const {useState} = React
+
+      function UserLaptop(props){
+        const[username, setUsername] = useState('')
+        const[laptop, setLaptop] = useState('')
+        const[isSubmitted, setIsSubmitted] = useState(false)
+        const brands = ['Apple', 'Hp', 'Acer', 'Samsung', 'Dell']
+
+        function handleUsernameChange(e){
+          const usernameInput = e.target.value
+          setUsername(usernameInput)
+        }
+
+        function handleLaptopChange(e){
+          const laptopInput = e.target.value;
+          setLaptop(laptopInput)
+        }
+
+        function formSubmitHandle(e){
+          e.preventDefault()
+          setIsSubmitted(!isSubmitted)
+        }
+
+        return(
+          <div>
+            {isSubmitted && <h1>{laptop}</h1>}
+          <form onSubmit={formSubmitHandle}>
+            <label> username </label><br/>
+            <input type="text" value={username} onChange={handleUsernameChange}/> <br/>
+
+            <label>laptop</label><br/>
+            <select value={laptop} onChange={handleLaptopChange}>
+              <option value="">Select brand</option>
+              {/* <option value="Hp">Hp</option>
+              <option value="Apple">Apple</option>
+              <option value="Acer">Acer</option>
+              <option value="Samsung">Samsung</option>
+              <option value="Dell">Dell</option> */}
+              {brands.sort().map((ele, i) => {
+                return <option key={i} value={ele}>{ele}</option>
+              })}
+            </select> <br/>
+
+            <input type="submit" value="Submit Laptop"/>
+          </form>
+          </div>
+        )
+      }
+
+      ReactDOM.render(<UserLaptop/>, rootHandle)
+    </script>
+  </body>
+</html>

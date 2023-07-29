@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <div id="root">
+
+    </div>
+
+    <script src="../JS/react.development.js"></script>
+    <script src="../JS/react-dom.development.js"></script>
+    <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+    <script type="text/babel">
+      const rootHandle = document.getElementById("root");
+
+      const { useState } = React
+
+      function UserAddress(props){
+        const[address, setAddress] = useState('')
+        const[addType, setAddType] = useState('home')
+
+
+        function handleAddressChange(e){
+          const addressInput = e.target.value
+          setAddress(addressInput)
+        }
+
+        function handleAddTypeChange(e){
+          const addTypeInput = e.target.value
+          console.log(addTypeInput);
+          setAddType(addTypeInput)
+        }
+
+        return (
+          <form>
+            <label> Address </label> <br/>
+            <textarea value={address} onChange={handleAddressChange}></textarea> <br/>
+
+            <label>Address type</label><br/>
+            <input type="radio" name='addType' value="home" checked={addType == 'home'} onChange={handleAddTypeChange}/>Home
+            <input type="radio" name='addType' value="office" checked={addType == 'office'} onChange={handleAddTypeChange}/>Office
+          </form>
+        )
+      }
+
+      ReactDOM.render(<UserAddress/>, rootHandle)
+    </script>
+  </body>
+</html>

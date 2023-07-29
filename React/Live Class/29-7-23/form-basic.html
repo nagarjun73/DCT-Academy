@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useState } = React
+
+    function App(props) {
+      const [username, setUsername] = useState('')
+      const [email, setEmail] = useState('')
+      const [password, setPassword] = useState('')
+      const [confirmpassword, setConfirmpassword] = useState('')
+      const [formErrors, setFormErrors] = useState({})
+      let errors = {}
+
+      const emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+
+      function formValidation() {
+        if (username.length == 0) {
+          errors.username = "username is required"
+        }
+
+        if (email.length == 0) {
+          errors.email = "email is required"
+        } else if (!emailFormat.test(email)) {
+          errors.email = "invalid email format"
+        }
+
+        if (password.length == 0) {
+          errors.password = "password is required"
+        } else if (password.length < 8 || password.length > 128) {
+          errors.password = "password is too short"
+        }
+
+        if (confirmpassword.length == 0) {
+          errors.confirmpassword = "password is required"
+        } else if (password !== confirmpassword) {
+          errors.confirmpassword = "password doesnot match"
+        }
+
+      }
+
+
+      function handleSubmit(e) {
+        e.preventDefault()
+
+        formValidation()
+
+        if (Object.keys(errors).length === 0) {
+          const objData = {
+            username,
+            email,
+            password,
+            confirmpassword
+          }
+          console.log(objData);
+
+          setFormErrors({})
+        } else {
+          setFormErrors(errors)
+        }
+
+      }
+
+      return (
+        <div>
+          <h2>Register with us</h2>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="username">username</label> <br />
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            /> {formErrors.username && <span>{formErrors.username}</span>} <br />
+
+            <label htmlFor="email">email</label><br />
+            <input
+              type="text"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            /> {formErrors.email && <span>{formErrors.email}</span>}<br />
+
+            <label htmlFor="password">password</label><br />
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            /> {formErrors.password && <span>{formErrors.password}</span>} <br />
+
+            <label htmlFor="confirmpassword">confirm password</label><br />
+            <input
+              type="password"
+              id="confirmpassword"
+              value={confirmpassword}
+              onChange={(e) => setConfirmpassword(e.target.value)}
+            /> {formErrors.confirmpassword && <span>{formErrors.confirmpassword}</span>} <br />
+
+            <input type="submit" />
+          </form>
+        </div>
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

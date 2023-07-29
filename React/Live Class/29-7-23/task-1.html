@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useState } = React
+
+    function App(props) {
+      const [name, setName] = useState('')
+      const [nameObj, setNameObj] = useState([])
+      const [formErrors, setFormErrors] = useState({})
+      const errors = {}
+
+      function formValidator() {
+        if (name.length === 0) {
+          errors.name = "name is required"
+        }
+
+        const result = nameObj.find((ele) => ele.name == name)
+        if (result) {
+          errors.name = "Name already present"
+        }
+      }
+
+      function handleSubmit(e) {
+        e.preventDefault()
+        formValidator()
+        if (Object.keys(errors).length == 0) {
+          const xhr = new XMLHttpRequest()
+          xhr.open("GET", `https://api.genderize.io?name=${name}`)
+          xhr.send()
+
+          xhr.onload = function () {
+            const genderObj = JSON.parse(xhr.responseText)
+
+            let myObj = {
+              name: genderObj.name,
+              gender: genderObj.gender
+            }
+            const val = nameObj.concat(myObj)
+            setNameObj(val)
+            setName("")
+            setFormErrors({})
+          }
+        } else {
+          setFormErrors(errors)
+        }
+      }
+
+      return (
+        <div>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="name">Name</label> <br />
+            <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} /> { }{formErrors.name && <span>{formErrors.name}</span>}<br />
+            <input type="submit" value="add" />
+          </form>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Gender</th>
+              </tr>
+            </thead>
+            <tbody>
+              {nameObj.map((ele, i) => {
+                return (
+                  <tr key={i}>
+                    <td>{ele.name}</td>
+                    <td>{ele.gender}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

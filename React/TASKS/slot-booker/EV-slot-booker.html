@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.8/index.global.min.js'></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const calendarEl = document.getElementById('calendar');
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'resourceTimelineWeek'
+      });
+      calendar.render();
+    });
+
+  </script>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+  <div id='calendar'></div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+    const { useState } = React
+    const fullcalender = window.FullCalendar
+
+    console.log(fullcalender);
+
+    //Full calender
+
+    const data = localStorage.getItem('timings') ? JSON.parse(localStorage.getItem('timings')) : []
+
+    function App(props) {
+      const [start, setStart] = useState('')
+      const [end, setEnd] = useState('')
+      const [slots, setSlots] = useState(0)
+      const [timings, setTimings] = useState(props.data)
+
+      console.log(props.data);
+
+
+      function startTimeHandle(e) {
+        const startInput = e.target.value
+        console.log(startInput);
+        setStart(startInput)
+      }
+
+      function endTimeHandle(e) {
+        const endInput = e.target.value
+        setEnd(endInput)
+      }
+
+      function slotsHandle(e) {
+        const slotsInput = Number(e.target.value)
+        setSlots(slotsInput)
+      }
+
+      function formSubmitHandle(e) {
+        e.preventDefault();
+
+        let stHrs = Number(start.slice(11, 13))
+        let etHrs = Number(end.slice(11, 13))
+
+        let stMin = Number(start.slice(14, 16))
+        let etMin = Number(end.slice(14, 16))
+
+        const totalSlots = Math.ceil((((etHrs - stHrs) * 60) + (etMin - stMin)) / slots)
+
+        console.log(slots);
+        const slotsArr = [`${stHrs}:${stMin}`]
+        for (let i = 0; i < totalSlots; i++) {
+          if ((Number(slotsArr[i].slice(3, 5)) + slots) >= 60) {
+            const minutes = Math.abs((Number(slotsArr[i].slice(3, 5)) + slots) - 60)
+            slotsArr.push(
+              `${Number(slotsArr[i].slice(0, 2)) + 1}:${minutes.toString().length == 1 ? '0' + minutes : minutes}`)
+          } else {
+            const minutes = Number(slotsArr[i].slice(3, 5)) + slots
+            slotsArr.push(`${Number(slotsArr[i].slice(0, 2))}:${minutes.toString().length == 1 ? '0' + minutes : minutes}`)
+          }
+        }
+
+        let timeStampArr = []
+        for (let j = 0; j < slotsArr.length; j++) {
+          if (slotsArr[j + 1]) {
+            timeStampArr.push({ timeslots: `${slotsArr[j]} - ${slotsArr[j + 1]}`, name: '', status: true })
+          }
+        }
+        setTimings(timeStampArr);
+      }
+
+      function bookHandle(index) {
+        const name = prompt("Enter your Name")
+        const updated = timings.map((ele, i) => {
+          if (i == index) {
+            return { ...ele, status: false, name: name }
+          } else {
+            return { ...ele }
+          }
+        })
+        setTimings(updated)
+      }
+
+      function cancelHandle(index) {
+        const updated = timings.map((ele, i) => {
+          if (i == index) {
+            return { ...ele, status: true, name: "" }
+          } else {
+            return { ...ele }
+          }
+        })
+        setTimings(updated)
+      }
+
+      function saveHandle() {
+        localStorage.setItem('timings', JSON.stringify(timings))
+      }
+
+
+
+      return (
+        <div>
+          <form onSubmit={formSubmitHandle}>
+            <label>start time</label> <br />
+            <input type="datetime-local" value={start} onChange={startTimeHandle} /><br />
+
+            <label>end time</label><br />
+            <input type="datetime-local" value={end} onChange={endTimeHandle} /><br />
+
+            <label>slot</label><br />
+            <input type="radio" name='slotSelect' value='15' onChange={slotsHandle} /> 15 Min <br />
+            <input type="radio" name='slotSelect' value='30' onChange={slotsHandle} /> 30 Min <br />
+            <input type="radio" name='slotSelect' value='60' onChange={slotsHandle} /> 60 Min <br />
+
+            <input type="submit" value="Create" />
+            <br />
+            <br />
+          </form>
+
+          <table border="1">
+            <thead>
+              <tr>
+                <th>time</th>
+                <th>status</th>
+                <th>name</th>
+                <th>actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {timings.map((ele, i) => {
+                return (
+                  <tr key={i}>
+                    <td>{ele.timeslots}</td>
+                    <td>{ele.status ? "available" : "booked"}</td>
+                    <td>{ele.name == '' ? "N/A" : ele.name}</td>
+                    <td>{ele.status ? <button onClick={() => bookHandle(i)}>Book</button> : <button onClick={() => cancelHandle(i)}>Cancel</button>}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+          <button onClick={() => saveHandle()}>Save</button>
+        </div>
+      )
+    }
+
+    ReactDOM.render(<App data={data} />, rootHandle)
+  </script>
+</body>
+
+</html>

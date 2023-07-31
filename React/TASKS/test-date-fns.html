@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Date-fns Example</title>
+</head>
+
+<body>
+  <!-- Your HTML content goes here -->
+
+  <!-- Include date-fns library -->
+  <script src="https://unpkg.com/date-fns@2.0.0-alpha.43"></script>
+
+  <script>
+    const { format } = require('date-fns');
+    // Your JavaScript code using date-fns goes here
+    const today = new Date();
+    const formattedDate = dateFns.format(today, 'yyyy-MM-dd');
+    console.log(formattedDate);
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Up Vote</title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="./JS/react.development.js"></script>
+  <script src="./JS/react-dom.development.js"></script>
+  <script src="./JS/babel-standalone@6.26.0_babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useState } = React
+
+    function ItemComp(props) {
+      const { item, buttonHandle } = props
+      return (
+        <li key={item.id}>
+          <h3>{item.name} <span>count - {item.count}</span></h3>
+          <button onClick={() => buttonHandle(item.id, 'min')}>-</button>
+          <button onClick={() => buttonHandle(item.id, 'plus')}>+</button>
+        </li>
+      )
+    }
+
+    function App(props) {
+      const [items, setItems] = useState([{
+        id: 1,
+        name: 'item1',
+        count: 0
+      }, {
+        id: 2,
+        name: 'item2',
+        count: 0
+      }, {
+        id: 3,
+        name: 'item3',
+        count: 0
+      }])
+
+      function buttonHandle(eid, sym) {
+        const res = items.map((ele) => {
+          if (ele.id === eid) {
+            if (sym == 'plus') {
+              return { ...ele, count: ele.count + 1 }
+            } else {
+              return { ...ele, count: ele.count - 1 }
+            }
+          } else {
+            return { ...ele }
+          }
+        })
+        setItems(res)
+      }
+
+      return (
+        <div>
+          <h1>Up vote</h1>
+          <ul>
+            {items.sort((a, b) => (b.count - a.count)).map((item, i) => {
+              return (
+                <ItemComp key={i} item={item} buttonHandle={buttonHandle} />
+              )
+            })}
+          </ul>
+        </div>
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

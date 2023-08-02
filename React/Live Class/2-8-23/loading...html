@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useState, useEffect } = React
+
+    function App(props) {
+      const [isLoading, setIsLoading] = useState(true)
+      const [users, setUsers] = useState([])
+
+      useEffect(() => {
+        const xhr = new XMLHttpRequest()
+        xhr.open('GET', 'https://jsonplaceholder.typicode.com/users')
+        xhr.send()
+        xhr.onload = function () {
+          const res = JSON.parse(xhr.responseText);
+          setIsLoading(false)
+          setUsers(res)
+        }
+      }, [])
+
+      return (
+        <div>
+          {isLoading ? 'Loading' :
+            (
+              <div>
+                <h1>List od Users - {users.length}</h1>
+                <ul>
+                  {users.map((ele, i) => {
+                    return (
+                      <li key={i}>{ele.name}</li>
+                    )
+                  })}
+                </ul>
+              </div>
+            )}
+
+        </div >
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

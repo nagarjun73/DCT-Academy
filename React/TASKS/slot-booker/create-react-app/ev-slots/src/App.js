@@ -1,39 +1,23 @@
-<!DOCTYPE html>
-<html>
+import logo from './logo.svg';
+import './App.css';
+import { useState } from 'react';
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import { addMinutes, format  } from 'date-fns'
 
-<head>
-  <title></title>
-
-</head>
-
-<body>
-  <div id="root">
-  </div>
-
-  <script src="../JS/react.development.js"></script>
-  <script src="../JS/react-dom.development.js"></script>
-  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
-  <script src='./fullcalendar-6.1.8/dist/index.global.min.js'></script>
-  <script src='./fullcalendar-6.1.8/packages/daygrid/index.global.min.js'></script>
-
-  <script type="text/babel">
-    const rootHandle = document.getElementById("root");
-    const { useState } = React
-    const { FullCalendar } = window
-    const dayGridPlugin = window.FullCalendar.DayGrid
-    console.log(window);
-
-
-
-
-    function App(props) {
+function App(props) {
       const [start, setStart] = useState('')
       const [end, setEnd] = useState('')
       const [slots, setSlots] = useState(0)
-      const [timings, setTimings] = useState(props.data)
-
       const data = localStorage.getItem('timings') ? JSON.parse(localStorage.getItem('timings')) : []
-      console.log(props.data);
+      const [timings, setTimings] = useState(data)
+      const [events, setEvents] = useState([{ 
+                    title: 'The Title', 
+                    start: '2023-07-31T10:30',
+                    end: '2023-07-31T11:30',
+                  }])
+      
+      console.log(timings);
 
 
       function startTimeHandle(e) {
@@ -63,6 +47,17 @@
 
         const totalSlots = Math.ceil((((etHrs - stHrs) * 60) + (etMin - stMin)) / slots)
 
+        const formatedTime = new Date(start).toISOString()
+        console.log(formatedTime);
+        const event1 = [formatedTime]
+        for(let i=0; i<totalSlots; i++){
+          let date = addMinutes(event1[i], slots)
+          const newDate = date
+          event1.push({start:newDate});
+        }
+        console.log(event1);
+
+
         console.log(slots);
         const slotsArr = [`${stHrs}:${stMin}`]
         for (let i = 0; i < totalSlots; i++) {
@@ -75,6 +70,8 @@
             slotsArr.push(`${Number(slotsArr[i].slice(0, 2))}:${minutes.toString().length == 1 ? '0' + minutes : minutes}`)
           }
         }
+
+        console.log(start)
 
         let timeStampArr = []
         for (let j = 0; j < slotsArr.length; j++) {
@@ -156,13 +153,16 @@
           <button onClick={() => saveHandle()}>Save</button>
           <FullCalendar
             plugins={[dayGridPlugin]}
-          />
+            initialView= 'dayGridWeek'
+            headerToolbar = {{
+                          left: 'prev,next',
+                          center: 'title',
+                          right: 'dayGridWeek,dayGridDay'
+                        }}
+            editable= {true}
+            events={ events}/>
         </div>
       )
     }
 
-    ReactDOM.render(<App data={data} />, rootHandle)
-  </script>
-</body>
-
-</html>
+export default App;

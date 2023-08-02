@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useEffect, useState } = React
+
+    function App(props) {
+      const [todos, setTodos] = useState([])
+      const [isLoading, setIsLoading] = useState(true)
+
+      useEffect(() => {
+        const xhr = new XMLHttpRequest()
+        xhr.open('GET', 'https://jsonplaceholder.typicode.com/todos')
+        xhr.send()
+        xhr.onload = function () {
+          const res = JSON.parse(xhr.responseText)
+          console.log(res);
+          setTodos(res)
+          setIsLoading(false)
+        }
+      }, [])
+
+      return (
+        <div>
+          {isLoading ? 'Loading..................' : <div>
+            <h1>Total task - {todos.length}</h1>
+            <h2>Completed - {todos.filter((ele) => {
+              return ele.completed == true
+            }).length}</h2>
+            <h2>Completed - {todos.filter((ele) => {
+              return ele.completed == false
+            }).length}</h2>
+          </div>}
+        </div>
+      )
+
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

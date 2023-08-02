@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useState, useEffect } = React
+
+    function Tabledata(props) {
+      const { user } = props
+      return (
+        <tr>
+          <td><img src={user.avatar} alt={user.name} /></td>
+          <td>{user.first_name}</td>
+          <td>{user.last_name}</td>
+          <td>{user.first_name} {user.last_name}</td>
+          <td>{user.email}</td>
+        </tr>
+      )
+    }
+
+    function App(props) {
+      const [isLoading, setIsLoading] = useState(true)
+      const [users, setUsers] = useState({})
+
+      useEffect(() => {
+        const xhr = new XMLHttpRequest()
+        xhr.open('GET', 'https://reqres.in/api/users')
+        xhr.send()
+        xhr.onload = function () {
+          const res = JSON.parse(xhr.responseText);
+          console.log(res);
+          setIsLoading(false)
+          setUsers(res)
+        }
+      }, [])
+
+      return (
+        <div>
+          {isLoading ? 'Loading' :
+            (
+              <div>
+                {users.data && <h1>List of Users - {users.data.length}</h1>}
+                {users.data && <table border='1'>
+                  <thead>
+                    <tr>
+                      <th>first Name</th>
+                      <th>Last Name</th>
+                      <th>Full Name</th>
+                      <th>email</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users.data.map((ele, i) => {
+                      return (
+                        <Tabledata key={i} user={ele} />
+                      )
+                    })}
+                  </tbody>
+                </table>}
+              </div>
+            )}
+        </div >
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

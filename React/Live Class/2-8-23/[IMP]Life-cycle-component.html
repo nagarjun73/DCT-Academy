@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useState, useEffect } = React
+
+    function App(props) {
+      const [count, setCount] = useState(0)
+      const [click, setClick] = useState(0)
+
+      console.log('inside Component');
+
+      //on the first render only executed once (initially) 
+      useEffect(() => {
+        console.log('inside useEffect with []');
+      }, [])
+      // [] - it will call the callback function only once
+
+      //on the first render + everytime a state / props changes fuction gets called
+      useEffect(() => {
+        console.log('useEffect - no dependency');
+      })
+
+      //on the first render + only when a specifice state or props changes fuction gets called
+      useEffect(() => {
+        console.log('useEffect - [count]');
+      }, [count])
+
+      //on the first render + only when a specifice state or props changes fuction gets called
+      useEffect(() => {
+        console.log('useEffect - [clcik]');
+      }, [click])
+
+      return (
+        <div>
+          {console.log('inside jsx')}
+          <h1>Counter app</h1>
+          <button onClick={() => setCount(count + 1)}> +1 </button>
+          <button onClick={() => setClick(click + 1)}> +1 </button>
+        </div >
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

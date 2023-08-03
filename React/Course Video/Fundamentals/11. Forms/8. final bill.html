@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useState } = React
+
+    function FinalBill(props) {
+      const [amount, setAmount] = useState('')
+      const [finalAmount, setFinalAmount] = useState('')
+
+      function amountHandle(e) {
+        const amt = e.target.value
+        setAmount(amt)
+        const finAmt = (Number(amt) * (18 / 100)) + Number(amt)
+        setFinalAmount(finAmt)
+      }
+
+      return (
+        <form>
+          <label>Amount</label> <br />
+          <input type="number" value={amount} onChange={amountHandle} /><br />
+
+          <label>Final Amount</label><br />
+          <input type="number" value={finalAmount} disabled={true} /><br />
+        </form>
+      )
+    }
+
+    ReactDOM.render(<FinalBill />, rootHandle)
+  </script>
+</body>
+
+</html>

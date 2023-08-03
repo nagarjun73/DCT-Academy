@@ -1,109 +1,165 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title></title>
-  </head>
-  <body>
-    <div id="root">
 
-    </div>
+<head>
+  <title></title>
+</head>
 
-    <script src="../JS/react.development.js"></script>
-    <script src="../JS/react-dom.development.js"></script>
-    <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+<body>
+  <div id="root">
 
-    <script type="text/babel">
-      const rootHandle = document.getElementById("root");
+  </div>
 
-      const { useState } = React
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/validator/13.9.0/validator.min.js"></script>
 
-      function EnquiryForm(props){
-        const[name, setName] = useState('')
-        const[email, setEmail] = useState('')
-        const[textarea, setTextarea] = useState('')
-        const[profession, setProfession] = useState('')
-        const[gender, setGender] = useState('')
-        const[isChecked, setIsChecked] = useState(false)
-        const status = ['FED', 'BED', "FSD"]
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
 
-        function nameInputHandle(e){
-          const nameInput = e.target.value
-          setName(nameInput)
-        }
+    const { useState } = React
 
-        function emailInputHandle(e){
-          const emailInput = e.target.value
-          setEmail(emailInput)
-        }
+    function EnquiryForm(props) {
+      const [name, setName] = useState('')
+      const [email, setEmail] = useState('')
+      const [textarea, setTextarea] = useState('')
+      const [profession, setProfession] = useState('')
+      const [gender, setGender] = useState('')
+      const [isChecked, setIsChecked] = useState(false)
+      const [showMessage, setShowMessage] = useState(false)
+      const [errorMessage, setErrorMessage] = useState({})
+      const error = {}
 
-        function textareaInputHandle(e){
-          const textAreaInput = e.target.value
-          setTextarea(textAreaInput)
-        }
+      const status = ['student', 'Working profesional', 'non Working profesional']
 
-        function professionInputHandle(e){
-          const proffInput = e.target.value
-          setProfession(proffInput)
-        }
-
-        function genderInputHandle(e){
-          const genderInput = e.target.value
-          setGender(genderInput)
-        }
-
-        function checkBoxHandle(e){
-          const checkedInput = e.target.checked
-          setIsChecked(checkedInput)
-        }
-
-        function formSubmitHandle(e){
-          e.preventDefault()
-
-          const userData = {
-            name:name,
-            email:email,
-            message:textarea,
-            profession:profession,
-            gender:gender,
-            isChecked:isChecked
-          }
-          console.log(userData)
-        }
-
-        return(
-          <div>
-            <h1>Enquiry Form</h1>
-            <form onSubmit={formSubmitHandle}>
-              <label>Name</label><br/>
-              <input type="text" value={name} onChange={nameInputHandle}/> <br/>
-
-              <label>Email</label><br/>
-              <input type="email" value={email} onChange={emailInputHandle}/> <br/>
-
-              <label>Message</label><br/>
-              <textarea value={textarea} onChange={textareaInputHandle}></textarea><br/>
-
-              <label>Profession</label>
-              <select value={profession} onChange={professionInputHandle}>
-                <option value="">status</option>
-                {status.map((ele, i) => {
-                  return <option key={i} value={ele}>{ele}</option>
-                })}
-              </select><br/>
-
-              <label>Gender</label><br/>
-              <input type="radio" value='male' name='gander' onChange={genderInputHandle}/>Male
-              <input type="radio" value='female' name='gander' onChange={genderInputHandle}/>Female<br/>
-
-              <input type="checkbox" onChange={checkBoxHandle}/>
-              <label>I agree to Terms and Condition</label><br/>
-
-              <input type="submit" value="Submittu"/>
-            </form>
-          </div>
-        )
+      /*
+      function nameInputHandle(e) {
+        const nameInput = e.target.value
+        setName(nameInput)
       }
-      ReactDOM.render(<EnquiryForm/>, rootHandle)
-    </script>
-  </body>
+
+      function emailInputHandle(e) {
+        const emailInput = e.target.value
+        setEmail(emailInput)
+      }
+
+      function textareaInputHandle(e) {
+        const textAreaInput = e.target.value
+        setTextarea(textAreaInput)
+      }
+
+      function professionInputHandle(e) {
+        const proffInput = e.target.value
+        setProfession(proffInput)
+      }
+
+      function genderInputHandle(e) {
+        const genderInput = e.target.value
+        setGender(genderInput)
+      }
+
+      */
+
+      function handleClick(e) {
+        const attr = e.target.name
+        if (attr === 'name') {
+          setName(e.target.value)
+        } else if (attr === 'email') {
+          setEmail(e.target.value)
+        } else if (attr === 'message') {
+          setTextarea(e.target.value)
+        } else if (attr === 'profession') {
+          setProfession(e.target.value)
+        } else if (attr === 'gender') {
+          setGender(e.target.value)
+        }
+      }
+
+      function checkBoxHandle(e) {
+        const checkedInput = e.target.checked
+        setIsChecked(checkedInput)
+      }
+
+      function userValidation() {
+        if (name.trim().length === 0) {
+          error.name = "name cannot be blank"
+        }
+
+        if (email.trim().length === 0) {
+          error.email = "email cannot be blank"
+        } else if (!validator.isEmail(email)) {
+          error.email = "invalid email"
+        }
+      }
+
+      function formSubmitHandle(e) {
+        e.preventDefault()
+
+        userValidation()
+
+        if (Object.keys(error).length == 0) {
+          setErrorMessage({})
+          const userData = {
+            name: name,
+            email: email,
+            message: textarea,
+            profession: profession,
+            gender: gender,
+            isChecked: isChecked
+          }
+
+          setName('')
+          setEmail('')
+          setTextarea('')
+          setProfession('')
+          setGender('')
+          setIsChecked('')
+          console.log(userData)
+        } else {
+          setErrorMessage(error)
+        }
+
+      }
+
+      return (
+        <div>
+          <h1>Enquiry Form</h1>
+          <form onSubmit={formSubmitHandle}>
+            <label>Name</label><br />
+            <input type="text" value={name} onChange={handleClick} name='name' /> <br />
+            {errorMessage.name && <span>{errorMessage.name}</span>}
+
+            <label>Email</label><br />
+            <input type="email" value={email} onChange={handleClick} name='email' /> <br />
+            {errorMessage.email && <span>{errorMessage.email}</span>}
+
+            <label>Message</label><br />
+            <textarea value={textarea} onChange={handleClick} name='message' onFocus={() => setShowMessage(true)} onBlur={() => { setShowMessage(false) }}></textarea><br />
+            {showMessage && <span>Enter your Eductional background and objectives</span>}<br />
+
+            <label>Profession</label>
+            <select value={profession} onChange={handleClick} name='profession'>
+              <option value="">status</option>
+              {status.map((ele, i) => {
+                return <option key={i} value={ele}>{ele}</option>
+              })}
+            </select><br />
+
+            <label>Gender</label><br />
+            <input type="radio" value='male' name='gender' checked={gender == 'male'} onChange={handleClick} />Male
+            <input type="radio" value='female' name='gender' checked={gender == 'female'} onChange={handleClick} />Female<br />
+
+            <input type="checkbox" onChange={checkBoxHandle} />
+            <label>I agree to Terms and Condition</label><br />
+
+            <input type="submit" value="Submittu" disabled={!isChecked} />
+          </form>
+        </div>
+      )
+    }
+    ReactDOM.render(<EnquiryForm />, rootHandle)
+  </script>
+</body>
+
 </html>

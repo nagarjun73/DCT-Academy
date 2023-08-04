@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useState, useEffect } = React
+
+    function App(props) {
+      const [user, setUser] = useState([])
+      const [userId, setUserId] = useState('')
+      const [recentUser, setRecentUser] = useState([])
+
+      useEffect(() => {
+        fetch(`https://jsonplaceholder.typicode.com/users`)
+          .then((res) => {//JSON to object conversion
+            return res.json()
+          })
+          .then((data) => {
+            setUser(data);
+          })
+          .catch((err) => {
+            console.log(err.message);
+          })
+        if (localStorage.getItem('users')) {
+          setRecentUser(JSON.parse(localStorage.getItem('users')))
+        }
+      }, [])
+
+      useEffect(() => {
+        if (userId) {
+          const newRecent = [...recentUser]
+          const username = user.find((ele) => ele.id == userId)
+          if (!newRecent.includes(username)) {
+            newRecent.push(username)
+          }
+          console.log(newRecent);
+          setRecentUser(newRecent)
+        }
+      }, [userId])
+
+      useEffect(() => {
+        localStorage.setItem('users', JSON.stringify(recentUser))
+      }, [recentUser])
+
+      return (
+        <div>
+          <select value={user.name} onChange={(e) => { setUserId(e.target.value) }}>
+            <option value="">select user</option>
+            {user.map((ele) => {
+              return <option value={ele.id} key={ele.id}> {ele.name}</option>
+            })}
+          </select>
+          {!userId ? <h1>No User selected</h1> : <h1>{(user.find((ele) => ele.id == userId)).name}</h1>}
+          <h1>Recent Users</h1>
+          {recentUser.length !== 0 ?
+            < ul >
+              {
+                recentUser.map((ele, i) => {
+                  return <li key={i}>{ele.name}</li>
+                })
+              }
+            </ul> : <span>No recent search</span>}
+        </div >
+      )
+    }
+
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useState, useEffect } = React
+
+    function App(props) {
+      const [userId, setUserId] = useState('')
+      const [user, setUser] = useState({})
+      const idArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+      useEffect(() => {
+        if (userId) {
+          fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
+            .then((res) => {//JSON to object conversion
+              return res.json()
+            })
+            .then((data) => {
+              setUser(data);
+            })
+            .catch((err) => {
+              console.log(err.message);
+            })
+        }
+      }, [userId])
+
+      return (
+        <div>
+          <select value={userId} onChange={(e) => { setUserId(e.target.value) }}>
+            <option value="">select user</option>
+            {idArr.map((id) => {
+              return <option value={id} key={id}> {id}</option>
+            })}
+          </select>
+          {Object.keys(user).length == 0 || !userId ? <h1>No User selected</h1> : <h1>{user.id} - {user.name} - {user.email}</h1>}
+        </div>
+      )
+    }
+
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

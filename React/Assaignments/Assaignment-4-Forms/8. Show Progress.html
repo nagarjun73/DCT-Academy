@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    Mark as complete
+  </title>
+</head>
+
+<body>
+  <div id="root">
+  </div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById('root')
+
+    const { useState } = React
+
+    function TasksContainer(props) {
+      const { tasks, checklistHandle } = props
+      return (
+        <div>
+          <ProgressBar tasks={tasks} />
+          <TasksList tasks={tasks} checklistHandle={checklistHandle} />
+        </div>
+      )
+    }
+
+    function TasksList(props) {
+      const { tasks, checklistHandle } = props
+      return (
+        <ul>
+          {tasks.map((task) => {
+            return <li key={task.id} id="task1">
+              <input id={task.id} type="checkbox" checked={task.completed} onChange={() => { checklistHandle(task.id) }} value={task.completed} />
+              <label htmlFor={task.id}>{task.completed ? <s>{task.title}</s> : <span>{task.title}</span>}</label></li>
+          })}
+        </ul>
+      )
+    }
+
+    function ProgressBar(props) {
+      const { tasks } = props
+      return (
+        <progress
+          id="file"
+          value={tasks.filter((ele) => ele.completed).length}
+          max={tasks.length}>
+        </progress>
+      )
+    }
+
+    function App(props) {
+      const [tasks, setTasks] = useState([
+        { id: 1, title: 'get the website live', completed: true },
+        { id: 2, title: 'work on user validation', completed: false },
+        { id: 3, title: 'Automate the deployment process', completed: false }])
+
+      function checklistHandle(ide) {
+        const newTasks = tasks.map((task) => {
+          if (task.id === ide) {
+            return { ...task, completed: !task.completed }
+          } else {
+            return { ...task }
+          }
+        })
+        setTasks(newTasks)
+      }
+      return (
+        <div>
+          <h1>Listing Tasks - {tasks.length}</h1>
+          <TasksContainer tasks={tasks} checklistHandle={checklistHandle} />
+        </div>
+      )
+    }
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

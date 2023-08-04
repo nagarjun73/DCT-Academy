@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Sample Title
+    </title>
+</head>
+
+<body>
+    <div id="root">
+
+    </div>
+
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+    <script type="text/babel">
+        const rootHandle = document.getElementById('root')
+
+        const { useState } = React
+
+        function DisplayCap(props) {
+            const [capital, setCapital] = useState('')
+
+            function textareaHandle(e) {
+                const val = (e.target.value).toUpperCase()
+                setCapital(val)
+            }
+
+            return (
+                <div>
+                    <h1>Display in Caps</h1>
+                    <textarea value={capital} onChange={textareaHandle}></textarea>
+                </div>
+            )
+        }
+
+        ReactDOM.render(<DisplayCap />, rootHandle)
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    Display View Component
+  </title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById('root')
+    const { useState } = React
+
+    function EmployeeContainer(props) {
+      const { isSelected, employees } = props
+
+      return (
+        <div>
+          {isSelected === 'List' ? < EmployeeList employees={employees} /> : < EmployeeTable employees={employees} />}
+        </div>
+      )
+    }
+
+    function EmployeeList(props) {
+      const { employees } = props
+      return (
+        <ul>
+          {employees.map((ele) => {
+            return <li key={ele.id}>{ele.name} - {ele.email}</li>
+          })}
+        </ul>
+      )
+    }
+
+    function EmployeeTable(props) {
+      const { employees } = props
+
+      return (
+        <table border="1">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>name</th>
+              <th>email</th>
+            </tr>
+          </thead>
+          <tbody>
+            {employees.map((ele) => {
+              return (
+                <tr key={ele.id}>
+                  <td>{ele.id}</td>
+                  <td>{ele.name}</td>
+                  <td>{ele.email}</td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      )
+    }
+
+    function App(props) {
+      const [employees, setEmployees] = useState([
+        { id: 1, name: 'emp1', email: 'emp1@gmail.com' },
+        { id: 2, name: 'emp2', email: 'emp2@gmail.com' },
+        { id: 3, name: 'emp3', email: 'emp3@gmail.com' },
+        { id: 4, name: 'emp4', email: 'emp4@gmail.com' }
+      ])
+
+      const [isSelected, setIsSelected] = useState('List')
+
+      return (
+        <div>
+          <div>
+            <input type="radio" name="viewType" value='List' checked={isSelected == 'List'} onChange={(e) => { setIsSelected(e.target.value) }} />List
+            <input type="radio" name="viewType" value='Table' checked={isSelected == 'Table'} onChange={(e) => { setIsSelected(e.target.value) }} />Table <br />
+          </div>
+          <EmployeeContainer employees={employees} isSelected={isSelected} />
+        </div>
+      )
+    }
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

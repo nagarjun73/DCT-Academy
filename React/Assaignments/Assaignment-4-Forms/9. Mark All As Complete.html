@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    Sample Title
+  </title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById('root')
+
+    const { useState } = React
+
+    function App(props) {
+      const [tasks, setTasks] = useState([
+        { id: 1, title: 'get the website live', completed: true },
+        { id: 2, title: 'work on user validation', completed: false },
+        { id: 3, title: 'Automate the deployment process', completed: false }
+      ])
+
+      function checklistHandle(ide) {
+        const newTasks = tasks.map((task) => {
+          if (task.id === ide) {
+            return { ...task, completed: !task.completed }
+          } else {
+            return { ...task }
+          }
+        })
+        setTasks(newTasks)
+      }
+
+      function checkAllHandle() {
+        const markAll = tasks.map((ele) => {
+          return { ...ele, completed: true }
+        })
+
+        setTasks(markAll)
+      }
+
+      return (
+        <div>
+          <h1>Mark All as Completed</h1>
+          <table border="1">
+            <thead>
+              <tr>
+                <th><input type='checkbox' onChange={checkAllHandle} /></th>
+                <th>title</th>
+                <th>status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tasks.map((ele) => {
+                return (
+                  <tr>
+                    <td><input type='checkbox' checked={ele.completed} onChange={() => { checklistHandle(ele.id) }} value={ele.completed} /></td>
+                    <td>{ele.title}</td>
+                    <td>{ele.completed ? 'completed' : 'pending'}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div >
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    Sample Title
+  </title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById('root')
+
+    const { useState } = React
+
+    function App(props) {
+      const [users, setUsers] = useState([
+        { id: 1, name: 'emp11', email: 'emp11@gmail.com', selected: false },
+        { id: 2, name: 'emp12', email: 'emp12@gmail.com', selected: false },
+        { id: 3, name: 'emp13', email: 'emp13@gmail.com', selected: false },
+        { id: 4, name: 'emp14', email: 'emp14@gmail.com', selected: false }
+      ])
+
+      function checkHandle(ide) {
+        const selectedUser = users.map((user) => {
+          if (user.id == ide) {
+            return { ...user, selected: !user.selected }
+          } else {
+            return { ...user }
+          }
+        })
+        setUsers(selectedUser)
+      }
+
+      return (
+        <div>
+          <h1>Listing Employees - {users.length}</h1>
+          <table border="1">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>name</th>
+                <th>action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => {
+                return (
+                  <tr key={user.id}>
+                    <td>{user.id}</td>
+                    <td>{user.name}</td>
+                    <td><input type="checkbox" checked={user.selected} onChange={() => { checkHandle(user.id) }} /></td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+          <h2>Selected Employees</h2>
+          <ul>
+            {users.filter((user) => {
+              return user.selected === true
+            }).map((user, i) => <li key={i}>{user.name}</li>)}
+          </ul>
+        </div>
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

@@ -1,9 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
-import { addMinutes, format  } from 'date-fns'
+import { addMinutes, formatISO  } from 'date-fns'
 
 function App(props) {
       const [start, setStart] = useState('')
@@ -13,16 +13,20 @@ function App(props) {
       const [timings, setTimings] = useState(data)
       const [events, setEvents] = useState([{ 
                     title: 'The Title', 
-                    start: '2023-07-31T10:30',
-                    end: '2023-07-31T11:30',
+                    start: '2023-08-04T10:30',
+                    end: '2023-08-04T11:30',
                   }])
+
+      useEffect(() => {
+          const newew = timings.map((ele) => {
+          return {start:ele.start, end:ele.end, title:ele.title}
+        })
+
+        setEvents(newew.filter((ele) => ele.title !== ''))
+      },[timings])
       
-      console.log(timings);
-
-
       function startTimeHandle(e) {
         const startInput = e.target.value
-        console.log(startInput);
         setStart(startInput)
       }
 
@@ -47,51 +51,37 @@ function App(props) {
 
         const totalSlots = Math.ceil((((etHrs - stHrs) * 60) + (etMin - stMin)) / slots)
 
-        const formatedTime = new Date(start).toISOString()
-        console.log(formatedTime);
-        const event1 = [formatedTime]
-        for(let i=0; i<totalSlots; i++){
-          let date = addMinutes(event1[i], slots)
-          const newDate = date
-          event1.push({start:newDate});
+        //////////////////////////////////TIMINGS ISO
+        const formatedTime = new Date(start)
+        const event1 = [{start:formatedTime, end:addMinutes(formatedTime, slots)}]
+        for(let t=0; t<totalSlots-1; t++){
+          console.log(event1[t].start);
+          let date = addMinutes(event1[t].start, slots)
+          event1.push({start:date, end:addMinutes(date, slots)});
+          console.log(event1);
+
+          
+          const newTym = event1.map((ele) => {
+            return {start:formatISO(ele.start).slice(0,16), end:formatISO(ele.end).slice(0,16), title: '', status: true}
+          })
+
+          setTimings([...timings].concat(newTym));
+          console.log(newTym);
         }
-        console.log(event1);
-
-
-        console.log(slots);
-        const slotsArr = [`${stHrs}:${stMin}`]
-        for (let i = 0; i < totalSlots; i++) {
-          if ((Number(slotsArr[i].slice(3, 5)) + slots) >= 60) {
-            const minutes = Math.abs((Number(slotsArr[i].slice(3, 5)) + slots) - 60)
-            slotsArr.push(
-              `${Number(slotsArr[i].slice(0, 2)) + 1}:${minutes.toString().length == 1 ? '0' + minutes : minutes}`)
-          } else {
-            const minutes = Number(slotsArr[i].slice(3, 5)) + slots
-            slotsArr.push(`${Number(slotsArr[i].slice(0, 2))}:${minutes.toString().length == 1 ? '0' + minutes : minutes}`)
-          }
-        }
-
-        console.log(start)
-
-        let timeStampArr = []
-        for (let j = 0; j < slotsArr.length; j++) {
-          if (slotsArr[j + 1]) {
-            timeStampArr.push({ timeslots: `${slotsArr[j]} - ${slotsArr[j + 1]}`, name: '', status: true })
-          }
-        }
-        setTimings(timeStampArr);
       }
 
       function bookHandle(index) {
         const name = prompt("Enter your Name")
         const updated = timings.map((ele, i) => {
           if (i == index) {
-            return { ...ele, status: false, name: name }
+            return { ...ele, status: false, title: name }
           } else {
             return { ...ele }
           }
         })
         setTimings(updated)
+        console.log(timings);
+
       }
 
       function cancelHandle(index) {
@@ -141,9 +131,9 @@ function App(props) {
               {timings.map((ele, i) => {
                 return (
                   <tr key={i}>
-                    <td>{ele.timeslots}</td>
+                    <td>{ele.start.slice(11,16)} - {ele.end.slice(11,16)}</td>
                     <td>{ele.status ? "available" : "booked"}</td>
-                    <td>{ele.name == '' ? "N/A" : ele.name}</td>
+                    <td>{ele.title == '' ? "N/A" : ele.title}</td>
                     <td>{ele.status ? <button onClick={() => bookHandle(i)}>Book</button> : <button onClick={() => cancelHandle(i)}>Cancel</button>}</td>
                   </tr>
                 )
@@ -166,3 +156,32 @@ function App(props) {
     }
 
 export default App;
+
+
+
+
+
+
+
+
+
+        // console.log(slots);
+        // const slotsArr = [`${stHrs}:${stMin}`]
+        // for (let i = 0; i < totalSlots; i++) {
+        //   if ((Number(slotsArr[i].slice(3, 5)) + slots) >= 60) {
+        //     const minutes = Math.abs((Number(slotsArr[i].slice(3, 5)) + slots) - 60)
+        //     slotsArr.push(
+        //       `${Number(slotsArr[i].slice(0, 2)) + 1}:${minutes.toString().length == 1 ? '0' + minutes : minutes}`)
+        //   } else {
+        //     const minutes = Number(slotsArr[i].slice(3, 5)) + slots
+        //     slotsArr.push(`${Number(slotsArr[i].slice(0, 2))}:${minutes.toString().length == 1 ? '0' + minutes : minutes}`)
+        //   }
+        // }
+
+
+        // let timeStampArr = []
+        // for (let j = 0; j < slotsArr.length; j++) {
+        //   if (slotsArr[j + 1]) {
+        //     timeStampArr.push({ timeslots: `${slotsArr[j]} - ${slotsArr[j + 1]}`, name: '', status: true })
+        //   }
+        // }

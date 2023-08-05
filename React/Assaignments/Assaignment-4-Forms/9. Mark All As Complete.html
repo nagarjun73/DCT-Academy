@@ -3,7 +3,7 @@
 
 <head>
   <title>
-    Sample Title
+    Mark All As Complete
   </title>
 </head>
 
@@ -23,28 +23,18 @@
 
     function App(props) {
       const [tasks, setTasks] = useState([
-        { id: 1, title: 'get the website live', completed: true },
+        { id: 1, title: 'get the website live', completed: false },
         { id: 2, title: 'work on user validation', completed: false },
         { id: 3, title: 'Automate the deployment process', completed: false }
       ])
-
-      function checklistHandle(ide) {
-        const newTasks = tasks.map((task) => {
-          if (task.id === ide) {
-            return { ...task, completed: !task.completed }
-          } else {
-            return { ...task }
-          }
-        })
-        setTasks(newTasks)
-      }
+      const [markAll, setMarkAll] = useState(true)
 
       function checkAllHandle() {
-        const markAll = tasks.map((ele) => {
-          return { ...ele, completed: true }
+        setMarkAll(!markAll)
+        const markAsAll = tasks.map((ele) => {
+          return { ...ele, completed: markAll }
         })
-
-        setTasks(markAll)
+        setTasks(markAsAll)
       }
 
       return (
@@ -62,7 +52,7 @@
               {tasks.map((ele) => {
                 return (
                   <tr>
-                    <td><input type='checkbox' checked={ele.completed} onChange={() => { checklistHandle(ele.id) }} value={ele.completed} /></td>
+                    <td><input type='checkbox' checked={ele.completed} value={ele.completed} disabled /></td>
                     <td>{ele.title}</td>
                     <td>{ele.completed ? 'completed' : 'pending'}</td>
                   </tr>

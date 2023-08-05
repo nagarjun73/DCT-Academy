@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useState, useEffect, useReducer } = React
+
+    function App(props) {
+      //Using useReducer
+      const initialState = {
+        user: [],
+        userId: '',
+        recentUser: []
+      };
+
+      function reducer(state, action) {
+        switch (action.type) {
+          case 'selectUserId': {
+            console.log(state, action.value);
+            return {
+              ...state,
+              userId: action.value
+            };
+          }
+          case 'setRecentUser': {
+            return {
+              ...state,
+              recentUser: action.value
+            }
+          }
+          case 'setUser': {
+            return {
+              ...state,
+              user: action.value
+            }
+          }
+          default:
+            throw new Error();
+        }
+      }
+
+      const [state, dispatch] = useReducer(reducer, initialState)
+      const { user, userId, recentUser } = state
+
+      useEffect(() => {
+        fetch(`https://jsonplaceholder.typicode.com/users`)
+          .then((res) => {//JSON to object conversion
+            return res.json()
+          })
+          .then((data) => {
+            dispatch({
+              type: 'setUser',
+              value: data
+            })
+          })
+          .catch((err) => {
+            console.log(err.message);
+          })
+        if (localStorage.getItem('users')) {
+          dispatch({
+            type: 'setRecentUser',
+            value: JSON.parse(localStorage.getItem('users'))
+          })
+        }
+      }, [])
+
+      useEffect(() => {
+        if (userId) {
+          const newRecent = [...recentUser]
+          const username = user.find((ele) => ele.id == userId)
+          if (!newRecent.includes(username)) {
+            newRecent.push(username)
+          }
+          console.log(newRecent);
+          dispatch({
+            type: 'setRecentUser',
+            value: newRecent
+          })
+        }
+      }, [userId])
+
+      useEffect(() => {
+        localStorage.setItem('users', JSON.stringify(recentUser))
+      }, [recentUser])
+
+      return (
+        <div>
+          <select value={user.name} onChange={(e) => { dispatch({ type: 'selectUserId', value: e.target.value }) }}>
+            <option value="">select user</option>
+            {user.map((ele) => {
+              return <option value={ele.id} key={ele.id}> {ele.name}</option>
+            })}
+          </select>
+          {!userId ? <h1>No User selected</h1> : <h1>{(user.find((ele) => ele.id == userId)).name}</h1>}
+          <h1>Recent Users</h1>
+          {recentUser.length !== 0 ?
+            < ul >
+              {
+                recentUser.map((ele, i) => {
+                  return <li key={i}>{ele.name}</li>
+                })
+              }
+            </ul> : <span>No recent search</span>}
+        </div >
+      )
+    }
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

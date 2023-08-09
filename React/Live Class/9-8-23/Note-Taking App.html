@@ -55,7 +55,7 @@
     }
 
     function NoteList(props) {
-      const { notes, deleteNote } = props
+      const { notes, deleteNote, editNotes } = props
       const [categories, setCategories] = useState([])
       const [selected, setSelected] = useState('')
 
@@ -96,7 +96,7 @@
           <h2>Listing Notes - {notes.length}</h2>
           {renderSelected().map((note, i) => {
             return (
-              <NoteItem key={i} note={note} deleteNote={deleteNote} />
+              <NoteItem key={i} note={note} deleteNote={deleteNote} editNotes={editNotes} />
             )
           })}
         </div>
@@ -104,17 +104,46 @@
     }
 
     function NoteItem(props) {
-      const { note, deleteNote } = props
+      const { note, deleteNote, editNotes } = props
+      const [toggle, setToggle] = useState(false)
+      const [inputEdit, setInputEdit] = useState('')
 
       function deleteHandle() {
         deleteNote(note.id)
       }
 
+      function editSubmithandle(e) {
+        e.preventDefault()
+        const newObj = {
+          id: note.id,
+          body: inputEdit,
+          createdAt: note.createdAt,
+          categories: note.categories
+        }
+        editNotes(newObj)
+        setToggle(!toggle)
+      }
+
+      useEffect(() => {
+        setInputEdit(note.body)
+      }, [])
+
+
       return (
         <div>
-          <blockquote>{note.body}</blockquote>
-          <p>created on {new Date(note.createdAt).toLocaleString()}</p>
-          <p># - {note.categories.toString()}</p>
+          {!toggle ?
+            (<div>
+              <blockquote>{note.body}</blockquote>
+              <p>created on {new Date(note.createdAt).toLocaleString()}</p>
+              <p># - {note.categories.toString()}</p>
+            </div>) : (
+              <form onSubmit={editSubmithandle}>
+                <input type="text" value={inputEdit} onChange={(e) => setInputEdit(e.target.value)} />
+                <input type="submit" />
+              </form>
+            )
+          }
+          {!toggle && <button onClick={() => setToggle(!toggle)}>Edit</button>}
           <button onClick={deleteHandle}>Delete</button>
           <hr />
         </div>
@@ -124,13 +153,11 @@
     function App(props) {
       const [notes, setNotes] = useState([])
 
-
       useEffect(() => {
         const data = localStorage.getItem('notes')
         if (data) {
           setNotes(JSON.parse(data))
         }
-
       }, [])
 
       useEffect(() => {
@@ -151,11 +178,23 @@
         setNotes(deleteNote)
       }
 
+      function editNotes(obj) {
+        const editedArr = notes.map((ele) => {
+          if (ele.id == obj.id) {
+            return obj
+          } else {
+            return ele
+          }
+        })
+        console.log(editedArr);
+        setNotes(editedArr)
+      }
+
       return (
         <div>
           <h1>Note-Taking App</h1>
           <NoteForm addNote={addNote} notes={notes} />
-          {notes.length ? <NoteList notes={notes} deleteNote={deleteNote} /> : 'No notes Found'}
+          {notes.length ? <NoteList notes={notes} deleteNote={deleteNote} editNotes={editNotes} /> : 'No notes Found'}
         </div>
       )
     }

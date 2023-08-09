@@ -29,7 +29,7 @@
 
       function onSubmitHandle(e) {
         e.preventDefault()
-        const categg = categ.split(',')
+        const categg = categ.split(',').map((ele) => { return ele.trim().toLowerCase() })
         console.log(categg);
         const newObj = {
           id: Number(new Date()),
@@ -56,10 +56,45 @@
 
     function NoteList(props) {
       const { notes, deleteNote } = props
+      const [categories, setCategories] = useState([])
+      const [selected, setSelected] = useState('')
+
+      useEffect(() => {
+        const note = [...notes]
+        const newCateg = []
+        for (let i = 0; i < note.length; i++) {
+          for (let j = 0; j < note[i].categories.length; j++) {
+            if (!newCateg.includes(note[i].categories[j])) {
+              newCateg.push(note[i].categories[j])
+            }
+          }
+        }
+        setCategories(newCateg)
+      }, [notes])
+
+      function categoryClickHandle(category) {
+        setSelected(category)
+      }
+
+      function renderSelected() {
+        const filterdArr = notes.filter((ele) => ele.categories.includes(selected))
+        if (filterdArr.length !== 0) {
+          return filterdArr
+        } else {
+          return notes
+        }
+      }
+
       return (
         <div>
+          <h3>Categories</h3>
+          <div>
+            {categories.map((cat, i) => {
+              return (<span key={i} style={{ marginRight: '10px' }}><a href='#' onClick={() => categoryClickHandle(cat)}>{cat}</a></span>)
+            })}
+          </div>
           <h2>Listing Notes - {notes.length}</h2>
-          {notes.map((note, i) => {
+          {renderSelected().map((note, i) => {
             return (
               <NoteItem key={i} note={note} deleteNote={deleteNote} />
             )
@@ -79,6 +114,7 @@
         <div>
           <blockquote>{note.body}</blockquote>
           <p>created on {new Date(note.createdAt).toLocaleString()}</p>
+          <p># - {note.categories.toString()}</p>
           <button onClick={deleteHandle}>Delete</button>
           <hr />
         </div>
@@ -88,11 +124,13 @@
     function App(props) {
       const [notes, setNotes] = useState([])
 
+
       useEffect(() => {
         const data = localStorage.getItem('notes')
         if (data) {
           setNotes(JSON.parse(data))
         }
+
       }, [])
 
       useEffect(() => {

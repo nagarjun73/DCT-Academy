@@ -58,7 +58,7 @@
 
       return (
         <div>
-          <select value={user.name} onChange={(e) => { setUserId(e.target.value) }}>
+          <select value={userId} onChange={(e) => { setUserId(e.target.value) }}>
             <option value="">select user</option>
             {user.map((ele) => {
               return <option value={ele.id} key={ele.id}> {ele.name}</option>

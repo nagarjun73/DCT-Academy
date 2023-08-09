@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+    const { useState, useEffect } = React
+
+    function NoteForm(props) {
+      const [input, setInput] = useState('')
+      const [categ, setCateg] = useState('')
+      const { addNote, notes } = props
+
+      useEffect(() => {
+        setInput('')
+      }, [notes])
+
+      function onSubmitHandle(e) {
+        e.preventDefault()
+        const categg = categ.split(',')
+        console.log(categg);
+        const newObj = {
+          id: Number(new Date()),
+          body: input,
+          createdAt: new Date(),
+          categories: categg
+        }
+        addNote(newObj)
+      }
+
+      function inputHandle(e) {
+        const val = e.target.value
+        setInput(val)
+      }
+
+      return (
+        <form onSubmit={onSubmitHandle}>
+          <textarea type="text" value={input} onChange={inputHandle} /> <br />
+          <input type="text" value={categ} onChange={(e) => setCateg(e.target.value)} />
+          <input type="submit" value="Create Note" />
+        </form>
+      )
+    }
+
+    function NoteList(props) {
+      const { notes, deleteNote } = props
+      return (
+        <div>
+          <h2>Listing Notes - {notes.length}</h2>
+          {notes.map((note, i) => {
+            return (
+              <NoteItem key={i} note={note} deleteNote={deleteNote} />
+            )
+          })}
+        </div>
+      )
+    }
+
+    function NoteItem(props) {
+      const { note, deleteNote } = props
+
+      function deleteHandle() {
+        deleteNote(note.id)
+      }
+
+      return (
+        <div>
+          <blockquote>{note.body}</blockquote>
+          <p>created on {new Date(note.createdAt).toLocaleString()}</p>
+          <button onClick={deleteHandle}>Delete</button>
+          <hr />
+        </div>
+      )
+    }
+
+    function App(props) {
+      const [notes, setNotes] = useState([])
+
+      useEffect(() => {
+        const data = localStorage.getItem('notes')
+        if (data) {
+          setNotes(JSON.parse(data))
+        }
+      }, [])
+
+      useEffect(() => {
+        localStorage.setItem('notes', JSON.stringify(notes))
+      }, [notes])
+
+      function addNote(newObj) {
+        const updateNote = [newObj, ...notes]
+        setNotes(updateNote)
+      }
+
+      function deleteNote(ide) {
+        const deleteNote = notes.filter((note) => {
+          if (note.id !== ide) {
+            return note
+          }
+        })
+        setNotes(deleteNote)
+      }
+
+      return (
+        <div>
+          <h1>Note-Taking App</h1>
+          <NoteForm addNote={addNote} notes={notes} />
+          {notes.length ? <NoteList notes={notes} deleteNote={deleteNote} /> : 'No notes Found'}
+        </div>
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

@@ -1,43 +1,81 @@
 import logo from './logo.svg';
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import { addMinutes, formatISO  } from 'date-fns'
 
+
+
 function App(props) {
+      const data = localStorage.getItem('timings') ? JSON.parse(localStorage.getItem('timings')) : []
+      /*
       const [start, setStart] = useState('')
       const [end, setEnd] = useState('')
       const [slots, setSlots] = useState(0)
-      const data = localStorage.getItem('timings') ? JSON.parse(localStorage.getItem('timings')) : []
       const [timings, setTimings] = useState(data)
       const [events, setEvents] = useState([{ 
                     title: 'The Title', 
                     start: '2023-08-04T10:30',
                     end: '2023-08-04T11:30',
                   }])
+      */
+      const initialArg = {
+            start: '',
+            end:'',
+            slots:'',
+            timings:data,
+            events:[]
+      }
+
+      function reducer(state, action){
+        switch(action.type){
+          case 'setStart' : {
+            return {...state, start:action.value}
+          }
+          case 'setEnd' : {
+            return {...state, end:action.value}
+          }
+          case 'setSlots' : {
+            return {...state, slots:action.value}
+          }
+          case 'setTimings' : {
+            return {...state, timings:action.value}
+          }
+          case 'setEvents' : {
+            return {...state, events:action.value}
+          }
+        }
+      }
+
+      const[state, dispatch] = useReducer(reducer, initialArg)
+      const {start, end, slots, timings, events} = state
 
       useEffect(() => {
           const newew = timings.map((ele) => {
           return {start:ele.start, end:ele.end, title:ele.title}
         })
 
-        setEvents(newew.filter((ele) => ele.title !== ''))
+        // setEvents(newew.filter((ele) => ele.title !== ''))
+        dispatch({type:'setEvents', value:newew.filter((ele) => ele.title !== '')})
       },[timings])
       
       function startTimeHandle(e) {
         const startInput = e.target.value
-        setStart(startInput)
+        // setStart(startInput)
+        dispatch({type:'setStart', value:startInput})
       }
 
       function endTimeHandle(e) {
         const endInput = e.target.value
-        setEnd(endInput)
+        // setEnd(endInput)
+        dispatch({type:'setEnd', value:endInput})
       }
 
       function slotsHandle(e) {
         const slotsInput = Number(e.target.value)
-        setSlots(slotsInput)
+        // setSlots(slotsInput)
+        dispatch({type:'setSlots', value:slotsInput})
       }
 
       function formSubmitHandle(e) {
@@ -60,12 +98,12 @@ function App(props) {
           event1.push({start:date, end:addMinutes(date, slots)});
           console.log(event1);
 
-          
           const newTym = event1.map((ele) => {
             return {start:formatISO(ele.start).slice(0,16), end:formatISO(ele.end).slice(0,16), title: '', status: true}
           })
 
-          setTimings([...timings].concat(newTym));
+          // setTimings([...timings].concat(newTym));
+          dispatch({type:'setTimings', value:[...timings].concat(newTym)})
           console.log(newTym);
         }
       }
@@ -79,7 +117,8 @@ function App(props) {
             return { ...ele }
           }
         })
-        setTimings(updated)
+        // setTimings(updated)
+        dispatch({type:'setTimings', value:updated})
         console.log(timings);
 
       }
@@ -87,12 +126,13 @@ function App(props) {
       function cancelHandle(index) {
         const updated = timings.map((ele, i) => {
           if (i == index) {
-            return { ...ele, status: true, name: "" }
+            return { ...ele, status: true, title: "" }
           } else {
             return { ...ele }
           }
         })
-        setTimings(updated)
+        // setTimings(updated)
+        dispatch({type:'setTimings', value:updated})
       }
 
       function saveHandle() {

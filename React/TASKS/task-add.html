@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="./JS/react.development.js"></script>
+  <script src="./JS/react-dom.development.js"></script>
+  <script src="./JS/babel-standalone@6.26.0_babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useState } = React
+
+    function InputComp(props) {
+      const { tsk, removeTaskHandler, i } = props
+      const [taskInput, settaskInput] = useState('')
+
+      return (
+        <div>
+          <label>Task{i + 1}</label>
+          <input type="text" value={taskInput} onChange={(e) => settaskInput(e.target.value)} />
+          < button onClick={(e) => removeTaskHandler(e, tsk.id)}> X</button><br />
+        </div>
+      )
+    }
+
+    function App(props) {
+      const [task, setTask] = useState([])
+      const [title, setTitle] = useState('')
+
+      function addTaskHandler(e) {
+        e.preventDefault()
+        const addTask = [...task, { id: Number(new Date()) }]
+        setTask(addTask)
+      }
+
+      function removeTaskHandler(e, taskid) {
+        e.preventDefault()
+        const removed = [...task].filter((ele) => {
+          return ele.id !== taskid
+        })
+        setTask(removed)
+      }
+
+      function submitHandle(e) {
+        e.preventDefault()
+        const onj = {
+          title: title,
+          tasks: task
+        }
+
+        console.log(onj);
+      }
+
+      return (
+        <div>
+          <form onSubmit={submitHandle}>
+            <label>Title</label>
+            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} /><br />
+            {/*<input type="text" value={task} onChange={(e) => dispatch({ type: 'setTask', value: e.target.value })} />*/}
+
+            {task.map((tsk, i) => {
+              return (
+                <InputComp key={i} tsk={tsk} removeTaskHandler={removeTaskHandler} i={i} />
+              )
+            })}
+            <button onClick={addTaskHandler}>Add</button>
+            <input type="submit" />
+          </form>
+        </div >
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

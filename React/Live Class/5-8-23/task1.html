@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useState, useEffect, useReducer } = React
+
+    const initialstate = {
+      postId: '',
+      post: {},
+      author: {}
+    }
+
+    function reducer(state, action) {
+      switch (action.type) {
+        case 'setPostID': {
+          return {
+            ...state,
+            postId: action.value
+          }
+        }
+        case 'setPost': {
+          return {
+            ...state,
+            post: action.value
+          }
+        }
+        case 'setAuthor': {
+          return {
+            ...state,
+            author: action.value
+          }
+        }
+      }
+    }
+
+    function App(props) {
+      const [state, dispatch] = useReducer(reducer, initialstate)
+      const { postId, post, author } = state
+
+      // const [postId, setPostID] = useState('')
+      // const [post, setPost] = useState({})
+      // const [author, setAuthor] = useState({})
+
+      function submitHandleFun(e) {
+        e.preventDefault()
+
+        const xhr = new XMLHttpRequest()
+        xhr.open('GET', `https://jsonplaceholder.typicode.com/posts/${postId}`)
+        xhr.send()
+        xhr.onload = function () {
+          const post1 = JSON.parse(xhr.responseText)
+          // setPost(post1)
+          dispatch({
+            type: 'setPost',
+            value: post1
+          })
+        }
+      }
+      useEffect(() => {
+        if (Object.keys(post).length !== 0) {
+          const xhr2 = new XMLHttpRequest()
+          xhr2.open('GET', `https://jsonplaceholder.typicode.com/users/${post.userId}`)
+          xhr2.send()
+          xhr2.onload = function () {
+            const user1 = JSON.parse(xhr2.responseText)
+            // setAuthor(user1.name);
+            dispatch({
+              type: 'setAuthor',
+              value: user1.name
+            })
+          }
+        }
+      }, [post])
+
+      return (
+        <div>
+          <form onSubmit={submitHandleFun}>
+            <input type="text" value={postId} onChange={(e) => dispathch({ type: 'setPostID', value: e.target.value })} /> <br />
+            <input type="submit" />
+          </form>
+
+          {author && <h1><span>Title- {post.title}</span> ||  Author -- {author}</h1>}
+        </div>
+
+      )
+    }
+
+
+    ReactDOM.render(<App />, rootHandle)
+
+  </script>
+</body>
+
+</html>

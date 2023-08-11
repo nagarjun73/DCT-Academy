@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+    const url = 'https://restcountries.com/v3.1/all?fields=name,capital'
+
+    const { useState, useEffect } = React
+
+    function CountriesList(props) {
+      const [countries, setCountries] = useState([])
+
+      useEffect(() => {
+        const xhr = new XMLHttpRequest()
+        xhr.open('GET', url)
+        xhr.send()
+        xhr.onload = function () {
+          const data = JSON.parse(xhr.responseText)
+          setCountries(data);
+        }
+      }, [])
+
+      return (
+        <div>
+          <h1>Listing Countries - {countries.length}</h1>
+          <ul>
+            {countries.map((ele, i) => {
+              return <li key={i}>{ele.name.common} - {ele.capital[0]}</li>
+            })}
+          </ul>
+        </div>
+      )
+    }
+
+    ReactDOM.render(<CountriesList />, rootHandle)
+  </script>
+</body>
+
+</html>

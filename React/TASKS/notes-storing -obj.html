@@ -12,38 +12,19 @@
 
   </div>
 
-  <script src="../JS/react.development.js"></script>
-  <script src="../JS/react-dom.development.js"></script>
-  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+  <script src="./JS/react.development.js"></script>
+  <script src="./JS/react-dom.development.js"></script>
+  <script src="./JS/babel-standalone@6.26.0_babel.js"></script>
 
   <script type="text/babel">
     const rootHandle = document.getElementById("root");
     const { useState, useEffect } = React
 
-    function SearchForm(props) {
-      const [search, setSearch] = useState('')
-      const { notes, setSearchedItems } = props
-
-      function onSearchClick(e) {
-        e.preventDefault()
-        setSearchedItems(search);
-      }
-
-      return (
-        <div>
-          <h3 className='display-6 mb-3'>Search for Notes</h3>
-          <form onSubmit={onSearchClick}>
-            <input className='form-control' type="text" value={search} onChange={(e) => setSearch(e.target.value)} />
-            <input className='btn btn-danger m-3' type="submit" value='Search' /><hr />
-          </form>
-        </div>
-      )
-    }
-
     function NoteForm(props) {
       const [input, setInput] = useState('')
       const [categ, setCateg] = useState('')
-      const { addNote, notes } = props
+      const [title, setTitle] = useState('')
+      const { addNote, notes, addCategory } = props
 
       useEffect(() => {
         setInput('')
@@ -53,11 +34,23 @@
         e.preventDefault()
         const categg = categ.split(',').map((ele) => { return ele.trim().toLowerCase() })
         console.log(categg);
+
+        const catArr = categg.map((ele) => {
+          return { id: Number(new Date()) + Math.random(), name: ele }
+        })
+        addCategory(catArr)
+
+        const cateArr2 = []
+        catArr.forEach((ele) => {
+          cateArr2.push(ele.id)
+        })
+
         const newObj = {
           id: Number(new Date()),
+          title: title,
           body: input,
           createdAt: new Date(),
-          categories: categg
+          categories: cateArr2
         }
         addNote(newObj)
       }
@@ -69,9 +62,14 @@
 
       return (
         <form onSubmit={onSubmitHandle}>
-          <textarea className='form-control' type="text" value={input} onChange={inputHandle} /> <br />
-          <input className='form-control' type="text" value={categ} onChange={(e) => setCateg(e.target.value)} />
-          <input className='btn btn-danger m-3' type="submit" value="Create Note" />
+          <label>Title</label><br />
+          <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} /><br />
+          <label>Description</label><br />
+          <textarea type="text" value={input} onChange={inputHandle} /> <br />
+          <label>Tags</label><br />
+          <input type="text" value={categ} onChange={(e) => setCateg(e.target.value)} /> <br />
+          <br />
+          <input type="submit" value="Create Note" />
         </form>
       )
     }
@@ -82,16 +80,16 @@
       const [selected, setSelected] = useState('')
 
       useEffect(() => {
-        // const note = [...notes]
-        // const newCateg = []
-        // for (let i = 0; i < note.length; i++) {
-        //   for (let j = 0; j < note[i].categories.length; j++) {
-        //     if (!newCateg.includes(note[i].categories[j])) {
-        //       newCateg.push(note[i].categories[j])
-        //     }
-        //   }
-        // }
-        const newCateg = [...new Set(notes.flatMap((ele) => ele.categories))]
+        const note = [...notes]
+        const newCateg = []
+        for (let i = 0; i < note.length; i++) {
+          for (let j = 0; j < note[i].categories.length; j++) {
+            if (!newCateg.includes(note[i].categories[j])) {
+              newCateg.push(note[i].categories[j])
+            }
+          }
+        }
+        // const newCateg = [...new Set(notes.flatMap((ele) => ele.categories))]
         setCategories(newCateg)
       }, [notes])
 
@@ -182,6 +180,7 @@
 
     function App(props) {
       const [notes, setNotes] = useState([])
+      const [categories, setCategories] = useState([])
       const [searched, setSearched] = useState('')
 
       useEffect(() => {
@@ -189,10 +188,16 @@
         if (data) {
           setNotes(JSON.parse(data))
         }
+
+        const cat = localStorage.getItem('categories')
+        if (cat) {
+          setCategories(JSON.parse(cat))
+        }
       }, [])
 
       useEffect(() => {
         localStorage.setItem('notes', JSON.stringify(notes))
+        localStorage.setItem('categories', JSON.stringify(categories))
       }, [notes])
 
       function addNote(newObj) {
@@ -224,11 +229,33 @@
         setSearched(srchd)
       }
 
+
+      function addCategory(arrCat) {
+
+        function checkingObj(ele) {
+          const catArr1 = [...categories]
+          const found = catArr1.find((ele1) => {
+            return ele.name === ele1.name
+          })
+          if (found) {
+            return false
+          } else {
+            return true
+          }
+        }
+
+        const arraa = arrCat.filter((ele) => {
+          return checkingObj(ele)
+        })
+
+        console.log(arraa);
+      }
+
+
       return (
         <div className='container m-5 '>
           <h1 className='display-4 mb-3'>Note-Taking App</h1>
-          <SearchForm notes={notes} setSearchedItems={setSearchedItems} />
-          <NoteForm addNote={addNote} notes={notes} />
+          <NoteForm addNote={addNote} notes={notes} addCategory={addCategory} />
           {notes.length ? <NoteList notes={notes} deleteNote={deleteNote} editNotes={editNotes} searched={searched} /> : 'No notes Found'}
         </div>
       )

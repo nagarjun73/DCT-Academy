@@ -4,7 +4,7 @@ import AddExpenseForm from "./AddExpenseForm"
 import PieChart from "./chartJS"
 
 function Dashboard(props) {
-  const{username, expenses, addEditedObj, addObj} = props
+  const{username, expenses, addEditedObj, addObj, logoutHandler} = props
   const[addPopUp, setAddPopUp] = useState(false)
 
 
@@ -19,7 +19,8 @@ function Dashboard(props) {
       return (
         <div>
           <h1>Dashboard</h1>
-          <h3>Welcome - {username}</h3>
+          <h3>Welcome - {username}</h3> 
+          <button onClick={() => logoutHandler()}>Log out</button>
           <button onClick={addExpHandle}>Add Expense</button>
           {addPopUp && <AddExpenseForm addObj={addObj} remExpHandle={remExpHandle}/>}
           {expenses.length !== 0 && <PieChart expenses={expenses}/>}

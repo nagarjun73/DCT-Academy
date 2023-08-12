@@ -2,7 +2,6 @@ import { useState, useEffect } from "react"
 
 function EditExpenseForm(props){
   const {selectedExp, editable, manipulateFun,  addEditedObj} = props
-  const[selectedExpe, setSelectedExpe] = useState(selectedExp)
   const [desc, setDesc] = useState('')
   const [amount, setAmount] = useState(0)
   const[category, setCategory] = useState('')
@@ -10,19 +9,19 @@ function EditExpenseForm(props){
   const[editables, setEditables] = useState(editable)
 
   useEffect(() => {
-    if(selectedExpe){
-      setDesc(selectedExpe.description)
-      setAmount(selectedExpe.amount)
-      setCategory(selectedExpe.category)
-      setNotes(selectedExpe.notes)
+    if(selectedExp){
+      setDesc(selectedExp.description)
+      setAmount(selectedExp.amount)
+      setCategory(selectedExp.category)
+      setNotes(selectedExp.notes)
     }
-  }, [selectedExpe])
+  }, [selectedExp])
 
   function dialogueSubmitHandle(e){
     e.preventDefault()
     const editedObj = {
-      id:selectedExpe.id,
-      date:selectedExpe.date,
+      id:selectedExp.id,
+      date:selectedExp.date,
       description:desc,
       amount:amount,
       category:category,

@@ -7,21 +7,38 @@ import Login from './Components/login'
 
 function App() {
   const [ifLogged, setIfLogged] = useState(false)
+  console.log(ifLogged)
   const[username, setUsername] = useState('')
-  const [users, setUsers] = useState([{ name: 'nagarjun', password: 'secret123' }, { name: 'nagarjun1211', password: 'secret1234' }])
-  const [expenses, setExpenses] = useState(sessionStorage.getItem('expenses') ? JSON.parse(sessionStorage.getItem('expenses')) : [])
-
-      // useEffect(() => {
-        
-      // },[])
+  const [users, setUsers] = useState([{ name: 'nagarjun', password: 'secret123', isLogged:false }])
+  const [expenses, setExpenses] = useState(localStorage.getItem('expenses') ? JSON.parse(localStorage.getItem('expenses')) : [])
 
       useEffect(() => {
-        sessionStorage.setItem('expenses', JSON.stringify(expenses))
+        const user1 = JSON.parse(sessionStorage.getItem('users'))
+        console.log(user1)
+        if(user1){
+          setIfLogged(true)
+        }
+      },[])
+
+      useEffect(() => {
+        localStorage.setItem('expenses', JSON.stringify(expenses))
       },[expenses])
+
+      useEffect(() => {
+        if(ifLogged){
+          users[0].isLogged = !users[0].isLogged
+          sessionStorage.setItem('users', JSON.stringify(users))
+        }
+      },[ifLogged])
 
       function logToggler(name) {
         setIfLogged(!ifLogged)
         setUsername(name)
+      }
+
+      function logoutHandler(){
+        setIfLogged(!ifLogged)
+        sessionStorage.removeItem('users')
       }
 
       function addObj(obj){
@@ -42,7 +59,7 @@ function App() {
 
       return (
         <div>
-          {!ifLogged ? <Login logToggler={logToggler} users={users} /> : <Dashboard username={username} expenses={expenses} addEditedObj={addEditedObj} addObj={addObj}/>}
+          {!ifLogged ? <Login logToggler={logToggler} users={users} /> : <Dashboard username={username} expenses={expenses} addEditedObj={addEditedObj} addObj={addObj} logoutHandler={logoutHandler} />}
         </div>
       )
 }

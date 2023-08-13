@@ -1,0 +1,30 @@
+#root {
+  margin: 0 auto;
+  padding: 2rem;
+  color: #274a91;
+}
+
+#body-bg{
+  background-color: #dee5f0;
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.main-container {
+  display:flex;
+  flex-direction: row;
+  gap: 10rem;
+}
+
+#list-item{
+  display: flex;
+  flex-direction:row;
+  align-items: center;
+  justify-content: space-between;
+}

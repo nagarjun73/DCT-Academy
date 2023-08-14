@@ -5,9 +5,9 @@ export default function ContactList(props){
   
   function renderFiltered(){
     if(filtered.length !== 0){
-      return filtered
+      return filtered.sort((a,b) => {return a.name.localeCompare(b.name)})
     }else{
-      return contacts
+      return contacts.sort((a,b) => {return a.name.localeCompare(b.name);})
     }
   }
 

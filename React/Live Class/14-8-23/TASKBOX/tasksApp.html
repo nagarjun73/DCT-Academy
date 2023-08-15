@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    Task Manager App
+  </title>
+</head>
+
+<body>
+  <div style="background-color: rgb(198, 250, 232);height:100vh; " id="root">
+
+  </div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById('root')
+
+    const { useState, useEffect } = React
+
+    function TaskForm(props) {
+      const { addTask, tasks } = props
+      const [title, setTitle] = useState('')
+      const [description, setDescription] = useState('')
+      const [isCompleted, setIsCompleted] = useState(false)
+      const [dueDate, setDueDate] = useState('')
+
+      useEffect(() => {
+        setTitle('')
+        setDescription('')
+        setIsCompleted(false)
+        setDueDate('')
+      }, [tasks])
+
+      function addFormSubmitHandle(e) {
+        e.preventDefault()
+
+        const taskObj = {
+          title,
+          description,
+          isCompleted,
+          dueDate
+        }
+        addTask(taskObj)
+        console.log(taskObj);
+      }
+
+      return (
+        <div className="card p-4" style={{ width: '25rem' }}>
+          <form onSubmit={addFormSubmitHandle}>
+            <div>
+              <label className="form-label pt-3">title</label>
+              <input className="form-control" type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+            </div>
+
+            <div>
+              <label className="form-label pt-3">description</label>
+              <textarea className="form-control" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+            </div>
+
+            <div>
+              <label className="form-label pt-3">due date</label>
+              <input className="form-control" type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
+            </div>
+
+            <div className='p-3'>
+              <input className="form-check-input" type="checkbox" value={isCompleted} onChange={(e) => setIsCompleted(e.target.checked)} />
+              <label className="form-check-label px-3">Completed</label><br />
+            </div>
+
+            <input className="btn btn-primary" type="submit" />
+          </form>
+        </div>
+      )
+    }
+
+    function TaskList(props) {
+      const { tasks, editTask, deleteTask } = props
+      return (
+        <div>
+          <h1>Total tasks <span className="badge rounded-pill text-bg-primary">{tasks.length}</span></h1>
+          <ul className="list-group">
+            {tasks.map((ele) => {
+              return <TaskItem key={ele._id} {...ele} editTask={editTask} deleteTask={deleteTask} />
+            })}
+          </ul>
+        </div>
+      )
+    }
+
+    function TaskItem(props) {
+      const { _id, title, description, isCompleted, dueDate, editTask, deleteTask } = props
+      const [completed, setCompleted] = useState(isCompleted)
+
+      function editHandle(e) {
+        setCompleted(e.target.checked)
+        const editedObj = {
+          isCompleted: !isCompleted
+        }
+        editTask(_id, editedObj)
+      }
+
+      function deleteHandle(e) {
+        deleteTask(_id)
+      }
+
+      return (
+        <li className="list-group-item"><span>{title}</span>&nbsp; &nbsp;<span><input type="checkbox" checked={completed} onChange={editHandle} /></span>&nbsp;&nbsp;<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+          <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+        </svg><button className="btn-close" onClick={deleteHandle}></button></li>
+      )
+    }
+
+    function App(props) {
+      const [tasks, setTasks] = useState([])
+
+      useEffect(() => {
+        // const xhr = new XMLHttpRequest()
+        // xhr.open("GET", "http://localhost:3033/api/tasks")
+        // xhr.send()
+        // xhr.onload = function () {
+        //   const data = JSON.parse(xhr.responseText);
+        //   console.log(data);
+        //   setTasks(data)
+        // }
+
+        axios.get("http://localhost:3033/api/tasks")
+          .then((res) => {
+            setTasks(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }, [])
+
+      function addTask(taskObj) {
+        // const xhr = new XMLHttpRequest()
+        // xhr.open("POST", 'http://localhost:3033/api/tasks')
+        // xhr.setRequestHeader('Content-type', 'application/json')
+        // xhr.send(JSON.stringify(taskObj))
+        // xhr.onload = function () {
+        //   console.log(xhr.responseText);
+        // }
+        axios.post('http://localhost:3033/api/tasks', taskObj)
+          .then((res) => {
+            setTasks([...tasks, res.data])
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }
+
+      function editTask(id, obj) {
+
+        // const xhr = new XMLHttpRequest()
+        // xhr.open("PUT", `http://localhost:3033/api/tasks/${id}`)
+        // xhr.setRequestHeader('Content-type', 'application/json')
+        // xhr.onload = function () {
+        //   if (xhr.status === 200) {
+        //     const updatedTask = JSON.parse(xhr.responseText);
+        //     console.table(updatedTask);
+        //   } else {
+        //     console.error(`Error editing task (Status ${xhr.status}): ${xhr.responseText}`);
+        //   }
+        // };
+        // xhr.onerror = function () {
+        //   console.error("Request failed.");
+        // };
+        // xhr.send(JSON.stringify(obj))
+
+        axios.put(`http://localhost:3033/api/tasks/${id}`, obj)
+          .then((res) => {
+            const dataUpdate = tasks.map((ele) => {
+              if (res.data._id === ele._id) {
+                return res.data
+              } else {
+                return ele
+              }
+            })
+            setTasks(dataUpdate)
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }
+
+      function deleteTask(id) {
+        // const xhr = new XMLHttpRequest()
+        // xhr.open("DELETE", `http://localhost:3033/api/tasks/${id}`)
+        // xhr.setRequestHeader('Content-type', 'application/json')
+        // xhr.onload = function () {
+        //   const data = xhr.responseText
+        //   if (xhr.status == 200) {
+        //     console.table(data);
+        //   } else {
+        //     console.error(data)
+        //   }
+        // }
+        // xhr.send(null)
+
+        axios.delete(`http://localhost:3033/api/tasks/${id}`)
+          .then((res) => {
+            const data2 = tasks.filter((ele) => {
+              if (ele._id !== id) {
+                return ele
+              }
+            })
+            setTasks(data2)
+          })
+      }
+      console.log(tasks);
+
+      return (
+        <div>
+          <h1 className="d-flex justify-content-center pb-5" style={{ color: '#4D516D' }}>Task Manager App</h1>
+          <div className="d-flex justify-content-evenly">
+            <TaskList tasks={tasks} editTask={editTask} deleteTask={deleteTask} />
+            <TaskForm addTask={addTask} tasks={tasks} />
+          </div>
+        </div>
+      )
+    }
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

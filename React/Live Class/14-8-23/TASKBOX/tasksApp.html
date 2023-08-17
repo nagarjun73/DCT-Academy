@@ -8,7 +8,7 @@
 </head>
 
 <body>
-  <div style="background-color: rgb(198, 250, 232);height:100vh; " id="root">
+  <div style="background-color: rgb(198, 250, 232);height:100%; " id="root">
 
   </div>
 
@@ -18,11 +18,14 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
   <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-beautiful-dnd@13.1.1/dist/react-beautiful-dnd.min.js"></script>
 
   <script type="text/babel">
     const rootHandle = document.getElementById('root')
 
     const { useState, useEffect } = React
+
+    const { DragDropContext, Droppable, Draggable } = ReactBeautifulDnd
 
     function TaskForm(props) {
       const { addTask, tasks } = props
@@ -31,12 +34,6 @@
       const [isCompleted, setIsCompleted] = useState(false)
       const [dueDate, setDueDate] = useState('')
 
-      useEffect(() => {
-        setTitle('')
-        setDescription('')
-        setIsCompleted(false)
-        setDueDate('')
-      }, [tasks])
 
       function addFormSubmitHandle(e) {
         e.preventDefault()
@@ -47,8 +44,21 @@
           isCompleted,
           dueDate
         }
-        addTask(taskObj)
-        console.log(taskObj);
+
+        axios.post('http://localhost:3033/api/tasks', taskObj)
+          .then((res) => {
+            const taskNew = ([...tasks, res.data])
+            addTask(taskNew)
+
+            //reset Form
+            setTitle('')
+            setDescription('')
+            setIsCompleted(false)
+            setDueDate('')
+          })
+          .catch((err) => {
+            console.log(err);
+          })
       }
 
       return (
@@ -73,7 +83,6 @@
               <input className="form-check-input" type="checkbox" value={isCompleted} onChange={(e) => setIsCompleted(e.target.checked)} />
               <label className="form-check-label px-3">Completed</label><br />
             </div>
-
             <input className="btn btn-primary" type="submit" />
           </form>
         </div>
@@ -87,7 +96,7 @@
           <h1>Total tasks <span className="badge rounded-pill text-bg-primary">{tasks.length}</span></h1>
           <ul className="list-group">
             {tasks.map((ele) => {
-              return <TaskItem key={ele._id} {...ele} editTask={editTask} deleteTask={deleteTask} />
+              return <TaskItem key={ele._id} {...ele} editTask={editTask} deleteTask={deleteTask} tasks={tasks} />
             })}
           </ul>
         </div>
@@ -95,7 +104,7 @@
     }
 
     function TaskItem(props) {
-      const { _id, title, description, isCompleted, dueDate, editTask, deleteTask } = props
+      const { _id, title, description, isCompleted, dueDate, editTask, deleteTask, tasks } = props
       const [completed, setCompleted] = useState(isCompleted)
 
       function editHandle(e) {
@@ -103,40 +112,128 @@
         const editedObj = {
           isCompleted: !isCompleted
         }
-        editTask(_id, editedObj)
+
+        axios.put(`http://localhost:3033/api/tasks/${_id}`, editedObj)
+          .then((res) => {
+            const dataUpdate = tasks.map((ele) => {
+              if (res.data._id === ele._id) {
+                return res.data
+              } else {
+                return ele
+              }
+            })
+            editTask(dataUpdate)
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+
       }
 
       function deleteHandle(e) {
-        deleteTask(_id)
-      }
-
-      function onEditHandle() {
-
+        axios.delete(`http://localhost:3033/api/tasks/${_id}`)
+          .then((res) => {
+            const data2 = tasks.filter((ele) => {
+              if (ele._id !== _id) {
+                return ele
+              }
+            })
+            deleteTask(data2)
+          })
       }
 
       return (
         <li className="list-group-item"><span>{title}</span>&nbsp; &nbsp;<span><input type="checkbox" checked={completed} onChange={editHandle} /></span>&nbsp;&nbsp;
-          <a href="#" onClick={onEditHandle}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+          <a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+            <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
           </svg></a>
           <button className="btn-close" onClick={deleteHandle}></button></li>
       )
     }
 
+    function OverdueDateTask(props) {
+      const { tasks } = props
+      const dates = tasks.filter((ele) => {
+        return new Date(ele.dueDate) < new Date() && ele.isCompleted == false
+      })
+
+
+      return (
+        <div>
+          <h2>Duedate Tasks</h2>
+          <ul className="list-group">
+            {dates.map((ele, i) => {
+              return <li className="list-group-item" key={i}>{ele.title} - {ele.dueDate} - {ele.isCompleted ? 'Completed' : 'Incomplete'}</li>
+            })}
+            {provided.placeholder}
+          </ul>
+        </div>
+      )
+    }
+
+    function UpcomingIncompleteTask(props) {
+      const { tasks } = props
+      const dates = tasks.filter((ele) => {
+        return new Date(ele.dueDate) > new Date() && ele.isCompleted == false
+      })
+
+      return (
+        <div>
+          <h2>Upcoming Tasks</h2>
+          <ul className="upcomingTasks list-group">
+            {dates.map((ele, i) => {
+              return <li className="list-group-item" key={i}>{ele.title} - {ele.dueDate} - {ele.isCompleted ? 'Completed' : 'Incomplete'}</li>
+            })}
+          </ul>
+        </div>
+      )
+    }
+
+    function GroupTaskItem(props) {
+      const { dataArr, tag } = props
+      console.log(dataArr);
+      return (
+        <div>
+          <h4>{tag}</h4>
+          <ul>
+            {
+              dataArr.map((ele, i) => {
+                return <li className="list-group-item" key={i}>{ele.title} - {ele.dueDate} - {ele.isCompleted ? 'Completed' : 'Incomplete'}</li>
+              })
+            }
+          </ul>
+        </div>
+      )
+    }
+
+    function GrouppingTask(props) {
+      const { tasks } = props
+
+      const newObj = {}
+      tasks.forEach((ele) => {
+        if (!newObj.hasOwnProperty(ele.dueDate)) {
+          newObj[ele.dueDate] = [ele]
+        } else {
+          newObj[ele.dueDate] = [...newObj[ele.dueDate], ele]
+        }
+      })
+
+      return (
+        <div className="list-group">
+          {Object.keys(newObj).map((ele, i) => {
+            return <GroupTaskItem key={i} dataArr={newObj[ele]} tag={ele} />
+          })}
+        </div>
+      )
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
     function App(props) {
       const [tasks, setTasks] = useState([])
 
       useEffect(() => {
-        // const xhr = new XMLHttpRequest()
-        // xhr.open("GET", "http://localhost:3033/api/tasks")
-        // xhr.send()
-        // xhr.onload = function () {
-        //   const data = JSON.parse(xhr.responseText);
-        //   console.log(data);
-        //   setTasks(data)
-        // }
-
         axios.get("http://localhost:3033/api/tasks")
           .then((res) => {
             setTasks(res.data);
@@ -146,82 +243,17 @@
           })
       }, [])
 
-      function addTask(taskObj) {
-        // const xhr = new XMLHttpRequest()
-        // xhr.open("POST", 'http://localhost:3033/api/tasks')
-        // xhr.setRequestHeader('Content-type', 'application/json')
-        // xhr.send(JSON.stringify(taskObj))
-        // xhr.onload = function () {
-        //   console.log(xhr.responseText);
-        // }
-        axios.post('http://localhost:3033/api/tasks', taskObj)
-          .then((res) => {
-            setTasks([...tasks, res.data])
-          })
-          .catch((err) => {
-            console.log(err);
-          })
+      function addTask(taskNew) {
+        setTasks(taskNew)
       }
 
-      function editTask(id, obj) {
-
-        // const xhr = new XMLHttpRequest()
-        // xhr.open("PUT", `http://localhost:3033/api/tasks/${id}`)
-        // xhr.setRequestHeader('Content-type', 'application/json')
-        // xhr.onload = function () {
-        //   if (xhr.status === 200) {
-        //     const updatedTask = JSON.parse(xhr.responseText);
-        //     console.table(updatedTask);
-        //   } else {
-        //     console.error(`Error editing task (Status ${xhr.status}): ${xhr.responseText}`);
-        //   }
-        // };
-        // xhr.onerror = function () {
-        //   console.error("Request failed.");
-        // };
-        // xhr.send(JSON.stringify(obj))
-
-        axios.put(`http://localhost:3033/api/tasks/${id}`, obj)
-          .then((res) => {
-            const dataUpdate = tasks.map((ele) => {
-              if (res.data._id === ele._id) {
-                return res.data
-              } else {
-                return ele
-              }
-            })
-            setTasks(dataUpdate)
-          })
-          .catch((err) => {
-            console.log(err);
-          })
+      function editTask(dataUpdate) {
+        setTasks(dataUpdate)
       }
 
-      function deleteTask(id) {
-        // const xhr = new XMLHttpRequest()
-        // xhr.open("DELETE", `http://localhost:3033/api/tasks/${id}`)
-        // xhr.setRequestHeader('Content-type', 'application/json')
-        // xhr.onload = function () {
-        //   const data = xhr.responseText
-        //   if (xhr.status == 200) {
-        //     console.table(data);
-        //   } else {
-        //     console.error(data)
-        //   }
-        // }
-        // xhr.send(null)
-
-        axios.delete(`http://localhost:3033/api/tasks/${id}`)
-          .then((res) => {
-            const data2 = tasks.filter((ele) => {
-              if (ele._id !== id) {
-                return ele
-              }
-            })
-            setTasks(data2)
-          })
+      function deleteTask(data2) {
+        setTasks(data2)
       }
-      console.log(tasks);
 
       return (
         <div>
@@ -229,6 +261,14 @@
           <div className="d-flex justify-content-evenly">
             <TaskList tasks={tasks} editTask={editTask} deleteTask={deleteTask} />
             <TaskForm addTask={addTask} tasks={tasks} />
+          </div>
+          <div className="d-flex justify-content-evenly">
+            <OverdueDateTask tasks={tasks} />
+            <UpcomingIncompleteTask tasks={tasks} />
+          </div>
+
+          <div>
+            <GrouppingTask tasks={tasks} />
           </div>
         </div>
       )

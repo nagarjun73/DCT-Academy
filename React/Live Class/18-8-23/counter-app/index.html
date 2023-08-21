@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    conter app
+  </title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.js"
+    integrity="sha512-RjvSEaeDqPCfUVQ9kna2/2OqHz/7F04IOl1/66LmQjB/lOeAzwq7LrbTzDbz5cJzlPNJ5qteNtHR56XaJSTNWw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/babel">
+    const rootHandle = document.getElementById('root')
+    const { useState, useEffect } = React
+
+
+    function CounterItem(props) {
+      const { counterData, deleteCounter, callBack } = props
+
+      function handleUpdate(data) {
+        axios.put(`http://localhost:3050/api/counters/${counterData._id}?type=${data}`)
+          .then((res) => {
+            callBack(res.data)
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }
+
+      function dechandle() {
+        axios.put(`http://localhost:3050/api/counters/${counterData._id}?type=decrement`)
+          .then((res) => {
+            decrementCB(res.data)
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }
+
+      function resethandle() {
+        axios.put(`http://localhost:3050/api/counters/${counterData._id}?type=reset`)
+          .then((res) => {
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }
+
+      function delethandle() {
+        axios.delete(`http://localhost:3050/api/counters/${counterData._id}`)
+          .then((res) => {
+            deleteCounter(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }
+
+      return (
+        <div>
+          <h1>count--{counterData.value}</h1>
+          <button onClick={() => handleUpdate('increment')}>+</button>
+          <button onClick={() => handleUpdate('decrement')}>-</button>
+          <button onClick={() => handleUpdate('reset')}>Reset</button>
+          <button onClick={delethandle}>delete</button>
+        </div>
+      )
+    }
+
+    function CounterList(props) {
+      const { counter, deleteCounter, callBack } = props
+      return (
+        <div>
+          <ul>
+            {
+              counter.map((ele, i) => {
+                return (
+                  <CounterItem key={i} counterData={ele} deleteCounter={deleteCounter} callBack={callBack} />
+                )
+              })
+            }
+          </ul>
+        </div>
+      )
+    }
+
+
+    function App(props) {
+      const [counter, setCounter] = useState([])
+      console.log(counter);
+
+      useEffect(() => {
+        axios.get('http://localhost:3050/api/counters')
+          .then((response) => {
+            setCounter(response.data)
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }, [])
+
+      function handleAdd() {
+        axios.post(' http://localhost:3050/api/counters')
+          .then((res) => {
+            console.log(res.data);
+            setCounter([...counter, res.data])
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }
+
+      function deleteCounter(data) {
+        const deleted = counter.filter((ele) => {
+          return ele._id !== data._id
+        })
+        console.log(deleted);
+        setCounter(deleted)
+      }
+
+      function callBack(data) {
+        setCounter(counter.map((ele) => {
+          if (data._id == ele._id) {
+            return data
+          } else {
+            return ele
+          }
+        }))
+      }
+
+
+
+      return (
+        <div>
+          <h1>list counter = {counter.length}</h1>
+          <button onClick={handleAdd}>Add Counter</button>
+          <CounterList counter={counter} deleteCounter={deleteCounter} callBack={callBack} />
+        </div>
+      )
+    }
+
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

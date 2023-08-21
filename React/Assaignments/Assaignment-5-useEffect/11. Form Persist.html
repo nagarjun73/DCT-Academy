@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    Form Persist
+  </title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById('root')
+
+    const { useState, useEffect } = React
+    function App(props) {
+      const [title, setTitle] = useState('')
+      const [body, setBody] = useState('')
+      const [formData, setFormData] = useState({})
+
+      useEffect(() => {
+        const data = localStorage.getItem('inputData')
+        if (data) {
+          setTitle(JSON.parse(data).title)
+          setBody(JSON.parse(data).body)
+        }
+      }, [])
+
+      useEffect(() => {
+        localStorage.setItem('inputData', JSON.stringify({ title, body }))
+      }, [title, body])
+
+      useEffect(() => {
+        if (Object.keys(formData).length !== 0) {
+          setTitle('')
+          setBody('')
+        }
+      }, [formData])
+
+      function submitFormHandle(e) {
+        e.preventDefault()
+        setFormData({ title, body })
+      }
+
+      function reloadbuttonHandle() {
+        window.document.location.reload()
+      }
+
+      return (
+        <div>
+          <h1>Story Book</h1>
+          <form onSubmit={submitFormHandle}>
+            <label>title</label> <br />
+            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} /><br />
+
+            <label>body</label> <br />
+            <textarea value={body} onChange={(e) => setBody(e.target.value)}></textarea><br />
+
+            <input type="submit" value="save" />
+          </form>
+          <button onClick={reloadbuttonHandle}>Reload</button>
+        </div>
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+
+  </script>
+</body>
+
+</html>

@@ -18,7 +18,7 @@ export default function UpcomingIncompleteTask(props) {
 
       return (
         <div>
-  <h2>Upcoming Tasks</h2>
+  <h2 className='display-6'>Upcoming Tasks</h2>
   <DragDropContext onDragEnd={handleOnDragEnd}>
     <Droppable droppableId={String(Math.random())}>
       {(provided) => ( 

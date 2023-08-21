@@ -7,12 +7,13 @@ export default function OverdueDateTask(props) {
 
       return (
         <div>
-          <h2>Duedate Tasks</h2>
-          <ul className="list-group">
+          <h2 className='display-6'>Duedate Tasks</h2>
+          {dates.length !== 0 ?
+            <ul className="list-group">
             {dates.map((ele, i) => {
               return <li className="list-group-item" key={i}>{ele.title} - {ele.dueDate} - {ele.isCompleted ? 'Completed' : 'Incomplete'}</li>
             })}
-          </ul>
+          </ul> : <li style={{listStyle:'none'}}>No tasks</li>}
         </div>
       )
     }

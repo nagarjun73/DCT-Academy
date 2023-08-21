@@ -1,0 +1,17 @@
+.box-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.task-list{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.box-one{
+  background-color: aqua;
+  height: 150px;
+  width: 150px;
+}

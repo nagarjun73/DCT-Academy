@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    Search User by Id
+  </title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById('root')
+
+    const { useState, useEffect } = React
+
+    function App(props) {
+      const [id, setId] = useState('')
+      const [userId, setUserId] = useState('')
+      const [foundUsr, setFoundUsr] = useState({})
+      const [error, setError] = useState({})
+
+      useEffect(() => {
+        if (userId) {
+          axios.get(`https://jsonplaceholder.typicode.com/users/${userId}`)
+            .then((res) => {
+              setFoundUsr(res.data);
+              setError({});
+            })
+            .catch((err) => {
+              setError(err);
+              setFoundUsr({});
+            })
+        }
+      }, [userId])
+
+      function onSubmitHandle(e) {
+        e.preventDefault()
+        setUserId(id)
+      }
+
+      return (
+        <div>
+          <form onSubmit={onSubmitHandle}>
+            <input type="text" value={id} placeholder="search id" onChange={(e) => setId(e.target.value)} />
+            <input type="submit" />
+          </form>
+          {Object.keys(foundUsr).length !== 0 && <h1>{foundUsr.name} - {foundUsr.email} - {foundUsr.address.city}</h1>}
+          {Object.keys(error).length !== 0 && <p style={{ color: '#FF0000' }}>record not found</p>}
+        </div>
+      )
+    }
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

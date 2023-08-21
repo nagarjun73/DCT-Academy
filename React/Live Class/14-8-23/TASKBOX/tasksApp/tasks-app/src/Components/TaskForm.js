@@ -37,8 +37,9 @@ export default function TaskForm(props) {
       }
 
       return (
-        <div className="card p-4" style={{ width: '25rem' }}>
-          <form onSubmit={addFormSubmitHandle}>
+        <div  style={{ width: '25rem', height:'100%' }}>
+          <h1 className='display-6 mb-3'>Add task</h1>
+          <form onSubmit={addFormSubmitHandle} className="card p-4 mt-3">
             <div>
               <label className="form-label pt-3">title</label>
               <input className="form-control" type="text" value={title} onChange={(e) => setTitle(e.target.value)} />

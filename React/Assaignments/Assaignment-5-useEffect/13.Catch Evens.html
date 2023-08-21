@@ -24,17 +24,16 @@
     function App(props) {
       const [random, setRandom] = useState(0)
       const [evenNum, setEvenNum] = useState([])
-      console.log(evenNum);
 
       useEffect(() => {
-        function intervalFunction() {
+        function timeoutFunction() {
           const randomNum = Math.ceil(Math.random() * 100)
           if (randomNum % 2 == 0) {
             setEvenNum([...evenNum, randomNum])
           }
           setRandom(randomNum);
         }
-        setTimeout(intervalFunction, 1000)
+        setTimeout(timeoutFunction, 1000)
       }, [random])
 
 

@@ -3,7 +3,7 @@
 
 <head>
   <title>
-    Sample Title
+    USD to INR Converter
   </title>
 </head>
 
@@ -24,13 +24,28 @@
     const { useState, useEffect } = React
 
     function App(props) {
+      const [inrData, setInrData] = useState(0)
+      const [dollar, setDollar] = useState(0)
+      const [inr, setInr] = useState(0)
 
       useEffect(() => {
-        axios.get('')
-      })
+        axios.get('https://api.currencyapi.com/v3/latest?apikey=cur_live_k4YzCsnMh5nkndBPYMnvRhBdwj1SqBKBispUOXGm')
+          .then((res) => {
+            setInrData(res.data.data.INR.value);
+          })
+      }, [])
+
+      useEffect(() => {
+        setInr(dollar * inrData)
+      }, [dollar])
 
       return (
-        <div></div>
+        <div>
+          <h1>Dollar - {dollar} </h1>
+          <h1>Rupees - {(inr).toFixed(2)} </h1>
+          <input type="range" min='0' max='100' value={dollar} onChange={(e) => setDollar(e.target.value)} />
+          <p>note - 1USD = {inrData.toFixed(2)}INR</p>
+        </div>
       )
     }
 

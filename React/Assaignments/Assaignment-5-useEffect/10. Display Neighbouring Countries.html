@@ -3,7 +3,7 @@
 
 <head>
   <title>
-    Sample Title
+    Display Neighbouring Countries
   </title>
 </head>
 
@@ -26,7 +26,6 @@
     function App(props) {
       const [countries, setCountries] = useState([])
       const [countryId, setCountryId] = useState('')
-      const [bordersCode, setBordersCode] = useState([])
       const [brdCountries, setBrdCountries] = useState([])
 
       useEffect(() => {
@@ -43,33 +42,31 @@
       useEffect(() => {
         if (countryId) {
           const found = countries.find((ele) => { return ele.cca2 == countryId })
-          setBordersCode(found.borders);
-        }
-      }, [countryId])
 
-      useEffect(() => {
-        if (bordersCode) {
-          const bordersArr = bordersCode.map((ele) => {
-            return axios.get(`https://restcountries.com/v3.1/alpha/${ele}`)
+          if (found.borders) {
+            const bordersArr = found.borders.map((ele) => {
+              return axios.get(`https://restcountries.com/v3.1/alpha/${ele}`)
+                .then((res) => {
+                  return res.data[0]
+                })
+                .catch((err) => {
+                  console.log(err);
+                })
+            })
+
+            Promise.all(bordersArr)
               .then((res) => {
-                return res.data[0]
+                setBrdCountries(res);
               })
               .catch((err) => {
                 console.log(err);
               })
-          })
-
-          Promise.all(bordersArr)
-            .then((res) => {
-              setBrdCountries(res);
-            })
-            .catch((err) => {
-              console.log(err);
-            })
-        } else {
-          setBrdCountries([])
+          } else {
+            setBrdCountries([])
+          }
         }
-      }, [bordersCode])
+
+      }, [countryId])
 
 
       return (
@@ -80,8 +77,8 @@
               return <option key={i} value={ele.cca2}>{ele.name.common}</option>
             })}
           </select>
-          <h1>Neighbouring Countries</h1>
           {countryId && <div>
+            <h1>Neighbouring Countries</h1>
             {brdCountries.length !== 0 ?
               <table>
                 <thead>

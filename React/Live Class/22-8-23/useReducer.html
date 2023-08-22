@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useReducer } = React
+
+    function reducer(state, action) {
+      switch (action.type) {
+        case 'INCREMENT': {
+          return state + 1
+        }
+        case "DECREMENT": {
+          return state - 1
+        }
+
+        case "RESET": {
+          return 0
+        }
+
+        case "INCREMENT_BY": {
+          return state + action.payload
+        }
+
+        case "DECREMENT_BY": {
+          return state - action.payload
+        }
+      }
+    }
+
+    function App(props) {
+      const [state, dispatch] = useReducer(reducer, 0)
+
+      function incrementHandle() {
+        dispatch({ type: 'INCREMENT' })
+      }
+
+      function decrementHandle() {
+        dispatch({ type: "DECREMENT" })
+      }
+
+      function resetHandle() {
+        dispatch({ type: "RESET" })
+      }
+
+      function incrementByHandle() {
+        const n = Number(prompt('type number'))
+        dispatch({ type: 'INCREMENT_BY', payload: n })
+      }
+
+      function decrementByHandle() {
+        const n = Number(prompt('type number'))
+        dispatch({ type: 'DECREMENT_BY', payload: n })
+      }
+
+      return (
+        <div>
+          <h1>{state}</h1>
+          <button onClick={incrementHandle}>+1</button>
+          <button onClick={decrementHandle}>-1</button>
+          <button onClick={resetHandle}>O</button>
+          <button onClick={incrementByHandle}>+2</button>
+          <button onClick={decrementByHandle}>-2</button>
+        </div>
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

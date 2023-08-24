@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    Display Neighbouring Countries
+  </title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById('root')
+
+    const { useState, useEffect } = React
+
+    function App(props) {
+      const [countries, setCountries] = useState([])
+      const [countryId, setCountryId] = useState('')
+      const [brdCountries, setBrdCountries] = useState([])
+
+      useEffect(() => {
+        axios.get('https://restcountries.com/v3.1/all')
+          .then((res) => {
+            setCountries(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }, [])
+
+
+      useEffect(() => {
+        if (countryId) {
+          const found = countries.find((ele) => { return ele.cca2 == countryId })
+
+          if (found.borders) {
+            const bordersArr = found.borders.map((ele) => {
+              return axios.get(`https://restcountries.com/v3.1/alpha/${ele}`)
+                .then((res) => {
+                  return res.data[0]
+                })
+                .catch((err) => {
+                  console.log(err);
+                })
+            })
+
+            Promise.all(bordersArr)
+              .then((res) => {
+                setBrdCountries(res);
+              })
+              .catch((err) => {
+                console.log(err);
+              })
+          } else {
+            setBrdCountries([])
+          }
+        }
+
+      }, [countryId])
+
+
+      return (
+        <div>
+          <select value={countryId} onChange={(e) => { setCountryId(e.target.value) }}>
+            <option value="">select</option>
+            {countries.sort((a, b) => { return a.name.common.localeCompare(b.name.common) }).map((ele, i) => {
+              return <option key={i} value={ele.cca2}>{ele.name.common}</option>
+            })}
+          </select>
+          {countryId && <div>
+            <h1>Neighbouring Countries</h1>
+            {brdCountries.length !== 0 ?
+              <table>
+                <thead>
+                  <tr>
+                    <th>flag</th>
+                    <th>Name</th>
+                    <th>Capital</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {brdCountries.map((ele, i) => {
+                    return (
+                      <tr key={i}>
+                        <td><img src={ele.flags.png} alt={ele.name.common} style={{ width: '100px', height: '60px' }} /></td>
+                        <td>{ele.name.common}</td>
+                        <td>{ele.capital[0]}</td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+              : <p>No neighbouring countries</p>}
+          </div>}
+        </div>
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

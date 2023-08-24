@@ -80,6 +80,7 @@
       const { notes, deleteNote, editNotes, searched } = props
       const [categories, setCategories] = useState([])
       const [selected, setSelected] = useState('')
+      console.log(categories);
 
       useEffect(() => {
         // const note = [...notes]
@@ -92,6 +93,7 @@
         //   }
         // }
         const newCateg = [...new Set(notes.flatMap((ele) => ele.categories))]
+        console.log(newCateg);
         setCategories(newCateg)
       }, [notes])
 

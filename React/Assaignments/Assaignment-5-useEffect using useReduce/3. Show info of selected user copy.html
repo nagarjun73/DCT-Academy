@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    Show info of selected user
+  </title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById('root')
+
+    const { useState, useEffect, useReducer } = React
+
+    function reducer(state, action) {
+      switch (action.type) {
+        case 'users': {
+          return { ...state, users: [...action.payload] }
+        }
+        case 'userId': {
+          return { ...state, userId: action.payload }
+        }
+
+        case 'foundUser': {
+          return { ...state, foundUsr: action.payload }
+        }
+      }
+    }
+
+    function UsersSelect(props) {
+
+      const initialState = {
+        users: [],
+        userId: '',
+        foundUsr: {}
+      }
+
+      const [state, dispatch] = useReducer(reducer, initialState)
+
+      useEffect(() => {
+        axios.get('https://jsonplaceholder.typicode.com/users')
+          .then((res) => {
+            dispatch({ type: "users", payload: res.data });
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }, [])
+
+      useEffect(() => {
+        if (state.userId) {
+          dispatch({
+            type: 'foundUser', payload: state.users.find((ele) => {
+              return ele.id == state.userId
+            })
+          })
+        }
+      }, [state.userId])
+
+      return (
+        <div>
+          <span>Users  </span>
+          <select value={state.userId} onChange={(e) => { dispatch({ type: "userId", payload: e.target.value }) }}>
+            <option value="">select user</option>
+            {
+              state.users.map((ele) => {
+                return <option key={ele.id} value={ele.id}>{ele.name}</option>
+              })
+            }
+          </select>
+          {Object.keys(state.foundUsr).length !== 0 ? <p>{state.foundUsr.name} - {state.foundUsr.email} - {state.foundUsr.address.city}</p> : <p>select any user</p>}
+        </div>
+      )
+    }
+
+    ReactDOM.render(<UsersSelect />, rootHandle)
+
+  </script>
+</body>
+
+</html>

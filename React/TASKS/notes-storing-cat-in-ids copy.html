@@ -18,22 +18,36 @@
 
   <script type="text/babel">
     const rootHandle = document.getElementById("root");
-    const { useState, useEffect } = React
+    const { useState, useEffect, useReducer, createContext, useContext } = React
+    const ReducerContext = createContext()
+
+    function reducer(state, action) {
+      switch (action.type) {
+        case 'setNotes': {
+          return
+        }
+        case 'setCategories': {
+
+        }
+        case 'setSearched': {
+
+        }
+      }
+    }
 
     function SearchForm(props) {
-      const [search, setSearch] = useState('')
-      const { notes, setSearchedItems } = props
+      const { state, dispatch } = useContext(ReducerContext)
 
       function onSearchClick(e) {
         e.preventDefault()
-        setSearchedItems(search);
+        dispatch({ key: 'setSearchedItems', payload: state.search })
       }
 
       return (
         <div>
           <h3 className='display-6 mb-3'>Search for Notes</h3>
           <form onSubmit={onSearchClick}>
-            <input className='form-control' type="text" value={search} onChange={(e) => setSearch(e.target.value)} />
+            <input className='form-control' type="text" value={state.search} onChange={(e) => dispatch({ type: 'setSearch', payload: e.target.value })} />
             <input className='btn btn-danger m-3' type="submit" value='Search' /><hr />
           </form>
         </div>
@@ -41,18 +55,16 @@
     }
 
     function NoteForm(props) {
-      const [input, setInput] = useState('')
-      const [categ, setCateg] = useState('')
-      const [title, setTitle] = useState('')
-      const { addNote, notes, addCategory } = props
+      const { state, dispatch } = useContext(ReducerContext)
+
 
       useEffect(() => {
-        setInput('')
-      }, [notes])
+        dispatch({ key: 'setInput', payload: '' })
+      }, [state.notes])
 
       function onSubmitHandle(e) {
         e.preventDefault()
-        const categg = categ.split(',').map((ele) => { return ele.trim().toLowerCase() })
+        const categg = state.categ.split(',').map((ele) => { return ele.trim().toLowerCase() })
         console.log(categg);
 
         const catArr = categg.map((ele) => {
@@ -61,27 +73,27 @@
 
         const newObj = {
           id: Number(new Date()),
-          title: title,
-          body: input,
+          title: state.title,
+          body: state.input,
           createdAt: new Date(),
         }
-        addNote(newObj)
+        dispatch({ key: 'addNote', payload: newObj })
         addCategory(catArr, newObj)
       }
 
       function inputHandle(e) {
         const val = e.target.value
-        setInput(val)
+        dispatch({ key: 'setInput', payload: val })
       }
 
       return (
         <form onSubmit={onSubmitHandle}>
           <label>Title</label><br />
-          <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} /><br />
+          <input type="text" value={state.title} onChange={(e) => dispatch({ key: 'setTitle', payload: e.target.value })} /><br />
           <label>Description</label><br />
-          <textarea type="text" value={input} onChange={inputHandle} /> <br />
+          <textarea type="text" value={state.input} onChange={inputHandle} /> <br />
           <label>Tags</label><br />
-          <input type="text" value={categ} onChange={(e) => setCateg(e.target.value)} /> <br />
+          <input type="text" value={state.categ} onChange={(e) => dispatch({ key: 'setCateg', payload: e.target.value })} /> <br />
           <br />
           <input type="submit" value="Create Note" />
         </form>
@@ -89,9 +101,8 @@
     }
 
     function NoteList(props) {
-      const { notes, deleteNote, editNotes, searched, categories } = props
+      const { state, dispatch } = useReducer(ReducerContext)
       // const [categories, setCategories] = useState([])
-      const [selected, setSelected] = useState('')
 
       // useEffect(() => {
       //   const note = [...notes]
@@ -108,18 +119,18 @@
       // }, [notes])
 
       function categoryClickHandle(category) {
-        setSelected(category.id)
+        dispatch({ key: 'setSelected', payload: category.id })
       }
 
       function renderSelected() {
-        const searchedArr = notes.filter((ele) => ele.body.includes(searched))
-        const filterdArr = notes.filter((ele) => ele.categories.includes(selected))
+        const searchedArr = state.notes.filter((ele) => ele.body.includes(state.searched))
+        const filterdArr = state.notes.filter((ele) => ele.categories.includes(state.selected))
         if (filterdArr.length !== 0) {
           return filterdArr
         } else if (searchedArr.length !== 0) {
           return searchedArr
         } else {
-          return notes
+          return state.notes
         }
       }
 
@@ -127,14 +138,14 @@
         <div>
           <h3 className='display-6 mb-3'>Categories</h3>
           <div>
-            {categories.map((cat, i) => {
+            {state.categories.map((cat, i) => {
               return (<span key={i} ><a className='link-danger mx-3' href='#' onClick={() => categoryClickHandle(cat)}>{cat.name}</a></span>)
             })}
           </div>
-          <h2 className='display-6 mb-3'>Listing Notes - {notes.length}</h2>
+          <h2 className='display-6 mb-3'>Listing Notes - {state.notes.length}</h2>
           {renderSelected().map((note, i) => {
             return (
-              <NoteItem key={i} note={note} deleteNote={deleteNote} editNotes={editNotes} categories={categories} />
+              <NoteItem key={i} />
             )
           })}
         </div>
@@ -142,21 +153,21 @@
     }
 
     function NoteItem(props) {
-      const { note, deleteNote, editNotes, categories } = props
+      const { state, dispatch } = useContext(ReducerContext)
       const [toggle, setToggle] = useState(false)
       const [inputEdit, setInputEdit] = useState('')
 
       function deleteHandle() {
-        deleteNote(note.id)
+        deleteNote(state.note.id)
       }
 
       function editSubmithandle(e) {
         e.preventDefault()
         const newObj = {
-          id: note.id,
-          body: inputEdit,
-          createdAt: note.createdAt,
-          categories: note.categories
+          id: state.note.id,
+          body: state.inputEdit,
+          createdAt: state.state.note.createdAt,
+          categories: state.note.categories
         }
         editNotes(newObj)
         setToggle(!toggle)
@@ -164,15 +175,15 @@
 
       function editButtonHandle() {
         setToggle(!toggle)
-        setInputEdit(note.body)
+        dispatch({ type: 'setInputEdit', payload: state.note.body })
       }
 
       useEffect(() => {
-        setInputEdit(note.body)
+        dispatch({ type: 'setInputEdit', payload: state.note.body })
       }, [])
 
       function callBackCat(ide) {
-        const newCat = categories.find((ele) => {
+        const newCat = state.categories.find((ele) => {
           return ele.id == ide
         })
         return newCat.name
@@ -183,12 +194,12 @@
         <div className='border border-secondary rounded mb-3'>
           {!toggle ?
             (<div>
-              <blockquote>{note.body} created on {new Date(note.createdAt).toLocaleString()}</blockquote>
+              <blockquote>{state.note.body} created on {new Date(state.note.createdAt).toLocaleString()}</blockquote>
 
-              <p># {note.categories.map((ele) => callBackCat(ele)).toString()}</p>
+              <p># {state.note.categories.map((ele) => callBackCat(ele)).toString()}</p>
             </div>) : (
               <form onSubmit={editSubmithandle}>
-                <input type="text" value={inputEdit} onChange={(e) => setInputEdit(e.target.value)} />
+                <input type="text" value={state.inputEdit} onChange={(e) => dispatch({ key: 'setInputEdit', payload: e.target.value })} />
                 <input className='btn btn-success m-2 fw-bolder' type="submit" />
               </form>
             )
@@ -199,22 +210,34 @@
       )
     }
 
-
-
     function App(props) {
-      const [notes, setNotes] = useState([])
-      const [categories, setCategories] = useState([])
-      const [searched, setSearched] = useState('')
+
+      const initialState = {
+        notes: [],
+        categories: [],
+        searched: '',
+        search: '',
+        input: '',
+        categ: '',
+        title: '',
+        selected: '',
+        inputEdit: ''
+      }
+
+      const { notes, categories, searched } = initialState
+
+
+      const [state, dispatch] = useContext(reducer, intialState)
 
       useEffect(() => {
         const data = localStorage.getItem('notes')
         if (data) {
-          setNotes(JSON.parse(data))
+          dispatch({ type: 'setNotes', payload: JSON.parse(data) })
         }
 
         const cat = localStorage.getItem('categories')
         if (cat) {
-          setCategories(JSON.parse(cat))
+          dispatch({ type: 'setCategories', payload: JSON.parse(cat) })
         }
       }, [])
 
@@ -225,7 +248,7 @@
 
       function addNote(newObj) {
         const updateNote = [newObj, ...notes]
-        setNotes(updateNote)
+        dispatch({ type: 'setNotes', payload: updateNote })
       }
 
       function deleteNote(ide) {
@@ -234,7 +257,7 @@
             return true
           }
         })
-        setNotes(deleteNote)
+        dispatch({ type: 'setNotes', payload: deleteNote })
       }
 
       function editNotes(obj) {
@@ -245,11 +268,11 @@
             return ele
           }
         })
-        setNotes(editedArr)
+        dispatch({ type: 'setNotes', payload: editedArr })
       }
 
       function setSearchedItems(srchd) {
-        setSearched(srchd)
+        dispatch({ type: 'setSearched', payload: srchd })
       }
 
 
@@ -295,16 +318,17 @@
         console.log(ObjIncludesNewID);
 
         const updateNote = [ObjIncludesNewID, ...notes]
-        setNotes(updateNote)
+        dispatch({ type: 'setNotes', payload: updateNote })
       }
-
 
       return (
         <div className='container m-5 '>
           <h1 className='display-4 mb-3'>Note-Taking App</h1>
-          <NoteForm notes={notes} addCategory={addCategory} addNote={addNote} />
-          <SearchForm notes={notes} setSearchedItems={setSearchedItems} />
-          {notes.length ? <NoteList notes={notes} deleteNote={deleteNote} editNotes={editNotes} searched={searched} categories={categories} /> : 'No notes Found'}
+          <ReducerContext value={{ state, dispatch }}>
+            <NoteForm notes={notes} addCategory={addCategory} addNote={addNote} />
+            <SearchForm notes={notes} setSearchedItems={setSearchedItems} />
+            {notes.length ? <NoteList notes={notes} deleteNote={deleteNote} editNotes={editNotes} searched={searched} categories={categories} /> : 'No notes Found'}
+          </ReducerContext>
         </div>
       )
     }

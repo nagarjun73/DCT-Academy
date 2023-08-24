@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    Search User by Id
+  </title>
+</head>
+
+<body>
+  <div id="root">
+  </div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById('root')
+
+    const { useState, useEffect, useReducer } = React
+
+    function reducer(state, action) {
+      switch (action.type) {
+        case 'setId': {
+          return { ...state, id: action.payload }
+        }
+        case 'setUserId': {
+          return { ...state, userId: action.payload }
+        }
+
+        case 'setFoundUser': {
+          return { ...state, foundUser: action.payload }
+        }
+
+        case 'setError': {
+          return { ...state, error: action.payload }
+        }
+      }
+    }
+
+    function App(props) {
+      const initialState = {
+        id: '',
+        userId: '',
+        foundUsr: {},
+        error: {}
+      }
+
+      const [state, dispatch] = useReducer(reducer, initialState)
+
+      useEffect(() => {
+        if (state.userId) {
+          axios.get(`https://jsonplaceholder.typicode.com/users/${state.userId}`)
+            .then((res) => {
+              dispatch({ type: 'setFoundUsr', payload: res.data });
+              dispatch({ type: 'setError', payload: {} });
+            })
+            .catch((err) => {
+              dispatch({ type: 'setError', payload: err });
+              dispatch({ type: 'setFoundUsr', payload: {} });
+            })
+        }
+      }, [state.userId])
+
+      function onSubmitHandle(e) {
+        e.preventDefault()
+        dispatch({ type: 'setUserId', payload: state.id })
+      }
+
+      return (
+        <div>
+          <form onSubmit={onSubmitHandle}>
+            <input type="text" value={state.id} placeholder="search id" onChange={(e) => dispatch({ type: 'setId', payload: e.target.value })} />
+            <input type="submit" />
+          </form>
+          {Object.keys(state.foundUsr).length !== 0 && <h1>{state.foundUsr.name} - {state.foundUsr.email} - {state.foundUsr.address.city}</h1>}
+          {Object.keys(state.error).length !== 0 && <p style={{ color: '#FF0000' }}>record not found</p>}
+        </div>
+      )
+    }
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

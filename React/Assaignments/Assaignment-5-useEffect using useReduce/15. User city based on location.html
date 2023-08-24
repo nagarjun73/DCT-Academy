@@ -3,7 +3,7 @@
 
 <head>
   <title>
-    Dashboard of JSON placeholder
+    User city based on location
   </title>
 </head>
 
@@ -17,43 +17,42 @@
   <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.js"></script>
 
+
   <script type="text/babel">
     const rootHandle = document.getElementById('root')
 
     const { useState, useEffect } = React
 
     function App(props) {
-      const [allData, setAllData] = useState([])
+      const [coords, setCoords] = useState({})
+      const [city, setCity] = useState('')
 
       useEffect(() => {
-        const data = ['users', 'posts', 'todos'].map((ele) => {
-          return axios.get(`https://jsonplaceholder.typicode.com/${ele}`)
+        navigator.geolocation.getCurrentPosition(showPosition)
+        function showPosition(position) {
+          setCoords({ lat: position.coords.latitude, lng: position.coords.longitude })
+        }
+      }, [])
+
+      useEffect(() => {
+        if (Object.keys(coords).length) {
+          axios.get(`https://nominatim.openstreetmap.org/reverse?lat=${coords.lat}&lon=${coords.lng}&format=json`)
             .then((res) => {
-              return res.data
+              setCity(res.data.address.city);
             })
             .catch((err) => {
               console.log(err);
             })
-        })
-
-        Promise.all(data)
-          .then((res) => {
-            console.log(res);
-            setAllData(res);
-          })
-
-      }, [])
-
+        }
+      }, [coords])
 
       return (
         <div>
-          <h1>Dashboard</h1>
+          <h1>Geo Location</h1>
           <hr />
-          {allData.length !== 0 && <div>
-            <h1>Users - {allData[0].length}</h1>
-            <h1>Posts - {allData[1].length}</h1>
-            <h1>Todos - {allData[2].length}</h1>
-          </div>}
+          {coords.lat && <h3>Latitude - {coords.lat}</h3>}
+          {coords.lng && <h3>Longitude - {coords.lng}</h3>}
+          {city && <h3>City - {city}</h3>}
         </div>
       )
     }

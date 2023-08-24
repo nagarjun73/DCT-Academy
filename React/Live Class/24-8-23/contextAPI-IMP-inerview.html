@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>ContextAPI</title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { createContext, useContext, useReducer, useEffect } = React
+
+    const UserContext = createContext()
+
+    function reducer(state, action) {
+      switch (action.type) {
+        case "SET_USER": {
+          return [...action.payload]
+        }
+
+        case "REMOVE_USER": {
+          return state.filter((ele) => {
+            return ele.id !== action.payload
+          })
+        }
+
+        case "UPCASE": {
+          return state.map((ele) => {
+            if (ele.id == action.payload) {
+              return { ...ele, name: ele.name.toUpperCase() }
+            } else {
+              return { ...ele }
+            }
+          })
+        }
+        default: {
+          return [...state]
+        }
+      }
+    }
+
+    function UserItem(props) {
+      const { id, name } = props
+      const { dispatch } = useContext(UserContext)
+      return (
+        <div>
+          <p>{name}
+            <button onClick={(e) => { dispatch({ type: "UPCASE", payload: id }) }}>Upcase</button>
+            <button onClick={(e) => { dispatch({ type: 'REMOVE_USER', payload: id }) }}>remove</button>
+          </p>
+        </div>
+      )
+    }
+
+    function UsersList(props) {
+      const { users } = useContext(UserContext)
+      return (
+        <div>
+          <ul>
+            {
+              users.map((ele, i) => {
+                return <UserItem key={i} {...ele} />
+              })
+            }
+          </ul>
+        </div>
+      )
+    }
+
+    function App(props) {
+      const [users, dispatch] = useReducer(reducer, [])
+
+      useEffect(() => {
+        axios.get('https://jsonplaceholder.typicode.com/users')
+          .then((res) => {
+            dispatch({ type: "SET_USER", payload: res.data })
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }, [])
+
+      return (
+        <UserContext.Provider value={{ users, dispatch }}>
+          <div>
+            <h1>Users - {users.length}</h1>
+            <UsersList />
+          </div>
+        </UserContext.Provider>
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

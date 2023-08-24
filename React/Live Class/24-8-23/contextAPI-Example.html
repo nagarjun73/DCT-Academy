@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>ContextAPI</title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useContext, createContext } = React
+
+    const MessageContext = createContext()
+
+    function ChildThree(props) {
+      const { m1 } = useContext(MessageContext)
+      return (
+        <div>
+          <h1>ChildThree</h1>
+          <h3>{m1}</h3>
+        </div>
+      )
+    }
+
+    function ChildTwo(props) {
+      const { m2 } = useContext(MessageContext)
+
+      return (
+        <div>
+          <h1>ChildTwo</h1>
+          <h3>{m2}</h3>
+          <ChildThree />
+        </div>
+      )
+    }
+
+    function ChildOne(props) {
+      const { m3 } = useContext(MessageContext)
+      return (
+        <div>
+          <h1>ChildOne</h1>
+          <h3>{m3}</h3>
+          <ChildTwo />
+        </div>
+      )
+    }
+
+
+    function App(props) {
+      const msg = 'Heyy bro 3'
+      const msg2 = 'Heyy 22'
+      const mes1 = 'Heyy 111'
+
+      return (
+        <MessageContext.Provider value={{ m1: msg, m2: msg2, m3: mes1 }}>
+          <div>
+            <h1>Parent</h1>
+            <ChildOne />
+          </div>
+        </MessageContext.Provider>
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

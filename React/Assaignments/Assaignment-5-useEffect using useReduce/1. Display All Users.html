@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    Display All Users
+  </title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById('root')
+
+    const { useState, useEffect } = React
+
+    function UsersTable(props) {
+      const [users, setUsers] = useState([])
+
+      useEffect(() => {
+        axios.get('https://jsonplaceholder.typicode.com/users')
+          .then((response) => {
+            setUsers(response.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+      }, [])
+
+      return (
+        <div>
+          <h1>Listing Users - {users.length}</h1>
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>name</th>
+                <th>email</th>
+                <th>city</th>
+                <th>position (lat,lng)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                users.map((ele) => {
+                  return (
+                    <tr key={ele.id}>
+                      <td>{ele.id}</td>
+                      <td>{ele.name}</td>
+                      <td>{ele.email}</td>
+                      <td>{ele.address.city}</td>
+                      <td>{ele.address.geo.lat}, {ele.address.geo.lng}</td>
+                    </tr>
+                  )
+                })
+              }
+            </tbody>
+          </table>
+        </div>
+      )
+    }
+
+    ReactDOM.render(<UsersTable />, rootHandle)
+
+  </script>
+</body>
+
+</html>

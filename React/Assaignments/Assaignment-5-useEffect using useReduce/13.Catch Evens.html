@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    Catch Evens
+  </title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById('root')
+
+    const { useState, useEffect } = React
+
+    function App(props) {
+      const [random, setRandom] = useState(0)
+      const [evenNum, setEvenNum] = useState([])
+
+      useEffect(() => {
+        function timeoutFunction() {
+          const randomNum = Math.ceil(Math.random() * 100)
+          if (randomNum % 2 == 0) {
+            setEvenNum([...evenNum, randomNum])
+          }
+          setRandom(randomNum);
+        }
+        setTimeout(timeoutFunction, 1000)
+      }, [random])
+
+
+      return (
+        <div>
+          <h1>{random}</h1>
+          <h1>All Evens - {evenNum.length}</h1>
+          <ul>
+            {evenNum.map((ele, i) => {
+              return <li key={i}>{ele}</li>
+            })}
+          </ul>
+        </div>
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+
+  </script>
+</body>
+
+</html>

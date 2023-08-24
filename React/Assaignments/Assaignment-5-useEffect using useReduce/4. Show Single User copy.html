@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    Show Single User
+  </title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById('root')
+    const { useState, useEffect, useReducer } = React
+
+    function reducer(state, action) {
+      switch (action.type) {
+        case 'user': {
+          return { ...state, user: action.payload }
+        }
+      }
+    }
+
+    function App(props) {
+      const initialState = {
+        user: {}
+      }
+
+      const [state, dispatch] = useReducer(reducer, initialState)
+
+      useEffect(() => {
+        axios.get("https://jsonplaceholder.typicode.com/users/1")
+          .then((res) => {
+            dispatch({ type: 'user', payload: res.data })
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }, [])
+
+      return (
+        <div>
+          {Object.keys(state.user).length !== 0 && <h1>{state.user.name} - {state.user.email} - {state.user.address.city}</h1>}
+        </div>
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

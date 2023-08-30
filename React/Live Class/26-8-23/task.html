@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.js"
+    integrity="sha512-RjvSEaeDqPCfUVQ9kna2/2OqHz/7F04IOl1/66LmQjB/lOeAzwq7LrbTzDbz5cJzlPNJ5qteNtHR56XaJSTNWw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useState, useReducer, useEffect } = React
+
+    function reducer(state, action) {
+      switch (action.type) {
+        case "FETCH_USER": {
+          return { ...state, user: { ...action.payload } }
+        }
+
+        case "FETCH_POSTS": {
+          return { ...state, posts: [...action.payload] }
+        }
+
+        case "NEXT": {
+          return { ...state, id: action.payload > 10 ? 10 : action.payload }
+        }
+        case "PREVIOUS": {
+          return { ...state, id: action.payload < 1 ? 1 : action.payload }
+        }
+
+        default: {
+          return { ...state }
+        }
+      }
+    }
+
+    function App(props) {
+      const initialState = {
+        user: {},
+        posts: [],
+        id: 1
+      }
+
+      const [state, dispatch] = useReducer(reducer, initialState)
+
+      useEffect(() => {
+        const user = axios.get(`https://jsonplaceholder.typicode.com/users/${state.id}`)
+        const posts = axios.get(`https://jsonplaceholder.typicode.com/posts?userId=${state.id}`)
+        axios.all([user, posts])
+          .then(axios.spread((resUsr, resPst) => {
+            dispatch({ type: "FETCH_USER", payload: resUsr.data });
+            dispatch({ type: "FETCH_POSTS", payload: resPst.data })
+          }))
+          .catch((err) => {
+            console.log(err);
+          })
+      }, [state.id])
+
+      function handleNextButton() {
+        dispatch({ type: "NEXT", payload: state.id += 1 })
+      }
+
+      function handlePrevButton() {
+        dispatch({ type: "PREVIOUS", payload: state.id -= 1 })
+      }
+
+      return (
+        <div>
+          {state.user.name && <h1>{state.user.id}. {state.user.name}</h1>}
+          <button onClick={handlePrevButton}>Prev</button>
+          <button onClick={handleNextButton}>Next</button>
+          <h1>Posts</h1>
+          {state.posts.length !== 0 &&
+            <ul>
+              {state.posts.map((ele, i) => {
+                return <li key={i}> {ele.title}</li>
+              })}
+            </ul>}
+        </div>
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

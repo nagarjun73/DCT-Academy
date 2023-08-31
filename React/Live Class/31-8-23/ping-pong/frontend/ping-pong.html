@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Ping-Pong</title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useState } = React
+
+    function TableComponent(props) {
+      const { charcters } = props
+
+
+      function moreButtonHandle(char) {
+        axios.get(`http://localhost:3030/api/characters/${char}`)
+          .then((res) => {
+            alert(JSON.stringify(res.data));
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }
+
+      return (
+        <table border="1">
+          <thead>
+            <tr>
+              <td>id</td>
+              <td>original</td>
+              <td>transformed</td>
+              <td>timestamp</td>
+              <td>actions</td>
+            </tr>
+          </thead>
+          <tbody>
+            {charcters.map((ele) => {
+              return (
+                <tr key={ele._id}>
+                  <td>{ele._id}</td>
+                  <td>{ele.original}</td>
+                  <td>{ele.transformed}</td>
+                  <td>{ele.sentAt}</td>
+                  <td><button onClick={() => { moreButtonHandle(ele.original) }}>more</button></td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      )
+    }
+
+    function FormComponent(props) {
+      const [char, setChar] = useState('')
+      const { cbUpdateChar } = props
+
+      function formSubmitHandle(e) {
+        e.preventDefault()
+        axios.post('http://localhost:3030/api/characters', { char: char })
+          .then((res) => {
+            cbUpdateChar(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }
+
+      return (
+        <div>
+          <h1>Enter a character</h1>
+          <form onSubmit={formSubmitHandle}>
+            <input value={char} onChange={(e) => setChar(e.target.value)} type="text" /> <br />
+            <input type="submit" value="send" />
+          </form>
+        </div>
+      )
+    }
+
+    function App(props) {
+      const [charcters, setCharacters] = useState([])
+      console.log(charcters);
+
+      function cbUpdateChar(data) {
+        console.log(data);
+        setCharacters([...charcters, data])
+      }
+      return (
+        <div>
+          <FormComponent cbUpdateChar={cbUpdateChar} />
+          <TableComponent charcters={charcters} />
+        </div>
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

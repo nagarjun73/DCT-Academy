@@ -46,7 +46,7 @@
 
       useEffect(() => {
         const data = ['categories', 'expenses'].map((ele) => {
-          return axios.get(`http://127.0.0.1:3050/api/${ele}`)
+          return axios.get(`http://localhost:3075/api/${ele}`)
             .then((res) => {
               return res.data;
             })

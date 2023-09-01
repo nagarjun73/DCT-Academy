@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    Sample Title
+  </title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById('root')
+
+    const { useReducer, useContext, createContext, useState, useEffect } = React
+
+    const UserContext = createContext()
+
+    function reducer(state, action) {
+      switch (action.type) {
+        case 'UPDATE_PERSONAL_DETAILS': {
+          return { ...state, userInfo: { ...state.userInfo, ...action.payload } }
+        }
+
+        case 'NEXT_ACCOUNT_DEATAILS': {
+          return { ...state, prsnlPageActive: '', accDtlPageAct: 'a', confmPageActive: '' }
+        }
+
+        case 'UPDATE_ACCOUNT_DEATAILS': {
+          return { ...state, userInfo: { ...state.userInfo, ...action.payload } }
+        }
+
+        case "NEXT_CONFIRMATION": {
+          return { ...state, prsnlPageActive: '', accDtlPageAct: '', confmPageActive: 'a' }
+        }
+
+        case "BACK_PERSONAL_DETAILS": {
+          return { ...state, prsnlPageActive: 'a', accDtlPageAct: '', confmPageActive: '' }
+        }
+
+        case "BACK_ACCOUNT_DETAILS": {
+          return { ...state, prsnlPageActive: '', accDtlPageAct: 'a', confmPageActive: '' }
+        }
+
+        default: {
+          return { ...state }
+        }
+      }
+    }
+
+    function ConfirmationComp(props) {
+      const { state, dispatch } = useContext(UserContext)
+
+      function backAccDtlsHandle() {
+        dispatch({ type: "BACK_ACCOUNT_DETAILS" })
+      }
+
+      return (
+        <div>
+          <h1>Registration Form</h1>
+          <h3>Confirmation</h3>
+          <h3>Personal Details</h3>
+          <p>First Name - {state.userInfo.fName}</p>
+          <p>Last Name - {state.userInfo.lName}</p>
+          <p>Date of Birth - {state.userInfo.date}</p>
+
+          <h3>Account Details</h3>
+          <p>Email - {state.userInfo.email}</p>
+          <p>Password - {state.userInfo.password}</p>
+          <button onClick={backAccDtlsHandle}>Back - Account Details</button>
+          <button>Submit</button>
+        </div>
+      )
+    }
+
+    function AccountDtlsComp(props) {
+      const [email, setEmail] = useState('')
+      const [password, setPassword] = useState('')
+      const [confirmPassword, setConfirmPassword] = useState('')
+
+      const { state, dispatch } = useContext(UserContext)
+
+      useEffect(() => {
+        if (state.userInfo.email) {
+          setEmail(state.userInfo.email)
+          setPassword(state.userInfo.password)
+          setConfirmPassword(state.userInfo.confirmPassword)
+        }
+      }, [])
+
+      function nxtConfirmationHandle() {
+        dispatch({ type: 'UPDATE_ACCOUNT_DEATAILS', payload: { email, password, confirmPassword } })
+        dispatch({ type: "NEXT_CONFIRMATION" })
+      }
+
+      function backPrsnlDtlsHandle() {
+        dispatch({ type: "BACK_PERSONAL_DETAILS" })
+      }
+
+      return (
+        <div>
+          <h1>Registration Form</h1>
+          <h3>Account Details</h3>
+          <form>
+            <label>Email</label> <br />
+            <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} /><br />
+
+            <label>Password</label><br />
+            <input type="text" value={password} onChange={(e) => setPassword(e.target.value)} /><br />
+
+            <label>Confirm Password</label><br />
+            <input type="text" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} /><br />
+          </form>
+          <button onClick={backPrsnlDtlsHandle}>Back - Personal Details</button>
+          <button onClick={nxtConfirmationHandle}>Next - Confirmation</button>
+        </div>
+      )
+    }
+
+
+    function PersonalDtlsComp(props) {
+      const { state, dispatch } = useContext(UserContext)
+
+      const [fName, setFName] = useState('')
+      const [lName, setLName] = useState('')
+      const [date, setDate] = useState('')
+
+      useEffect(() => {
+        if (state.userInfo.fName) {
+          setFName(state.userInfo.fName)
+          setLName(state.userInfo.lName)
+          setDate(state.userInfo.date)
+        }
+      }, [])
+
+      function nxtAccDetailsHandle() {
+        dispatch({ type: 'UPDATE_PERSONAL_DETAILS', payload: { fName, lName, date } });
+        dispatch({ type: 'NEXT_ACCOUNT_DEATAILS' })
+      }
+
+
+      return (
+        <div>
+          <h1>Registration Form</h1>
+          <h3>Personal Details</h3>
+          <form>
+            <label>First Name</label> <br />
+            <input type="text" value={fName} onChange={(e) => setFName(e.target.value)} /><br />
+
+            <label>Last Name</label><br />
+            <input type="text" value={lName} onChange={(e) => setLName(e.target.value)} /><br />
+
+            <label>Date of Birth</label><br />
+            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} /><br />
+          </form>
+          <button onClick={nxtAccDetailsHandle}>Next - Account Details</button>
+        </div>
+      )
+    }
+
+    function App(props) {
+      const initialState = { userInfo: {}, prsnlPageActive: 'a', accDtlPageAct: '', confmPageActive: '' }
+      const [state, dispatch] = useReducer(reducer, initialState)
+      console.log(state);
+
+      return (
+        <div>
+          <UserContext.Provider value={{ state, dispatch }}>
+            <div>
+              {state.prsnlPageActive && <PersonalDtlsComp />}
+              {state.accDtlPageAct && <AccountDtlsComp />}
+              {state.confmPageActive && <ConfirmationComp />}
+            </div>
+          </UserContext.Provider>
+        </div>
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+
+  </script>
+</body>
+
+</html>

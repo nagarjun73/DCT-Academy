@@ -30,7 +30,7 @@
         }
 
         case 'NEXT_ACCOUNT_DEATAILS': {
-          return { ...state, prsnlPageActive: '', accDtlPageAct: 'a', confmPageActive: '' }
+          return { ...state, pageStatus: action.payload }
         }
 
         case 'UPDATE_ACCOUNT_DEATAILS': {
@@ -38,15 +38,15 @@
         }
 
         case "NEXT_CONFIRMATION": {
-          return { ...state, prsnlPageActive: '', accDtlPageAct: '', confmPageActive: 'a' }
+          return { ...state, pageStatus: action.payload }
         }
 
         case "BACK_PERSONAL_DETAILS": {
-          return { ...state, prsnlPageActive: 'a', accDtlPageAct: '', confmPageActive: '' }
+          return { ...state, pageStatus: action.payload }
         }
 
         case "BACK_ACCOUNT_DETAILS": {
-          return { ...state, prsnlPageActive: '', accDtlPageAct: 'a', confmPageActive: '' }
+          return { ...state, pageStatus: action.payload }
         }
 
         default: {
@@ -59,7 +59,7 @@
       const { state, dispatch } = useContext(UserContext)
 
       function backAccDtlsHandle() {
-        dispatch({ type: "BACK_ACCOUNT_DETAILS" })
+        dispatch({ type: "BACK_ACCOUNT_DETAILS", payload: '2' })
       }
 
       return (
@@ -97,11 +97,11 @@
 
       function nxtConfirmationHandle() {
         dispatch({ type: 'UPDATE_ACCOUNT_DEATAILS', payload: { email, password, confirmPassword } })
-        dispatch({ type: "NEXT_CONFIRMATION" })
+        dispatch({ type: "NEXT_CONFIRMATION", payload: '3' })
       }
 
       function backPrsnlDtlsHandle() {
-        dispatch({ type: "BACK_PERSONAL_DETAILS" })
+        dispatch({ type: "BACK_PERSONAL_DETAILS", payload: '1' })
       }
 
       return (
@@ -142,7 +142,7 @@
 
       function nxtAccDetailsHandle() {
         dispatch({ type: 'UPDATE_PERSONAL_DETAILS', payload: { fName, lName, date } });
-        dispatch({ type: 'NEXT_ACCOUNT_DEATAILS' })
+        dispatch({ type: 'NEXT_ACCOUNT_DEATAILS', payload: '2' })
       }
 
 
@@ -166,7 +166,7 @@
     }
 
     function App(props) {
-      const initialState = { userInfo: {}, prsnlPageActive: 'a', accDtlPageAct: '', confmPageActive: '' }
+      const initialState = { userInfo: {}, pageStatus: '1' }
       const [state, dispatch] = useReducer(reducer, initialState)
       console.log(state);
 
@@ -174,9 +174,9 @@
         <div>
           <UserContext.Provider value={{ state, dispatch }}>
             <div>
-              {state.prsnlPageActive && <PersonalDtlsComp />}
-              {state.accDtlPageAct && <AccountDtlsComp />}
-              {state.confmPageActive && <ConfirmationComp />}
+              {state.pageStatus == '1' && <PersonalDtlsComp />}
+              {state.pageStatus == '2' && <AccountDtlsComp />}
+              {state.pageStatus == '3' && <ConfirmationComp />}
             </div>
           </UserContext.Provider>
         </div>

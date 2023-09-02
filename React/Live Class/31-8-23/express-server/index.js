@@ -85,10 +85,47 @@ const categoryData = [
       res.json(catObj)
     })
 
+    //update on category
+    app.put('/api/categories/:id', (req, res)=>{
+      const id = req.params.id
+      const body = req.body
+      const cat = categoryData.find((ele)=> ele._id == id)
+
+      if(cat){
+        Object.assign(cat, body)
+        res.json(cat)
+      }else{
+        res.status(404).json({})
+      }
+    })
+
+    //delete categoirs
+    app.delete('/api/categories/:id', (req,res)=>{
+      const id = req.params.id
+      const index = categoryData.findIndex((ele) => ele._id == id)
+      if(index >= 0){
+        const [cat] = categoryData.splice(index, 1)
+        res.json(cat)
+      }else{
+        res.status(404).json({})
+      }
+    })
+
 
     //get all expenses
     app.get('/api/expenses', ((req, res)=>{
-      res.json(expensesData)
+      console.log(req.query);
+      const {categoryId} = req.query
+      if(categoryId){
+        const expenses = expensesData.filter((ele)=> ele.categoryId == categoryId)
+        if(expenses.length){
+          res.json(expenses)
+        }else{
+          res.status(404).json([])
+        }
+      }else{
+        res.json(expensesData)
+      }
     }))
 
     //show one expense
@@ -103,6 +140,40 @@ const categoryData = [
       }else{
         res.status(404).json({})
       }
+    })
+
+    //Update expenses
+    app.put('/api/expenses/:id', (req, res) =>{
+      const id = req.params.id
+      const body = req.body
+      const exp = expensesData.find((ele)=> ele._id == id)
+
+      if(exp){
+        Object.assign(exp, body)
+        res.json(exp)
+      }else{
+        res.status(404).json({})
+      }
+    })
+
+    //delete expense
+    app.delete('/api/expenses/:id', (req, res)=>{
+      const id = req.params.id
+      const index = expensesData.findIndex((ele) => ele._id == id)
+
+      if(index >= 0){
+        const [exp] = expensesData.splice(index, 1)
+        res.json(exp)
+      }else{
+        res.status(404).json({})
+      }
+    })
+
+    //get expenses of a single category (nested route)
+    app.get('/api/categories/:id/expenses', (req, res)=>{
+      const id = req.params.id
+      const expenses = expensesData.filter((ele) => ele.categoryId == id)
+      res.json(expenses)
     })
 
 app.listen(3075, ()=>{

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useState, useReducer, useContext, createContext, useEffect } = React
+
+    const ContactContext = createContext()
+
+    function reduce(state, action) {
+      switch (action.type) {
+        case "ADD_CONTACT": {
+          return { ...state, contacts: [action.payload] }
+        }
+
+        case "INITIAL_RENDER": {
+          return { ...state, contacts: [...action.payload] }
+        }
+
+        case "SEARCH_CONTACT": {
+          return { ...state, contacts: [...action.payload] }
+        }
+
+        case 'SORT_CONTACT': {
+          return { ...state, contacts: [...action.payload] }
+        }
+      }
+    }
+
+    function SearchComp(props) {
+      const [search, setSearch] = useState('')
+      const [sort, setSort] = useState('')
+      console.log(sort);
+
+      const { state, dispatch } = useContext(ContactContext)
+
+      useEffect(() => {
+        if (sort) {
+          axios.get(`http://localhost:3050/api/contacts?sort=${sort}`)
+            .then((res) => {
+              dispatch({ type: "SORT_CONTACT", payload: res.data })
+            })
+        }
+      }, [sort])
+
+      function searchHandleFun(e) {
+        e.preventDefault()
+        axios.get(`http://localhost:3050/api/contacts?search=${search}`)
+          .then((res) => {
+            dispatch({ type: "SEARCH_CONTACT", payload: res.data });
+          })
+      }
+
+      function selectFunction(e) {
+        setSort(e.target.value)
+      }
+
+      return (
+        <div>
+          <form onSubmit={searchHandleFun}>
+            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} />
+            <input type="submit" />
+          </form>
+          <select onChange={selectFunction}>
+            <option value="">sort</option>
+            <option value="a-z">a-z</option>
+            <option value="z-a">z-a</option>
+          </select>
+        </div>
+      )
+    }
+
+    function ListContactComp(props) {
+      const { state, dispatch } = useContext(ContactContext)
+      console.log(state);
+
+      return (
+        <div>
+          <ul>
+            {state.contacts.map((ele) => {
+              return <li key={ele._id}>{ele.name} - {ele.mobile}</li>
+            })}
+          </ul>
+        </div>
+      )
+    }
+
+    function FormComponent(props) {
+      const { state, dispatch } = useContext(ContactContext)
+      const [name, setName] = useState('')
+      const [mobile, setMobile] = useState('')
+      const [email, setEmail] = useState('')
+
+
+      function submitContactFun(e) {
+        e.preventDefault()
+        const contactObj = { name, mobile, email }
+        axios.post('http://localhost:3050/api/contacts', contactObj)
+          .then((res) => {
+            dispatch({ type: "ADD_CONTACT", payload: res.data });
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+      }
+
+      return (
+        <div>
+          <form onSubmit={submitContactFun}>
+            <label>Name</label><br />
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)} /><br />
+
+            <label>Mobile</label><br />
+            <input type="text" value={mobile} onChange={(e) => setMobile(e.target.value)} /><br />
+
+            <label>Email</label><br />
+            <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} /><br />
+
+            <input type="submit" />
+          </form>
+        </div>
+      )
+    }
+
+    function App(props) {
+
+      const initialState = { contacts: [] }
+
+      const [state, dispatch] = useReducer(reduce, initialState)
+
+      console.log(state.contacts);
+
+      useEffect(() => {
+        axios.get('http://localhost:3050/api/contacts')
+          .then((res) => {
+            dispatch({ type: "INITIAL_RENDER", payload: res.data })
+          })
+      }, [])
+
+      return (
+        <div>
+          <h1 style={{ marginLeft: '45%' }}>Contacts App</h1>
+          <ContactContext.Provider value={{ state, dispatch }}>
+            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
+              <div>
+                <SearchComp />
+                <ListContactComp />
+              </div>
+              <div>
+                <FormComponent />
+              </div>
+            </div>
+          </ContactContext.Provider >
+        </div >
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

@@ -33,10 +33,10 @@ app.get('/api/contacts', (req, res)=>{
     res.json(filContact)
   }else if(query.sort){
     if(query.sort == 'a-z'){
-      const asc = contacts.sort((a,b)=> a.name.localeCompare(b.name))
+      const asc = contacts.sort((a,b)=> a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
       res.json(asc)
     }else {
-      const des = contacts.sort((a,b)=> b.name.localeCompare(a.name))
+      const des = contacts.sort((a,b)=> b.name.toLowerCase().localeCompare(a.name.toLowerCase()))
       res.json(des)
     }
     console.log(query.sort);

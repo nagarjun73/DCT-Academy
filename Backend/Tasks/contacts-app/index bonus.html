@@ -25,18 +25,14 @@
     function reduce(state, action) {
       switch (action.type) {
         case "ADD_CONTACT": {
-          return { ...state, contacts: [action.payload] }
+          return { ...state, contacts: [action.payload, ...state.contacts] }
         }
 
         case "INITIAL_RENDER": {
           return { ...state, contacts: [...action.payload] }
         }
 
-        case "SEARCH_CONTACT": {
-          return { ...state, contacts: [...action.payload] }
-        }
-
-        case 'SORT_CONTACT': {
+        case "SEARCH_SORT_CONTACT": {
           return { ...state, contacts: [...action.payload] }
         }
       }
@@ -45,24 +41,13 @@
     function SearchComp(props) {
       const [search, setSearch] = useState('')
       const [sort, setSort] = useState('')
-      console.log(sort);
-
       const { state, dispatch } = useContext(ContactContext)
-
-      useEffect(() => {
-        if (sort) {
-          axios.get(`http://localhost:3050/api/contacts?sort=${sort}`)
-            .then((res) => {
-              dispatch({ type: "SORT_CONTACT", payload: res.data })
-            })
-        }
-      }, [sort])
 
       function searchHandleFun(e) {
         e.preventDefault()
-        axios.get(`http://localhost:3050/api/contacts?search=${search}`)
+        axios.get(`http://localhost:3060/api/contacts?search=${search}&sort=${sort}`)
           .then((res) => {
-            dispatch({ type: "SEARCH_CONTACT", payload: res.data });
+            dispatch({ type: "SEARCH_SORT_CONTACT", payload: res.data });
           })
       }
 
@@ -74,20 +59,19 @@
         <div>
           <form onSubmit={searchHandleFun}>
             <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} />
+            <select onChange={selectFunction}>
+              <option value="">sort</option>
+              <option value="a-z">a-z</option>
+              <option value="z-a">z-a</option>
+            </select>
             <input type="submit" />
           </form>
-          <select onChange={selectFunction}>
-            <option value="">sort</option>
-            <option value="a-z">a-z</option>
-            <option value="z-a">z-a</option>
-          </select>
         </div>
       )
     }
 
     function ListContactComp(props) {
       const { state, dispatch } = useContext(ContactContext)
-      console.log(state);
 
       return (
         <div>
@@ -110,7 +94,7 @@
       function submitContactFun(e) {
         e.preventDefault()
         const contactObj = { name, mobile, email }
-        axios.post('http://localhost:3050/api/contacts', contactObj)
+        axios.post('http://localhost:3060/api/contacts', contactObj)
           .then((res) => {
             dispatch({ type: "ADD_CONTACT", payload: res.data });
           })
@@ -143,10 +127,8 @@
 
       const [state, dispatch] = useReducer(reduce, initialState)
 
-      console.log(state.contacts);
-
       useEffect(() => {
-        axios.get('http://localhost:3050/api/contacts')
+        axios.get('http://localhost:3060/api/contacts')
           .then((res) => {
             dispatch({ type: "INITIAL_RENDER", payload: res.data })
           })

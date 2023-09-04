@@ -77,7 +77,7 @@
         <div>
           <ul>
             {state.contacts.map((ele) => {
-              return <li key={ele._id}>{ele.name} - {ele.mobile}</li>
+              return <li key={ele._id}>{ele._id} - {ele.name} - {ele.mobile} - {ele.email}</li>
             })}
           </ul>
         </div>

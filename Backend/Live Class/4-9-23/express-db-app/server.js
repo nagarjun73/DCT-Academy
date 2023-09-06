@@ -12,7 +12,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/expense-app-db')
     console.log('connected to DB');
   })
   .catch((e)=>{
-    console.log('erroe connecting to db' , e);
+    console.log('error connecting to db' , e);
   })
 
 //const Schema = mongoose.Schema

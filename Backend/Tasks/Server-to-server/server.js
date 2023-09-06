@@ -13,7 +13,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/server-to-server')
 
 const{Schema, model} = mongoose
 
-const userSchema = Schema({
+const userSchema = new Schema({
   name:{
     type:String,
   },

@@ -62,7 +62,7 @@ const expenseSchema = new Schema({
   }
 })
 
-const Expenses = model('Expense', expenseSchema)
+const Expense = model('Expense', expenseSchema)
 
 //get all exopenses
 //get single expenses
@@ -124,6 +124,67 @@ app.delete('/api/categories/:id', (req, res)=>{
   Category.findByIdAndDelete(id)
     .then((cat)=>{
       res.json(cat)
+    })
+    .catch((err)=>{
+      res.json(err)
+    })
+})
+
+app.get('/api/expenses', (req,res)=>{
+  Expense.find()
+    .then((exp)=>{
+      res.json(exp)
+    })
+    .catch((err)=>{
+      res.json(err)
+    })
+})
+
+app.get('/api/expenses/:id', (req, res)=>{
+  const id = req.params.id
+  Expense.findById(id)
+    .then((exp)=>{
+      res.json(exp)
+    })
+    .catch((err)=>{
+      res.json(err)
+    })
+})
+
+app.post('/api/expenses', (req, res)=>{
+  const body = req.body
+  const expense1 = new Expense()
+  expense1.title = body.title
+  expense1.description = body.description
+  expense1.amount = body.amount
+  expense1.expenseDate = body.expenseDate
+  expense1.categoryId = body.categoryId
+  expense1.save()
+    .then((exp)=>{
+      res.json(exp)
+    })
+    .catch((err)=>{
+      res.json(err)
+    })
+})
+
+app.put('/api/expenses/:id', (req, res)=>{
+  const id = req.params.id
+  const body = req.body
+  Expense.findByIdAndUpdate(id, body, {runValidators:true, new:true})
+    .then((exp)=>{
+      res.json(exp)
+    })
+    .catch((err)=>{
+      res.json(err)
+    })
+})
+
+app.delete('/api/expenses/:id', (req, res)=>{
+  const id = req.params.id
+  Expense.findByIdAndDelete(id)
+    .then((exp)=>{
+      res.json(exp)
     })
     .catch((err)=>{
       res.json(err)

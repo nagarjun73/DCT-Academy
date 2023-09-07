@@ -24,18 +24,45 @@ const addressSchema = new Schema({
     type:String,
     required:true
   },
+  city:{
+    type:String,
+    required:true
+  },
+  categoryId:{
+    type:String,
+    required:true
+  },
   formattedAdd:{
     type:String,
     required:true
   }
 })
 
-const address = model('address', addressSchema)
+const categorySchema = new Schema({
+  name:{
+    type:String,
+    required:true
+  }
+})
+
+const Address = model('address', addressSchema)
+
+const Category = model('category', categorySchema)
 
 app.get('/api/places', (req, res)=>{
-  address.find()
+  Address.find()
     .then((add)=>{
       res.json(add)
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+})
+
+app.get('/api/categories',(req,res)=>{
+  Category.find()
+    .then((cat)=>{
+      res.json(cat)
     })
     .catch((err)=>{
       console.log(err);
@@ -47,9 +74,11 @@ app.post(`/api/addresses`,(req, res)=>{
   console.log(body);
   axios.get(`https://api.geoapify.com/v1/geocode/search?name=${body.name}&street=${body.street}&postcode=${body.postcode}&city=${body.city}&state=${body.state}&country=${body.country}&format=json&apiKey=de80eb3914e44b11ad5f6128504f83f1`)
     .then((resp)=>{
-      const add1 = new address()
+      const add1 = new Address()
       add1.lat = resp.data.results[0].lat
       add1.lon = resp.data.results[0].lon
+      add1.city = body.city
+      add1.categoryId = body.categoryId
       add1.formattedAdd = `${body.name},${body.street},${body.postcode},${body.city},${body.state},${body.country}`.toLowerCase()
       add1.save()
         .then((address)=>{
@@ -58,6 +87,19 @@ app.post(`/api/addresses`,(req, res)=>{
         .catch((err)=>{
           console.log(err);
         })
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+})
+
+app.post('/api/categories', (req, res)=>{
+  const body = req.body
+  const cat1 = new Category()
+  cat1.name = body.name
+  cat1.save()
+    .then((cat)=>{
+      res.json(cat)
     })
     .catch((err)=>{
       console.log(err);

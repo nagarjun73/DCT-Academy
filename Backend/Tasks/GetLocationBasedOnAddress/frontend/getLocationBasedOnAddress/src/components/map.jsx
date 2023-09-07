@@ -8,19 +8,26 @@ export default function MapComp(props) {
 
   return (
     <div>
-      <MapContainer style={{ height: "400px" }} center={[12.9457315, 77.5717632]} zoom={7} scrollWheelZoom={false}>
+      <MapContainer style={{ height: "400px" }} center={places.selectedCity.length ? places.selectedCity : [12.9457315, 77.5717632]} zoom={13} scrollWheelZoom={false}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {places.position.map((ele, i) => {
-          console.log(ele, "pos")
-          return <Marker key={i} position={ele}>
-            <Popup>
-              A pretty CSS3
-            </Popup>
-          </Marker>
-        })}
+        {places.foundPlaces.length == 0 ?
+          places.place.map((ele, i) => {
+            return <Marker key={i} position={[Number(ele.lat), Number(ele.lon)]}>
+              <Popup>
+                {ele.formattedAdd}
+              </Popup>
+            </Marker>
+          }) :
+          places.foundPlaces.map((ele, i) => {
+            return <Marker key={i} position={[Number(ele.lat), Number(ele.lon)]}>
+              <Popup>
+                {ele.formattedAdd}
+              </Popup>
+            </Marker>
+          })}
       </MapContainer>
     </div>
   )

@@ -32,6 +32,16 @@ const addressSchema = new Schema({
 
 const address = model('address', addressSchema)
 
+app.get('/api/places', (req, res)=>{
+  address.find()
+    .then((add)=>{
+      res.json(add)
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+})
+
 app.post(`/api/addresses`,(req, res)=>{
   const body = req.body
   console.log(body);

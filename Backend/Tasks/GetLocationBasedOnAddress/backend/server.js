@@ -77,7 +77,7 @@ app.post(`/api/addresses`,(req, res)=>{
       const add1 = new Address()
       add1.lat = resp.data.results[0].lat
       add1.lon = resp.data.results[0].lon
-      add1.city = body.city
+      add1.city = body.city.toLowerCase()
       add1.categoryId = body.categoryId
       add1.formattedAdd = `${body.name},${body.street},${body.postcode},${body.city},${body.state},${body.country}`.toLowerCase()
       add1.save()

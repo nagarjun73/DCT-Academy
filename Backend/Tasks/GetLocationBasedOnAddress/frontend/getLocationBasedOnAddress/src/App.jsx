@@ -15,7 +15,7 @@ function reducer(state, action) {
     case "FETCH_MAP": {
       // const pos = action.payload.map((ele) => [Number(ele.lat), Number(ele.lon)])
       console.log(action.payload)
-      return { ...state, place: [...action.payload], foundPlaces: [] }
+      return { ...state, place: [...action.payload], foundPlaces: [], selectedCity: [] }
     }
 
     case "FETCH_CAT": {
@@ -23,7 +23,7 @@ function reducer(state, action) {
     }
 
     case "FOUND_PLACES": {
-      return { ...state, foundPlaces: [...action.payload] }
+      return { ...state, foundPlaces: [...action.payload], selectedCity: [Number(action.payload.lat), Number(action.payload.lon)] }
     }
 
     case "SELECT_CITY": {

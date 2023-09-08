@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+</head>
+
+<body>
+  <div id="root">
+
+  </div>
+
+  <script src="../JS/react.development.js"></script>
+  <script src="../JS/react-dom.development.js"></script>
+  <script src="../JS/babel-standalone@6.26.0_babel.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById("root");
+
+    const { useState, useReducer } = React
+
+    function App(props) {
+      const [id, setId] = useState('')
+      console.log(id);
+
+      const initialState = {
+        user: {}
+      }
+      const [state, dispatch] = useReducer(reducer, initialState)
+
+      function userSubmitHandle(e) {
+        e.preventDefault()
+        axios.get(`http://localhost:3033/api/users/${id}`)
+          .then((res) => {
+            console.log(res.data);
+          })
+      }
+
+      return (
+        <div>
+          <form onSubmit={userSubmitHandle}>
+            <label>User Id</label>
+            <input type="text" value={id} onChange={(e) => setId(e.target.value)} />
+
+            <input type="submit" />
+          </form>
+        </div>
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

@@ -8,8 +8,8 @@ export default function SelectionComp(props) {
   console.log(catSelect, citySelect, "state")
 
   const cities = places.place.reduce((ini, fin) => {
-    if (!ini.includes(fin.city.toLowerCase())) {
-      ini.push(fin.city.toLowerCase())
+    if (!ini.includes(fin.city)) {
+      ini.push(fin.city)
     }
     return ini
   }, [])

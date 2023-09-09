@@ -100,7 +100,9 @@ app.post('/api/transactions', (req, res)=>{
       .then((tras)=>{
         res.json(tras)
       })
-  
+      .catch((err)=>{
+        res.json(err)
+      })
 })
 
 app.listen(port, ()=>{

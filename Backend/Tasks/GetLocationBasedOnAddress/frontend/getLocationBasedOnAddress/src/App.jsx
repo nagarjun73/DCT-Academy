@@ -9,7 +9,7 @@ export const PlacesContext = createContext()
 function reducer(state, action) {
   switch (action.type) {
     case "SET_POSITION": {
-      return { ...state, place: [...state.place, action.payload] }
+      return { ...state, place: [...state.place, action.payload], addedPlace: action.payload, foundPlaces: [] }
     }
 
     case "FETCH_MAP": {
@@ -38,6 +38,7 @@ function reducer(state, action) {
 function App() {
   const initialState = {
     place: [],
+    addedPlace: [],
     categories: [],
     foundPlaces: [],
     selectedCity: []

@@ -29,7 +29,7 @@ export default function FormComponent(props) {
 
     axios.post('http://localhost:3075/api/addresses', addObj)
       .then((res) => {
-        placesDispatch({ type: "SET_POSITION", payload: [Number(res.data.lat), Number(res.data.lon)] })
+        placesDispatch({ type: "SET_POSITION", payload: res.data })
         console.log(res.data)
       })
       .catch((err) => {
@@ -95,7 +95,7 @@ export default function FormComponent(props) {
         }}>
           {searchRes.map((ele) => {
             return <li
-              style={{ listStyleType: "none" }}
+              style={{ listStyleType: "none", cursor: "pointer" }}
               key={ele.place_id}
               onClick={(e) => resultClickFun(ele)}
             >{ele.formatted}</li>

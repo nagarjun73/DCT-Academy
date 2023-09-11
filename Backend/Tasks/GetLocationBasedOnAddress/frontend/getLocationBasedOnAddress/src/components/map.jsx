@@ -7,6 +7,8 @@ export default function MapComp(props) {
   const { places } = useContext(PlacesContext)
   const [positions, setPositions] = useState([12.9457315, 77.5717632])
 
+  console.log(positions)
+
   //custom function to change map view based on change in positions
   function ChangeMapView({ coords }) {
     const map = useMap();
@@ -21,6 +23,8 @@ export default function MapComp(props) {
       setPositions(places.selectedCity)
     }
   }, [places.selectedCity])
+
+
 
   return (
     <div>

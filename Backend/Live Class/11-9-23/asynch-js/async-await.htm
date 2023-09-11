@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Sample Title
+    </title>
+</head>
+
+<body>
+    <div id="root">
+
+    </div>
+
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"></script>
+
+    <script type="text/babel">
+        const rootHandle = document.getElementById('root')
+
+        async function getUsers() {
+            try {
+                const userResposnse = await axios.get("https://jsonplaceholder.typicode.com/users")
+                console.log(userResposnse.data);
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        getUsers()
+
+    </script>
+</body>
+
+</html>

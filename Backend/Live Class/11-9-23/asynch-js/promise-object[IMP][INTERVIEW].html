@@ -1,0 +1,54 @@
+<script>
+  //INTERVIEW
+  //promise producing code
+
+  const p1 = new Promise(function (resolve, reject) {
+    setTimeout(() => {
+      const rNumber = Math.round(Math.random() * 100)
+      if (rNumber % 2 == 0) {
+        resolve(rNumber)
+      } else {
+        reject(rNumber)
+      }
+    }, 3000)
+  })
+
+  //Promise consuming code
+  p1
+    .then((res) => {
+      console.log(res, "success even number");
+    })
+    .catch((err) => {
+      console.log(err, 'failure odd number');
+    })
+
+
+  //AXIOS EXAMPLE
+  //promise producing code
+  const dctAxios = {
+    get: function (url) {
+      return new Promise(function (resolve, reject) {
+        const xhr = new XMLHttpRequest()
+        xhr.open('GET', url)
+        xhr.send()
+        xhr.onload = function () {
+          const response = {}
+          response.data = JSON.parse(xhr.responseText)
+          resolve(response)
+        }
+        xhr.onerror = function () {
+          reject(new Error('something wen wrong'))
+        }
+      })
+    }
+  }
+
+  //promise consuming code
+  dctAxios.get('https://jsonplaceholder.typicode.com/users')
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+</script>

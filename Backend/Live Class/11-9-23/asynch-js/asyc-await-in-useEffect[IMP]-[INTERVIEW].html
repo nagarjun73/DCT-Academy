@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>
+    Async Await
+  </title>
+</head>
+
+<body>
+  <div id="root">
+  </div>
+
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"></script>
+
+  <script type="text/babel">
+    const rootHandle = document.getElementById('root')
+
+    const { useState, useEffect } = React
+    function App(props) {
+      const [users, setUsers] = useState([])
+      const [post, setPost] = useState([])
+      const [isLoading, setIsLoading] = useState(true)
+
+      useEffect(() => {
+        (async function getUsers() {
+          try {
+            const response = await axios.get("https://jsonplaceholder.typicode.com/users")
+            setUsers(response.data);
+          } catch (e) {
+            console.log(e);
+          } finally {
+            setIsLoading(false)
+          }
+        })()
+      }, [])
+
+      async function getPosts() {
+        try {
+          const response = await axios.get("https://jsonplaceholder.typicode.com/posts")
+          setPost(response.data);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      return (
+        <div>
+          {isLoading ? "Loading" : <h1>users  - {users.length}</h1>}
+          <h1>posts - {post.length}</h1>
+          <button onClick={getPosts}>get posts</button>
+        </div>
+      )
+    }
+
+    ReactDOM.render(<App />, rootHandle)
+  </script>
+</body>
+
+</html>

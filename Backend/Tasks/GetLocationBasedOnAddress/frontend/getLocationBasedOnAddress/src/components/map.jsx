@@ -24,7 +24,11 @@ export default function MapComp(props) {
     }
   }, [places.selectedCity])
 
-
+  useEffect(() => {
+    if (places.addedPlace.length) {
+      setPositions(places.addedPlace)
+    }
+  }, [places.addedPlace])
 
   return (
     <div>

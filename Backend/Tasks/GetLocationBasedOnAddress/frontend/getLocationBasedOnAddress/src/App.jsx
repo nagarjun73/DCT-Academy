@@ -9,7 +9,7 @@ export const PlacesContext = createContext()
 function reducer(state, action) {
   switch (action.type) {
     case "SET_POSITION": {
-      return { ...state, place: [...state.place, action.payload], addedPlace: action.payload, foundPlaces: [] }
+      return { ...state, place: [...state.place, action.payload], addedPlace: [action.payload.lat, action.payload.lon], foundPlaces: [] }
     }
 
     case "FETCH_MAP": {

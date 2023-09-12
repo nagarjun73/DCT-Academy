@@ -32,11 +32,11 @@ function App() {
     <>
       <h1>Random Number - {num}</h1>
 
-      {/* <input type="text" value={room} onChange={(e) => setRoom(e.target.value)} />
+      <input type="text" value={room} onChange={(e) => setRoom(e.target.value)} />
       <button onClick={joinRoom}>join room</button>
 
-      <input type="text" value={input} onChange={(e) => setInput(e.target.value)} />
-      <button onClick={sendMsgFunction}>send</button> */}
+      <textarea type="text" value={input} onChange={(e) => setInput(e.target.value)}></textarea>
+      <button onClick={sendMsgFunction}>send</button>
     </>
   )
 }

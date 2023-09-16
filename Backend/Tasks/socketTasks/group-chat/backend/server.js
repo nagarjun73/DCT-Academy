@@ -3,10 +3,11 @@ const cors = require('cors')
 const http = require('http')
 const { Server } = require('socket.io')
 const mongoose = require('mongoose')
-const port = 3066
+const port = 3033
 
 const app = express()
 app.use(cors())
+app.use(express.json())
 
 mongoose.connect("mongodb://localhost:27017/groupchat")
 
@@ -55,7 +56,7 @@ io.on('connection', (socket) => {
     msg1.userName = data.name
     msg1.save()
       .then((msg) => {
-        console.log(msg);
+        socket.emit("SAVE_USER", msg);
       })
       .catch((err) => {
         console.log(err)
@@ -63,12 +64,12 @@ io.on('connection', (socket) => {
   })
 
   socket.on("text_input", (data) => {
-    socket.to(data.groupId).emit("display_data", { msg: data.text, id: socket.id })
+    socket.to(data.groupId).emit("display_data", { id: socket.id })
 
-    Message.findOne({ userId: socket.id })
+    Message.findOne({ userId: data.userId })
       .then((msg) => {
         if (msg) {
-          Message.findOneAndUpdate({ userId: socket.id }, { msg: data.text }, { runValidators: true, new: true })
+          Message.findOneAndUpdate({ userId: data.userId }, { msg: data.text }, { runValidators: true, new: true })
             .then((msg) => {
               console.log(msg);
             })
@@ -101,6 +102,12 @@ app.get('/api/messages', (req, res) => {
     .catch((err) => {
       res.json(err)
     })
+})
+
+app.post('/api/messages', async (req, res) => {
+  const body = req.body
+  const user = await Message.findOne({ userId: body.userId })
+  res.json(user)
 })
 
 

@@ -1,15 +1,24 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const http = require('http')
 const { Server } = require('socket.io')
 const mongoose = require('mongoose')
-const port = 3033
+const port = process.env.PORT
 
 const app = express()
 app.use(cors())
 app.use(express.json())
 
-mongoose.connect("mongodb://localhost:27017/groupchat")
+const connectMD = async () => {
+  try {
+    mongoose.connect(process.env.MONGODB_URL)
+    console.log('connected to mongodb')
+  } catch (e) {
+    console.log('error connrcying to mongodb', e)
+  }
+}
+connectMD()
 
 const { Schema, model } = mongoose
 
@@ -28,7 +37,11 @@ const messageSchema = new Schema({
   userName: {
     type: String,
     required: true
-  }
+  },
+  codeTimeline: [{
+    userId: String,
+    body: String
+  }]
 })
 
 const Message = model("Message", messageSchema)
@@ -54,6 +67,7 @@ io.on('connection', (socket) => {
     msg1.groupId = data.groupId
     msg1.userId = socket.id
     msg1.userName = data.name
+    msg1.codeTimeline = []
     msg1.save()
       .then((msg) => {
         socket.emit("SAVE_USER", msg);
@@ -69,7 +83,8 @@ io.on('connection', (socket) => {
     Message.findOne({ userId: data.userId })
       .then((msg) => {
         if (msg) {
-          Message.findOneAndUpdate({ userId: data.userId }, { msg: data.text }, { runValidators: true, new: true })
+          const newCd = [...msg.codeTimeline, { userId: data.userId, body: data.text }]
+          Message.findOneAndUpdate({ userId: data.userId }, { $set: { msg: data.text, codeTimeline: newCd } }, { runValidators: true, new: true })
             .then((msg) => {
               console.log(msg);
             })
@@ -109,7 +124,6 @@ app.post('/api/messages', async (req, res) => {
   const user = await Message.findOne({ userId: body.userId })
   res.json(user)
 })
-
 
 server.listen(port, () => {
   console.log('server running on port', port);

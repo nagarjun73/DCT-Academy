@@ -20,6 +20,9 @@ app.post('/auth/register', checkSchema(userRegisterValidation), userCltr.registe
 app.post('/auth/login', checkSchema(userLoginValidation), userCltr.login)
 
 app.post('/polls', userAuth, checkSchema(pollValidation), pollCltr.create)
+app.get('/polls/:pollId', pollCltr.getDetail)
+app.put('/polls/:pollId', userAuth, checkSchema(pollValidation), pollCltr.updatePoll)
+app.delete('/polls/:pollId', userAuth, pollCltr.deletePoll)
 
 app.listen(PORT, () => {
   console.log('Server running on port', PORT)

@@ -7,11 +7,10 @@ const userSchema = new Schema({
   email: String,
   password: String,
   registrationDate: Schema.Types.Date,
-  pollsCreated: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Poll'
-    }
+  pollsCreated: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Poll'
+  }
   ]
 })
 

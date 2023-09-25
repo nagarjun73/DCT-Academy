@@ -5,7 +5,10 @@ const PORT = process.env.PORT
 const configureDB = require('./config/configureDB')
 const { checkSchema } = require('express-validator')
 const userCltr = require('./app/controller/userCltr')
+const pollCltr = require('./app/controller/pollCltr')
 const { userRegisterValidation, userLoginValidation } = require('./app/helper/userValidation')
+const pollValidation = require('./app/helper/pollValidation')
+const userAuth = require('./app/middlewares/userAuth')
 const app = express()
 
 app.use(express.json())
@@ -16,6 +19,7 @@ configureDB()
 app.post('/auth/register', checkSchema(userRegisterValidation), userCltr.register)
 app.post('/auth/login', checkSchema(userLoginValidation), userCltr.login)
 
+app.post('/polls', userAuth, checkSchema(pollValidation), pollCltr.create)
 
 app.listen(PORT, () => {
   console.log('Server running on port', PORT)

@@ -59,21 +59,25 @@ pollCltr.updatePoll = async (req, res) => {
       const body = _.pick(req.body, ['question', 'options', 'duration', 'category'])
       const userId = req.userId
 
-      const fpoll = await Poll.findOne({ _id: id, creator: userId })
-      fpoll.question = body.question
-      fpoll.category = body.category
-      fpoll.options = body.options.map((ele) => {
-        const findobj = fpoll.options.find((els) => els.optionText == ele)
-        if (findobj) {
-          return findobj
+      const oldPoll = await Poll.findOne({ _id: id, creator: userId })
+      if (oldPoll) {
+        oldPoll.question = body.question
+        oldPoll.category = body.category
+        oldPoll.options = body.options.map((ele) => {
+          const findobj = oldPoll.options.find((els) => els.optionText == ele)
+          if (findobj) {
+            return findobj
+          } else {
+            return { optionText: ele }
+          }
+        })
+        oldPoll.expiryDate = fns.addHours(oldPoll.creationDate, body.duration)
+        const result = await oldPoll.save()
+        if (result) {
+          res.json(result)
         } else {
-          return { optionText: ele }
+          res.status(400).json({ errors: "Auth error or object not found" })
         }
-      })
-      fpoll.expiryDate = fns.addHours(fpoll.creationDate, body.duration)
-      const result = await fpoll.save()
-      if (result) {
-        res.json(result)
       }
     }
   } catch (e) {
@@ -84,7 +88,8 @@ pollCltr.updatePoll = async (req, res) => {
 pollCltr.deletePoll = async (req, res) => {
   try {
     const id = req.params.pollId
-    const result = Poll.findOneAndDelete({ _id: id, creator: userId })
+    const userId = req.userId
+    const result = await Poll.findOneAndDelete({ _id: id, creator: userId })
     if (result) {
       res.json({ message: "Poll deleted" })
     } else {

@@ -28,6 +28,8 @@ app.delete('/polls/:pollId', userAuth, pollCltr.deletePoll)
 app.post('/polls/vote/:pollId', userAuth, checkSchema(voteValidation), pollCltr.postVote)
 
 app.get("/polls", pollCltr.active)
+app.get("/mypolls", userAuth, pollCltr.myPolls)
+app.get("/polls/results/:pollId", pollCltr.result)
 
 app.listen(PORT, () => {
   console.log('Server running on port', PORT)

@@ -1,3 +1,4 @@
+const User = require('../model/userSchema')
 const Poll = require('../model/pollsSchema')
 const Vote = require('../model/voteSchema')
 const _ = require('lodash')
@@ -13,8 +14,9 @@ pollCltr.create = async (req, res) => {
       res.json({ errors: errors.array() })
     } else {
       const body = _.pick(req.body, ['question', 'options', 'duration', 'category'])
+      const userId = req.userId
       const poll = new Poll()
-      poll.creator = req.userId
+      poll.creator = userId
       poll.question = body.question
       poll.creationDate = new Date()
       poll.expiryDate = fns.addHours(poll.creationDate, body.duration)
@@ -24,9 +26,18 @@ pollCltr.create = async (req, res) => {
       })
       const result = await poll.save()
       if (result) {
-        res.json({
-          message: "Poll created", pollId: result._id
-        })
+        const usr = await User.findOne({ _id: userId })
+        const pollIds = usr.pollsCreated
+        pollIds.push(result._id)
+        usr.pollsCreated = pollIds
+        const userUpdated = await usr.save()
+        if (userUpdated) {
+          res.json({
+            message: "Poll created", pollId: result._id
+          })
+        }
+      } else {
+        res.status(400).json({ error: "poll add failed with an error" })
       }
     }
   } catch (e) {
@@ -130,6 +141,39 @@ pollCltr.active = async (req, res) => {
     if (result) {
       const active = result.filter((ele) => new Date(ele.expiryDate) > new Date())
       res.json(active)
+    }
+  } catch (e) {
+    res.status(400).json(e)
+  }
+}
+
+pollCltr.myPolls = async (req, res) => {
+  try {
+    const userId = req.userId
+    const result = await Poll.find({ creator: userId })
+    res.json(result)
+  } catch (e) {
+    res.status(400).json(e)
+  }
+}
+
+pollCltr.result = async (req, res) => {
+  try {
+    const id = req.params.pollId
+    const poll = await Poll.findOne({ _id: id })
+    const pollOpt = poll.options
+    const pollResult = await Vote.find({ pollId: id })
+    if (pollResult) {
+      const VoteObj = pollResult.reduce((acc, item) => {
+        const option = pollOpt.find((ele) => ele._id.equals(item.optionId)).optionText
+        if (!acc[option]) {
+          acc[option] = 1
+        } else {
+          acc[option] += 1
+        }
+        return acc
+      }, {})
+      res.json({ pollId: id, results: Object.entries(VoteObj) })
     }
   } catch (e) {
     res.status(400).json(e)

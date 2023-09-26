@@ -1,9 +1,8 @@
 const Poll = require('../model/pollsSchema')
+const Vote = require('../model/voteSchema')
 const _ = require('lodash')
 const { validationResult } = require('express-validator')
 const fns = require('date-fns')
-
-
 
 const pollCltr = {}
 
@@ -94,6 +93,43 @@ pollCltr.deletePoll = async (req, res) => {
       res.json({ message: "Poll deleted" })
     } else {
       res.status(400).json("daletation error")
+    }
+  } catch (e) {
+    res.status(400).json(e)
+  }
+}
+
+pollCltr.postVote = async (req, res) => {
+  try {
+    const pollId = req.params.pollId
+    const userId = req.userId
+    const body = _.pick(req.body, ["option"])
+
+    const isVoted = await Vote.findOne({ userId, pollId })
+    if (isVoted) {
+      res.status(400).json({ errors: "You can cast your vote once for this poll." })
+    } else {
+      const nVote = new Vote()
+      nVote.userId = userId
+      nVote.pollId = pollId
+      nVote.optionId = body.option
+      nVote.voteDate = new Date()
+      const result = await nVote.save()
+      if (result) {
+        res.json({ message: "Vote recorded" })
+      }
+    }
+  } catch (e) {
+    res.status(400).json(e)
+  }
+}
+
+pollCltr.active = async (req, res) => {
+  try {
+    const result = await Poll.find()
+    if (result) {
+      const active = result.filter((ele) => new Date(ele.expiryDate) > new Date())
+      res.json(active)
     }
   } catch (e) {
     res.status(400).json(e)

@@ -8,6 +8,7 @@ const userCltr = require('./app/controller/userCltr')
 const pollCltr = require('./app/controller/pollCltr')
 const { userRegisterValidation, userLoginValidation } = require('./app/helper/userValidation')
 const pollValidation = require('./app/helper/pollValidation')
+const voteValidation = require('./app/helper/voteValidation')
 const userAuth = require('./app/middlewares/userAuth')
 const app = express()
 
@@ -24,7 +25,9 @@ app.get('/polls/:pollId', pollCltr.getDetail)
 app.put('/polls/:pollId', userAuth, checkSchema(pollValidation), pollCltr.updatePoll)
 app.delete('/polls/:pollId', userAuth, pollCltr.deletePoll)
 
-app.post('/polls/vote/:pollId')
+app.post('/polls/vote/:pollId', userAuth, checkSchema(voteValidation), pollCltr.postVote)
+
+app.get("/polls", pollCltr.active)
 
 app.listen(PORT, () => {
   console.log('Server running on port', PORT)

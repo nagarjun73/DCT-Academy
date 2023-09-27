@@ -180,4 +180,19 @@ pollCltr.result = async (req, res) => {
   }
 }
 
+pollCltr.search = async (req, res) => {
+  try {
+    const keyword = req.query.keyword
+    const polls = await Poll.find()
+    if (polls) {
+      const queryResult = polls.filter((ele) => ele.question.toLowerCase().includes(keyword.toLowerCase()))
+      res.json({ polls: queryResult })
+    }
+  } catch (e) {
+    res.status(400).json(e)
+  }
+}
+
+
+
 module.exports = pollCltr

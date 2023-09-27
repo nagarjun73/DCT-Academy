@@ -6,6 +6,7 @@ const configureDB = require('./config/configureDB')
 const { checkSchema } = require('express-validator')
 const userCltr = require('./app/controller/userCltr')
 const pollCltr = require('./app/controller/pollCltr')
+const categoryCltr = require('./app/controller/categoryCltr')
 const { userRegisterValidation, userLoginValidation } = require('./app/helper/userValidation')
 const pollValidation = require('./app/helper/pollValidation')
 const voteValidation = require('./app/helper/voteValidation')
@@ -30,6 +31,9 @@ app.post('/polls/vote/:pollId', userAuth, checkSchema(voteValidation), pollCltr.
 app.get("/polls", pollCltr.active)
 app.get("/mypolls", userAuth, pollCltr.myPolls)
 app.get("/polls/results/:pollId", pollCltr.result)
+app.get("/search", pollCltr.search)
+app.post("/category", categoryCltr.addCategory)
+app.get("/polls/category/:categoryName", categoryCltr.categoryName)
 
 app.listen(PORT, () => {
   console.log('Server running on port', PORT)
